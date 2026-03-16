@@ -9,6 +9,18 @@
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
 
 </div>
+<div align="center">
+☕ Supporta il Progetto
+
+**Se questo addon ti è utile, offrimi un caffè!**
+
+[![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
+
+**[paypal.me/ago19800](https://paypal.me/ago19800)**
+
+*Ogni donazione mi aiuta a continuare a sviluppare e migliorare questo addon!* 🙏
+
+</div>
 
 ---
 
@@ -80,15 +92,53 @@ HomeMind si connette a Home Assistant tramite WebSocket, legge tutti i sensori i
 In Home Assistant:
 ```
 Impostazioni → Add-on Store → ⋮ (menu tre puntini) → Repositories
-→ Incolla l'URL del repository HomeMind → Aggiungi
+→ Incolla l'URL del repository HomeMind → Aggiungi → https://github.com/ago19800/HomeMind
+
 ```
 
 ### 2. Installa e configura l'add-on
+### Provider AI
 
+```yaml
+gemini_api_key: "AIzaSy..."         # 🟦 Google Gemini — GRATIS 1500/giorno
+gemini_model: "gemini-2.0-flash"
+
+groq_api_key: "gsk_..."             # ⚡ Groq — GRATIS 14400/giorno
+groq_model: "llama-3.3-70b-versatile"
+
+deepseek_api_key: "sk-..."          # 🔵 DeepSeek — quasi gratis
+deepseek_model: "deepseek-chat"
+
+cerebras_api_key: "csk-..."         # 🧠 Cerebras — GRATIS 1M token/min
+cerebras_model: "llama3.1-8b"       # oppure: gpt-oss-120b
+
+claude_api_key: "sk-ant-..."        # 🟠 Anthropic Claude — a pagamento
+claude_model: "claude-3-5-haiku-20241022"
+
+openai_api_key: "sk-..."            # 🟢 OpenAI — a pagamento
+openai_model: "gpt-4o-mini"
+
+ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
+```
+
+> Lascia vuoto il campo per disabilitare un provider. HomeMind usa solo quelli con API key.
+
+## 🤖 Provider AI — quale scegliere?
+
+> Consiglio: attiva almeno **Gemini + Groq**. HomeMind passa automaticamente al successivo se uno fallisce.
+
+| Provider | Costo | Limite | Link |
+|----------|-------|--------|------|
+| 🟦 **Google Gemini** | Gratis | 1.500 req/giorno | [aistudio.google.com](https://aistudio.google.com) |
+| ⚡ **Groq** | Gratis | 14.400 req/giorno | [console.groq.com](https://console.groq.com) |
+| 🧠 **Cerebras** | Gratis | 1M token/minuto | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
+| 🔵 **DeepSeek** | ~Gratis | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
+| 🟠 **Anthropic Claude** | A pagamento | — | [console.anthropic.com](https://console.anthropic.com) |
+| 🟢 **OpenAI GPT** | A pagamento | — | [platform.openai.com](https://platform.openai.com) |
 Nella scheda **Configurazione** dell'add-on imposta:
 
 ```yaml
-ha_token: "il_tuo_long_lived_access_token"
+
 telegram_token: "token_del_tuo_bot_telegram"
 telegram_chat_id: "il_tuo_chat_id"
 alarm_code: "1234"
@@ -127,6 +177,13 @@ L'**entity_id** è il codice tipo `sensor.temperatura_soggiorno` o `binary_senso
 ---
 
 ## 🟢 Configurazione BASE — Partire in 5 minuti
+### 4. Avvia l'add-on
+
+Clicca **Avvia**. Entro 10 secondi ricevi il primo messaggio su Telegram.
+
+---
+
+## ⚙️ Configurazione
 
 La configurazione minima per avere HomeMind funzionante con le funzioni essenziali: presenza, allarme automatico e controllo AI.
 
@@ -748,5 +805,17 @@ Scrivi questi comandi direttamente nella chat con il bot:
 <div align="center">
 
 **HomeMind Orchestrator** — *La tua casa, finalmente intelligente.*
+
+</div>
+<div align="center">
+☕ Supporta il Progetto
+
+**Se questo addon ti è utile, offrimi un caffè!**
+
+[![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
+
+**[paypal.me/ago19800](https://paypal.me/ago19800)**
+
+*Ogni donazione mi aiuta a continuare a sviluppare e migliorare questo addon!* 🙏
 
 </div>
