@@ -2,61 +2,74 @@
 
 # 🧠 HomeMind Orchestrator
 
-**Agente AI autonomo per Home Assistant**  
-**Autonomous AI Agent for Home Assistant**
+**L'agente AI che trasforma Home Assistant in una casa davvero intelligente**
 
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Arch](https://img.shields.io/badge/Arch-amd64%20%7C%20aarch64%20%7C%20armv7-orange)](config.yaml)
-
----
-
-[🇮🇹 Italiano](#-italiano) · [🇬🇧 English](#-english)
+[![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
+[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
 
 </div>
 
 ---
 
-# 🇮🇹 Italiano
-
-HomeMind è un **add-on per Home Assistant** che porta un agente AI nella tua casa. Monitora sensori, anomalie, sicurezza e ti risponde su **Telegram** in linguaggio naturale. Genera card Lovelace, analizza l'energia, gestisce l'allarme e ti manda un briefing ogni mattina.
-
----
-
 ## 📋 Indice
 
-- [Funzionalità](#-funzionalità)
+- [Cos'è HomeMind](#-cosè-homemind)
+- [Come funziona](#-come-funziona)
 - [Installazione](#-installazione)
-- [Configurazione](#-configurazione)
-- [Provider AI](#-provider-ai--quale-scegliere)
-- [Bot Telegram — comandi](#-bot-telegram--tutti-i-comandi)
-- [Filtri persona e sensori](#-filtri-persona-e-sensori)
-- [Generare card Lovelace](#-generare-card-lovelace)
-- [Calendario spazzatura](#-calendario-spazzatura)
-- [Lingua](#-lingua)
-- [Esempi pratici](#-esempi-pratici)
-- [Struttura file](#-struttura-file)
-- [FAQ](#-faq)
+- [Il file di configurazione](#-il-file-di-configurazione)
+- [Configurazione BASE](#-configurazione-base--partire-in-5-minuti)
+- [Configurazione MEDIA](#-configurazione-media--funzionalità-complete)
+- [Configurazione AVANZATA](#-configurazione-avanzata--tutto-attivo)
+- [Moduli e funzionalità](#-moduli-e-funzionalità)
+  - [🔒 Sicurezza & Allarme](#-sicurezza--allarme)
+  - [👤 Presenza & Prossimità GPS](#-presenza--prossimità-gps)
+  - [⚡ Monitor Elettrodomestici](#-monitor-elettrodomestici)
+  - [☀️ Ottimizzatore Solare](#️-ottimizzatore-solare)
+  - [📊 Analisi Energetica](#-analisi-energetica)
+  - [🌅 Briefing Mattutino](#-briefing-mattutino)
+  - [🗑️ Calendario Spazzatura](#️-calendario-spazzatura)
+  - [🤖 Controllo AI via Telegram](#-controllo-ai-via-telegram)
+- [Comandi Telegram](#-comandi-telegram)
+- [FAQ & Problemi comuni](#-faq--problemi-comuni)
 
 ---
 
-## ✨ Funzionalità
+## 🧠 Cos'è HomeMind
+
+HomeMind è un **add-on per Home Assistant** che aggiunge un cervello AI alla tua casa. Non è una semplice automazione — è un agente che capisce il contesto, impara la tua routine e ti avvisa solo quando serve davvero.
+
+**Parlagli su Telegram in italiano naturale:**
+> *"Accendi la luce del salotto"*
+> *"Quanta energia ho prodotto oggi?"*
+> *"Arma l'allarme"*
+> *"Cosa succede in casa?"*
+
+**Lui capisce, risponde e agisce.**
+
+### Cosa fa in modo autonomo
 
 | Funzione | Descrizione |
 |----------|-------------|
-| 💬 **Chat AI** | Fai domande sulla tua casa in linguaggio naturale via Telegram |
-| 🔒 **Sicurezza** | Arma/disarma allarme automaticamente, notifica movimenti, benvenuto al rientro |
-| ⚡ **Energia** | Analisi fotovoltaico, batteria, rete Enel, report giornaliero/ieri |
-| 🎨 **Card Lovelace** | Genera YAML per card pronte all'uso (mushroom, gauge, bubble, tile) |
-| 🔍 **Anomalie** | Rileva sensori con valori impossibili, luci dimenticate accese, ecc. |
-| 🛠️ **Patch YAML** | Genera e applica patch alla configurazione HA per correggere anomalie |
-| 🌅 **Briefing mattutino** | Report AI alle 07:00 con energia, meteo, spazzatura, anomalie notturne |
-| 🗑️ **Spazzatura** | Carica PDF calendario comunale → notifica serale automatica |
-| 🔄 **Aggiornamenti** | Controlla aggiornamenti HA e addon ogni 6 ore |
-| 🩺 **Riparazioni** | Verifica problemi ufficiali HA ogni 4 ore |
-| 🤖 **Multi-provider AI** | Fallback automatico tra Gemini → Groq → Cerebras → DeepSeek → Claude → OpenAI |
-| 🌍 **Multilingua** | Italiano e inglese, cambio al volo con `/lingua en` |
-| 📊 **Dashboard web** | Interfaccia chat a `http://IP:8099` con pulsanti rapidi |
+| 🔒 **Allarme automatico** | Arma quando tutti escono, disarma quando torni |
+| 👋 **Benvenuto a casa** | Ti accoglie con un messaggio quando rientri |
+| ⚡ **Monitor elettrodomestici** | Ti avvisa quando lavatrice/lavastoviglie finiscono |
+| ☀️ **Ottimizzatore solare** | Ti suggerisce quando avviare elettrodomestici col surplus FV |
+| 📊 **Analisi energia** | Ogni mattina ti dice se hai consumato più o meno del solito |
+| 🌅 **Briefing mattutino** | Alle 7:00 ti manda meteo, energia, spazzatura e un consiglio AI |
+| 🗑️ **Spazzatura** | La sera prima ti ricorda cosa mettere fuori |
+| 🚨 **Allarme intrusione** | Rilevamento movimento in casa con allarme armato |
+
+---
+
+## ⚙️ Come funziona
+
+```
+Home Assistant  ──→  HomeMind  ──→  Telegram
+    (sensori)        (cervello AI)    (tu)
+```
+
+HomeMind si connette a Home Assistant tramite WebSocket, legge tutti i sensori in tempo reale, li elabora con AI e ti comunica solo le cose importanti. Non hai bisogno di toccare nulla in HA — tutto avviene tramite HomeMind.
 
 ---
 
@@ -64,972 +77,676 @@ HomeMind è un **add-on per Home Assistant** che porta un agente AI nella tua ca
 
 ### 1. Aggiungi il repository
 
-In Home Assistant vai su:
-**Impostazioni → Add-on → Store → ⋮ → Repository**
-
-Aggiungi l'URL del repository:
+In Home Assistant:
 ```
-https://github.com/TUO_UTENTE/homemind-orchestrator
+Impostazioni → Add-on Store → ⋮ (menu tre puntini) → Repositories
+→ Incolla l'URL del repository HomeMind → Aggiungi
 ```
 
-### 2. Installa l'add-on
+### 2. Installa e configura l'add-on
 
-Cerca **HomeMind Orchestrator** nello store e clicca **Installa**.
-
-### 3. Configurazione minima
-
-Vai su **Impostazioni → Add-on → HomeMind Orchestrator → Opzioni** e compila:
+Nella scheda **Configurazione** dell'add-on imposta:
 
 ```yaml
-gemini_api_key: "AIzaSy..."
-telegram_bot_token: "123456:ABC..."
-telegram_chat_id: "360307101"
-```
-
-### 4. Avvia l'add-on
-
-Clicca **Avvia**. Entro 10 secondi ricevi il primo messaggio su Telegram.
-
----
-
-## ⚙️ Configurazione
-
-### Provider AI
-
-```yaml
-gemini_api_key: "AIzaSy..."         # 🟦 Google Gemini — GRATIS 1500/giorno
-gemini_model: "gemini-2.0-flash"
-
-groq_api_key: "gsk_..."             # ⚡ Groq — GRATIS 14400/giorno
-groq_model: "llama-3.3-70b-versatile"
-
-cerebras_api_key: "csk-..."         # 🧠 Cerebras — GRATIS 1M token/min
-cerebras_model: "llama3.1-8b"       # oppure: gpt-oss-120b
-
-deepseek_api_key: "sk-..."          # 🔵 DeepSeek — quasi gratis
-deepseek_model: "deepseek-chat"
-
-claude_api_key: "sk-ant-..."        # 🟠 Anthropic Claude — a pagamento
-claude_model: "claude-3-5-haiku-20241022"
-
-openai_api_key: "sk-..."            # 🟢 OpenAI — a pagamento
-openai_model: "gpt-4o-mini"
-
-ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
-```
-
-> Lascia vuoto il campo per disabilitare un provider. HomeMind usa solo quelli con API key.
-
-### Telegram
-
-```yaml
-telegram_bot_token: "123456:ABC..."
-telegram_chat_id: "360307101"
-```
-
-> Ottieni il token da [@BotFather](https://t.me/BotFather). Ottieni il chat_id da [@userinfobot](https://t.me/userinfobot).
-
-### Home Assistant
-
-```yaml
-notify_entity: "notify.mobile_app_mio_telefono"
+ha_token: "il_tuo_long_lived_access_token"
+telegram_token: "token_del_tuo_bot_telegram"
+telegram_chat_id: "il_tuo_chat_id"
 alarm_code: "1234"
-spazzatura_notify_hour: "20"
+gemini_api_key: "chiave_gemini_opzionale"
 ```
 
-### Filtri semplici (nelle Opzioni)
+> **Come ottenere il token HA:** Profilo → Token di accesso a lunga durata → Crea token
 
-```yaml
-person_blacklist: "person.mqtt"
-motion_blacklist: "binary_sensor.sm_s931b_motion"
+> **Come ottenere token Telegram:** Cerca @BotFather su Telegram → `/newbot`
+
+> **Come trovare il tuo Chat ID:** Cerca @userinfobot su Telegram → manda `/start`
+
+### 3. Crea il file di configurazione personale
+
+Crea il file `/config/homemind_patches/person_config.json` — questo è il file dove dici a HomeMind quali sono i **tuoi** dispositivi.
+
+---
+
+## 📁 Il file di configurazione
+
+Il file si chiama `person_config.json` e si trova in:
+```
+/config/homemind_patches/person_config.json
+```
+
+È un file **JSON** — un formato semplice con `{` chiavi `}` e valori. Ogni sezione attiva una funzionalità diversa. Se una sezione manca, quella funzionalità è semplicemente disattivata.
+
+### Come trovare gli entity_id dei tuoi dispositivi
+
+In Home Assistant:
+```
+Strumenti Sviluppatore → Stati → cerca il nome del dispositivo
+```
+L'**entity_id** è il codice tipo `sensor.temperatura_soggiorno` o `binary_sensor.porta_ingresso`.
+
+---
+
+## 🟢 Configurazione BASE — Partire in 5 minuti
+
+La configurazione minima per avere HomeMind funzionante con le funzioni essenziali: presenza, allarme automatico e controllo AI.
+
+```json
+{
+  "language": "it",
+
+  "person_whitelist": [
+    "person.mario",
+    "person.lucia"
+  ],
+
+  "person_blacklist": [],
+
+  "motion_whitelist": [
+    "binary_sensor.sensore_movimento_ingresso",
+    "binary_sensor.sensore_movimento_soggiorno"
+  ],
+
+  "motion_blacklist": []
+}
+```
+
+**Con questa configurazione hai:**
+- ✅ HomeMind parla italiano
+- ✅ Monitora la presenza di Mario e Lucia
+- ✅ Allarme si arma quando tutti escono
+- ✅ Allarme si disarma quando qualcuno rientra
+- ✅ Rilevamento movimento con allarme armato
+- ✅ Controllo AI via Telegram (linguaggio naturale)
+- ✅ Briefing mattutino alle 7:00
+
+**Come trovare le persone:**
+```
+Strumenti Sviluppatore → Stati → cerca "person."
+```
+Vedrai `person.mario`, `person.lucia` ecc.
+
+**Come trovare i sensori movimento:**
+```
+Strumenti Sviluppatore → Stati → cerca "occupancy" o "motion"
 ```
 
 ---
 
-## 🤖 Provider AI — quale scegliere?
+## 🟡 Configurazione MEDIA — Funzionalità complete
 
-> Consiglio: attiva almeno **Gemini + Groq**. HomeMind passa automaticamente al successivo se uno fallisce.
+Aggiunge: prossimità GPS precisa, sensori contatto, elettrodomestici e energia.
 
-| Provider | Costo | Limite | Link |
-|----------|-------|--------|------|
-| 🟦 **Google Gemini** | Gratis | 1.500 req/giorno | [aistudio.google.com](https://aistudio.google.com) |
-| ⚡ **Groq** | Gratis | 14.400 req/giorno | [console.groq.com](https://console.groq.com) |
-| 🧠 **Cerebras** | Gratis | 1M token/minuto | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
-| 🔵 **DeepSeek** | ~Gratis | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
-| 🟠 **Anthropic Claude** | A pagamento | — | [console.anthropic.com](https://console.anthropic.com) |
-| 🟢 **OpenAI GPT** | A pagamento | — | [platform.openai.com](https://platform.openai.com) |
+```json
+{
+  "language": "it",
 
-### Come ottenere le API key
+  "person_whitelist": [
+    "person.mario",
+    "person.lucia"
+  ],
 
-**Gemini (consigliato come primario)**
-1. Vai su [aistudio.google.com](https://aistudio.google.com)
-2. Accedi con Google → **Get API key** → **Create API key**
-3. Copia la key `AIzaSy...`
+  "person_blacklist": [
+    "person.mqtt_finto"
+  ],
 
-**Groq (consigliato come fallback)**
-1. Vai su [console.groq.com](https://console.groq.com)
-2. Crea account gratuito → **API Keys** → **Create API Key**
-3. Copia la key `gsk_...`
+  "motion_whitelist": [
+    "binary_sensor.sensore_movimento_ingresso",
+    "binary_sensor.sensore_movimento_soggiorno",
+    "binary_sensor.sensore_movimento_cucina"
+  ],
 
-**Cerebras**
-1. Vai su [cloud.cerebras.ai](https://cloud.cerebras.ai)
-2. Crea account → **API Keys** → **Create**
-3. Copia la key `csk-...`
-4. Modelli disponibili: `llama3.1-8b` (veloce) · `gpt-oss-120b` (potente)
+  "motion_blacklist": [
+    "binary_sensor.telefono_mario_motion",
+    "binary_sensor.sensore_test"
+  ],
 
-**DeepSeek**
-1. Vai su [platform.deepseek.com](https://platform.deepseek.com)
-2. Crea account (ricevi $5 crediti) → **API Keys** → **Create new secret key**
+  "contact_blacklist": [
+    "binary_sensor.porta_garage"
+  ],
 
-### Verificare i provider
+  "proximity_sensors": {
+    "person.mario": {
+      "sensor": "sensor.casa_telefono_mario_distance",
+      "threshold_m": 100,
+      "stale_check": true
+    }
+  },
 
-Scrivi `/providers` su Telegram per testare tutti i provider in tempo reale:
+  "energy_sensors": {
+    "produzione_fv":   "sensor.fv_tot",
+    "consumo_casa":    "sensor.consumi_giornalieri",
+    "rete_enel":       "sensor.enel_giornaliero",
+    "batteria_wh":     "sensor.batteria_wh"
+  },
 
+  "appliances": {
+    "lavatrice": {
+      "enabled": true,
+      "name": "Lavatrice",
+      "icon": "🫧",
+      "mode": "power",
+      "power_sensor": "sensor.presa_lavatrice_power",
+      "power_on_threshold": 50,
+      "power_off_threshold": 10,
+      "min_cycle_minutes": 20,
+      "max_idle_minutes": 5,
+      "notify_on_start": false
+    },
+    "lavastoviglie": {
+      "enabled": true,
+      "name": "Lavastoviglie",
+      "icon": "🍽️",
+      "mode": "smart",
+      "state_sensor": "sensor.lavastoviglie_operation_state",
+      "running_states": ["Run"],
+      "done_states": ["Finished", "Ready"],
+      "notify_on_start": false
+    }
+  }
+}
 ```
-🤖 Test AI Provider
 
-🥇 ✅ Gemini (Google) 🆓
-   gemini-2.0-flash · Risposta: OK
+**In più rispetto alla BASE:**
+- ✅ **Prossimità GPS** — usa il sensore distanza del telefono per sapere esattamente quando sei vicino a casa, evitando falsi allarmi da GPS che salta
+- ✅ **Sensori contatto** — porte e finestre monitorate (con blacklist per quelle sempre aperte)
+- ✅ **Monitor lavatrice** — notifica quando finisce
+- ✅ **Monitor lavastoviglie** — notifica quando finisce
+- ✅ **Analisi energetica** — confronto consumi giornalieri
 
-🥈 ✅ Groq/Llama 🆓
-   llama-3.3-70b-versatile · Risposta: OK
+### Spiegazione dei campi importanti
 
-🥉 ❌ Cerebras 🆓
-   llama3.1-8b
-   ⚠️ API key non valida — controlla le Opzioni addon
+#### `person_blacklist`
+Persone da ignorare completamente — utile per entità "fantasma" create da MQTT o altri sistemi.
+
+#### `motion_blacklist`
+Sensori di movimento da ignorare — tipicamente il sensore del telefono (si attiva sempre), sensori di test o telecamere PTZ.
+
+#### `contact_blacklist`
+Porte/finestre da NON monitorare — es. garage sempre aperto, finestra tenuta aperta di proposito.
+
+#### `proximity_sensors`
+Il sensore distanza GPS più preciso. Se non ce l'hai, HomeMind usa solo il GPS nativo di HA.
+
+| Campo | Descrizione | Default |
+|-------|-------------|---------|
+| `sensor` | Entity ID del sensore distanza | — |
+| `threshold_m` | Distanza in metri per "a casa" | 100 |
+| `stale_check` | `true` = smette di considerare il sensore se i dati sono vecchi, `false` = usa sempre l'ultimo valore anche se vecchio | true |
+
+> **`stale_check: false`** è utile se il tuo telefono non aggiorna spesso il GPS — HomeMind userà l'ultimo valore valido anche dopo ore.
+
+#### Modalità elettrodomestici
+
+**`mode: "power"`** — per elettrodomestici su presa smart con misura di potenza:
+```json
+"power_sensor": "sensor.presa_lavatrice_power",
+"power_on_threshold": 50,    ← inizia ciclo quando supera 50W
+"power_off_threshold": 10,   ← fine ciclo quando scende sotto 10W
+"min_cycle_minutes": 20,     ← ciclo minimo valido (evita falsi start)
+"max_idle_minutes": 5        ← tolleranza pause durante il ciclo
+```
+
+**`mode: "smart"`** — per elettrodomestici con sensore stato nativo (es. Bosch Home Connect):
+```json
+"state_sensor": "sensor.lavastoviglie_operation_state",
+"running_states": ["Run"],
+"done_states": ["Finished", "Ready"]
 ```
 
 ---
 
-## 💬 Bot Telegram — tutti i comandi
+## 🔴 Configurazione AVANZATA — Tutto attivo
 
-### Generali
+Aggiunge: ottimizzatore solare con auto-avvio, sensori W istantanei, più elettrodomestici.
 
+```json
+{
+  "language": "it",
+
+  "person_whitelist": [
+    "person.mario",
+    "person.lucia"
+  ],
+
+  "person_blacklist": [
+    "person.mqtt_finto"
+  ],
+
+  "motion_whitelist": [
+    "binary_sensor.sensore_movimento_ingresso",
+    "binary_sensor.sensore_movimento_soggiorno",
+    "binary_sensor.sensore_movimento_cucina",
+    "binary_sensor.sensore_movimento_garage"
+  ],
+
+  "motion_blacklist": [
+    "binary_sensor.telefono_mario_motion",
+    "binary_sensor.sensore_test"
+  ],
+
+  "contact_blacklist": [
+    "binary_sensor.porta_garage"
+  ],
+
+  "proximity_sensors": {
+    "person.mario": {
+      "sensor": "sensor.casa_telefono_mario_distance",
+      "threshold_m": 100,
+      "stale_check": false
+    }
+  },
+
+  "energy_sensors": {
+    "produzione_fv":   "sensor.fv_tot",
+    "consumo_casa":    "sensor.consumi_giornalieri",
+    "rete_enel":       "sensor.enel_giornaliero",
+    "batteria_wh":     "sensor.batteria_wh",
+    "produzione_fv_w": "sensor.fotovoltaica_totale_w",
+    "consumo_casa_w":  "sensor.inverter_ac_output_power",
+    "rete_enel_w":     "sensor.shelly_channel_1_power"
+  },
+
+  "appliances": {
+    "lavatrice": {
+      "enabled": true,
+      "name": "Lavatrice",
+      "icon": "🫧",
+      "mode": "power",
+      "power_sensor": "sensor.presa_lavatrice_power",
+      "power_on_threshold": 50,
+      "power_off_threshold": 10,
+      "min_cycle_minutes": 20,
+      "max_idle_minutes": 5,
+      "notify_on_start": false
+    },
+    "lavastoviglie": {
+      "enabled": true,
+      "name": "Lavastoviglie",
+      "icon": "🍽️",
+      "mode": "smart",
+      "state_sensor": "sensor.lavastoviglie_operation_state",
+      "running_states": ["Run"],
+      "done_states": ["Finished", "Ready"],
+      "notify_on_start": false
+    },
+    "asciugatrice": {
+      "enabled": true,
+      "name": "Asciugatrice",
+      "icon": "🌀",
+      "mode": "power",
+      "power_sensor": "sensor.presa_asciugatrice_power",
+      "power_on_threshold": 100,
+      "power_off_threshold": 15,
+      "min_cycle_minutes": 25,
+      "max_idle_minutes": 8,
+      "notify_on_start": false
+    },
+    "forno": {
+      "enabled": true,
+      "name": "Forno",
+      "icon": "🔥",
+      "mode": "power",
+      "power_sensor": "sensor.presa_forno_power",
+      "power_on_threshold": 500,
+      "power_off_threshold": 30,
+      "min_cycle_minutes": 10,
+      "max_idle_minutes": 3,
+      "notify_on_start": true
+    }
+  },
+
+  "solar_optimizer": {
+    "enabled": true,
+    "min_surplus_w": 500,
+    "confirm_minutes": 5,
+    "cooldown_hours": 2,
+    "appliances": {
+      "lavatrice": {
+        "enabled": true,
+        "switch": "switch.presa_lavatrice",
+        "min_surplus_w": 800,
+        "auto_start": false
+      },
+      "lavastoviglie": {
+        "enabled": true,
+        "switch": null,
+        "min_surplus_w": 500,
+        "auto_start": false
+      },
+      "pompa_piscina": {
+        "enabled": true,
+        "switch": "switch.pompa_piscina",
+        "min_surplus_w": 400,
+        "auto_start": true
+      }
+    }
+  }
+}
+```
+
+**In più rispetto alla MEDIA:**
+- ✅ **Sensori W istantanei** — calcolo surplus solare preciso al watt (nessuna derivata)
+- ✅ **Ottimizzatore solare attivo** — ti avvisa quando c'è surplus FV
+- ✅ **Conferma via Telegram** — rispondi "sì" per avviare
+- ✅ **Auto-start** per dispositivi come pompe (partono da soli, senza chiedere)
+- ✅ **Asciugatrice e forno** monitorati
+
+---
+
+## 📦 Moduli e funzionalità
+
+### 🔒 Sicurezza & Allarme
+
+HomeMind gestisce l'allarme in modo completamente automatico.
+
+**Armo automatico:**
+```
+Tutti escono di casa → HomeMind aspetta 30 secondi → Arma l'allarme
+```
+
+**Disarmo automatico:**
+```
+Qualcuno si avvicina a casa → HomeMind rileva → Disarma prima che entri
+```
+
+**Rilevamento intrusione:**
+```
+Allarme armato + movimento rilevato → Notifica immediata su Telegram
+```
+
+**Sensori contatto:**
+```
+Porta/finestra aperta con allarme armato → Avviso
+Porta aperta durante armamento → Avviso (non blocca l'armamento)
+```
+
+> Le porte in `contact_blacklist` vengono ignorate completamente — utile per porte che restano spesso aperte.
+
+---
+
+### 👤 Presenza & Prossimità GPS
+
+HomeMind sa sempre chi è in casa usando due livelli di rilevamento:
+
+**Livello 1 — GPS nativo HA:** `person.mario` = home / not_home
+
+**Livello 2 — Sensore distanza (opzionale):** Distanza precisa in metri dal telefono
+
+Quando hai il sensore distanza configurato, **la distanza vince sempre sul GPS**. Questo risolve il problema classico del GPS che "salta" e arma l'allarme mentre sei ancora in casa.
+
+```
+Sensore dice 45m → sei a casa (anche se GPS dice "not_home")
+Sensore dice 1200m → sei fuori (anche se GPS dice "home")
+```
+
+**`stale_check`:** controlla se i dati del sensore sono freschi.
+- `true` (consigliato per chi ha buon GPS) → dopo 5 minuti senza aggiornamento torna al GPS
+- `false` (consigliato se il GPS del telefono è pigro) → usa sempre l'ultimo valore valido
+
+---
+
+### ⚡ Monitor Elettrodomestici
+
+HomeMind sa quando gli elettrodomestici partono e finiscono, e ti avvisa su Telegram.
+
+**Notifica fine ciclo:**
+```
+Lavatrice finita → "🫧 Lavatrice terminata! Ciclo durato 1h 23min."
+```
+
+**Due modalità:**
+
+**POWER** — per prese smart con misura potenza (Zigbee, Shelly, Tasmota):
+```json
+"mode": "power",
+"power_sensor": "sensor.presa_lavatrice_power",
+"power_on_threshold": 50,    ← sopra = sta girando
+"power_off_threshold": 10,   ← sotto = ha finito
+"min_cycle_minutes": 20,     ← ignora accensioni brevi (es. standby)
+"max_idle_minutes": 5        ← tolleranza per pause di centrifuga
+```
+
+**SMART** — per elettrodomestici connessi (Bosch, Siemens, Miele via Home Connect):
+```json
+"mode": "smart",
+"state_sensor": "sensor.lavastoviglie_operation_state",
+"running_states": ["Run"],
+"done_states": ["Finished", "Ready"]
+```
+
+**`notify_on_start: true`** → ricevi notifica anche all'avvio (default: false)
+
+---
+
+### ☀️ Ottimizzatore Solare
+
+HomeMind monitora il surplus fotovoltaico in tempo reale e ti suggerisce quando è il momento migliore per avviare gli elettrodomestici pesanti.
+
+**Come funziona:**
+```
+Ogni 2 minuti controlla:
+  produzione FV - consumo casa = surplus
+
+Se surplus ≥ soglia per X minuti consecutivi:
+  → Notifica Telegram con l'elettrodomestico suggerito
+
+Tu rispondi "sì" → HomeMind accende la presa (se configurata)
+```
+
+**Parametri principali:**
+
+| Campo | Descrizione | Default |
+|-------|-------------|---------|
+| `enabled` | Attiva/disattiva tutto | false |
+| `min_surplus_w` | Surplus minimo generale in Watt | 500 |
+| `confirm_minutes` | Minuti di surplus stabile prima di notificare | 5 |
+| `cooldown_hours` | Ore minime tra una notifica e l'altra | 2 |
+
+**Parametri per singolo elettrodomestico:**
+
+| Campo | Descrizione |
+|-------|-------------|
+| `enabled` | Includi questo elettrodomestico |
+| `switch` | Entity ID presa smart da accendere (null = solo notifica) |
+| `min_surplus_w` | Soglia surplus specifica per questo elettrodomestico |
+| `auto_start` | `true` = parte da solo, `false` = chiede conferma |
+
+**Sensori W istantanei (raccomandati):**
+Se hai sensori che misurano Watt in tempo reale (inverter, Shelly EM), aggiungili nella sezione `energy_sensors` con suffisso `_w`:
+```json
+"produzione_fv_w": "sensor.fotovoltaica_totale",
+"consumo_casa_w":  "sensor.inverter_ac_output_power",
+"rete_enel_w":     "sensor.shelly_channel_1_power"
+```
+Senza di essi HomeMind usa i sensori kWh giornalieri con calcolo a derivata (meno preciso ma funziona).
+
+**Comandi Telegram:**
+- `/solare` — mostra surplus attuale, elettrodomestici configurati e conferme in attesa
+
+---
+
+### 📊 Analisi Energetica
+
+Ogni mattina alle 7:15 (dopo il briefing) HomeMind confronta i consumi di ieri con la media storica degli ultimi 30 giorni. Se trova anomalie te lo dice con una spiegazione AI.
+
+**Esempio notifica:**
+```
+⚡ Analisi energetica ieri
+
+☀️ Produzione FV: 12.4 kWh (+23% rispetto alla media)
+🏠 Consumo casa: 18.2 kWh (+45% ⚠️ anomalia)
+🔌 Prelievo rete: 8.1 kWh
+
+💡 Il consumo di ieri è stato insolitamente alto.
+   Possibile causa: condizionatore acceso tutto il giorno
+   o elettrodomestico rimasto in standby inutilmente.
+```
+
+**Sensori supportati:**
+```json
+"energy_sensors": {
+  "produzione_fv":   "sensor.nome_sensore_kwh_fv",
+  "consumo_casa":    "sensor.nome_sensore_kwh_casa",
+  "rete_enel":       "sensor.nome_sensore_kwh_enel",
+  "batteria_wh":     "sensor.nome_sensore_batteria"
+}
+```
+
+---
+
+### 🌅 Briefing Mattutino
+
+Ogni mattina alle 7:00 HomeMind ti manda un riepilogo completo:
+
+```
+🌅 Buongiorno Mario!
+
+🌤️ Meteo: Sole, 18°C - massima 24°C
+   Nessuna pioggia prevista oggi.
+
+⚡ Energia ieri:
+   ☀️ Prodotto: 11.2 kWh
+   🏠 Consumato: 7.8 kWh
+   ✅ Autosufficienza: 100%
+
+🗑️ Spazzatura stasera: Plastica e metallo
+
+💡 Consiglio del giorno:
+   Ottima giornata di sole prevista — 
+   considera di avviare la lavatrice tra le 11 e le 14.
+```
+
+**Si attiva automaticamente** senza configurazione. Usa i sensori energetici se configurati.
+
+**Per riceverlo subito:** scrivi `/briefing` su Telegram.
+
+---
+
+### 🗑️ Calendario Spazzatura
+
+HomeMind ti ricorda ogni sera alle 12:00 (mezzanotte) cosa mettere fuori per il giorno dopo.
+
+**Per attivarlo:**
+1. Carica il file PDF del calendario raccolta nel percorso:
+   ```
+   /config/homemind_patches/spazzatura.pdf
+   ```
+2. Scrivi `/ricarica_spazzatura` su Telegram
+3. HomeMind legge il PDF con AI e crea il calendario automaticamente
+
+**Oppure** crea manualmente il file JSON:
+```
+/config/homemind_patches/spazzatura_calendario.json
+```
+
+**Comando:** `/spazzatura` — mostra raccolta prossimi 7 giorni.
+
+---
+
+### 🤖 Controllo AI via Telegram
+
+Puoi scrivere qualsiasi cosa in italiano e HomeMind capisce e risponde. Non servono comandi precisi.
+
+**Esempi di controllo:**
+```
+"Accendi la luce cucina"
+"Spegni tutte le luci"
+"Metti la temperatura a 21 gradi"
+"Arma l'allarme"
+"Disarma l'allarme"
+"Apri le tapparelle"
+```
+
+**Esempi di domande:**
+```
+"Cosa succede in casa?"
+"Chi è a casa?"
+"Quanta energia ho prodotto oggi?"
+"La lavatrice sta girando?"
+"Quando è tornato Mario ieri?"
+```
+
+**AI con fallback automatico:**
+HomeMind usa fino a 3 provider AI in cascata — se uno non risponde passa automaticamente al prossimo:
+1. Gemini (Google) — gratuito
+2. Groq/Llama — gratuito
+3. Cerebras — gratuito
+
+---
+
+## 📱 Comandi Telegram
+
+Scrivi questi comandi direttamente nella chat con il bot:
+
+### Info Casa
 | Comando | Descrizione |
 |---------|-------------|
-| `/start` · `ciao` | Benvenuto |
-| `/comandi` · `/commands` | Lista comandi |
-| `/stato` · `/status` | Stato completo della casa |
-| `/briefing` · `buongiorno` | Briefing AI immediato |
-| `/providers` | Test live di tutti i provider AI |
-| `/lingua it` · `/lingua en` | Cambia lingua |
+| `/stato` | Stato completo: persone, sensori, allarme |
+| `/allarme` | Stato attuale dell'allarme |
+| `/energia` | Produzione FV e consumi di oggi |
+| `/ieri` | Produzione e consumi di ieri |
+| `/solare` | Surplus FV in tempo reale e ottimizzatore |
 
-### Sicurezza e presenza
-
+### Elettrodomestici
 | Comando | Descrizione |
 |---------|-------------|
-| `/allarme` · `/alarm` | Stato allarme attuale |
-| `chi è in casa?` | Persone presenti |
-| `dove si trova [nome]?` | Posizione di una persona |
-
-### Energia
-
-| Comando | Descrizione |
-|---------|-------------|
-| `/energia` · `/energy` | Report energia oggi |
-| `/ieri` · `/yesterday` | Report energia ieri |
-| `analizza energia` | Analisi AI completa |
-
-### Card Lovelace
-
-| Esempio | Cosa genera |
-|---------|-------------|
-| `crea card mushroom: sensor.temperatura_soggiorno` | Card moderna per il sensore |
-| `crea card gauge: sensor.umidita` | Indicatore circolare |
-| `crea card lights` | Card per tutte le luci |
-| `crea card energia` | Card fotovoltaico/batteria |
-| `crea card security` | Card sicurezza con movimento |
-| `crea card tile: tutte le temperature` | Card per tutti i termometri |
-
-### Automazioni
-
-| Comando | Descrizione |
-|---------|-------------|
-| `/automazioni` · `/automations` | Lista automazioni |
-| `crea automazione per...` | Genera YAML automazione |
+| `/elettrodomestici` | Stato di lavatrice, lavastoviglie ecc. |
+| `lavatrice` | Stato rapido lavatrice |
+| `lavastoviglie` | Stato rapido lavastoviglie |
 
 ### Spazzatura
-
 | Comando | Descrizione |
 |---------|-------------|
-| `/spazzatura` · `/trash` | Prossima raccolta |
-| `/ricarica_spazzatura` | Ricarica calendario dal PDF |
+| `/spazzatura` | Raccolta prossimi 7 giorni |
+| `/ricarica_spazzatura` | Rileggi PDF calendario |
 
-### Manutenzione
-
+### Sistema
 | Comando | Descrizione |
 |---------|-------------|
-| `/aggiornamenti` · `/updates` | Controlla aggiornamenti HA |
-| `/riparazioni` · `/repairs` | Problemi ufficiali HA |
-
-### Chat libera — esempi
-
-```
-Quante luci sono accese?
-Qual è la temperatura in soggiorno?
-C'è qualcosa di anomalo nei miei sensori?
-Analizza i consumi di ieri
-Dove si trova Agostino?
-Suggerisci come migliorare la configurazione HA
-```
-
----
-
-## 👤 Filtri persona e sensori
-
-### Configurazione base (nelle Opzioni addon)
-
-```yaml
-person_blacklist: "person.mqtt,person.guest"
-motion_blacklist: "binary_sensor.telefono_motion"
-```
-
-### Configurazione avanzata — `person_config.json`
-
-Crea `/config/homemind_patches/person_config.json` per un controllo totale:
-
-```json
-{
-  "person_whitelist": [
-    "person.agostino",
-    "person.rosa"
-  ],
-  "person_blacklist": [
-    "person.mqtt"
-  ],
-  "motion_whitelist": [
-    "binary_sensor.0x000d6ffffe1a246d_occupancy",
-    "binary_sensor.0x00158d000224fa71_occupancy",
-    "binary_sensor.0x00158d000224fb57_occupancy",
-    "binary_sensor.0x00158d0001ae9a1b_occupancy"
-  ],
-  "motion_blacklist": [
-    "binary_sensor.sm_s931b_motion",
-    "binary_sensor.lc_motion_alarm",
-    "binary_sensor.test_sensore_presenza"
-  ],
-  "contact_blacklist": [
-    "binary_sensor.contact_sensor_porta",
-    "binary_sensor.lock_pro_3f_porta"
-  ],
-  "proximity_sensors": {
-    "person.agostino": {
-      "sensor": "sensor.casa_sm_s931b_distance",
-      "threshold_m": 100
-    }
-  },
-  "energy_sensors": {
-    "produzione_fv": "sensor.fv_tot",
-    "consumo_casa":  "sensor.daily_energy_combined",
-    "rete_enel":     "sensor.enel",
-    "batteria_wh":   "sensor.batteria_wh"
-  },
-  "language": "it"
-}
-```
-
-### Spiegazione di ogni campo
-
-| Campo | Comportamento |
-|-------|---------------|
-| `person_whitelist` | **Solo** queste persone → sicurezza. Se vuoto = auto-rileva tutto |
-| `person_blacklist` | Queste persone vengono **sempre ignorate** |
-| `motion_whitelist` | **Solo** questi sensori per l'antifurto. Se vuoto = tutti |
-| `motion_blacklist` | Questi sensori vengono **sempre ignorati** (es. smartphone) |
-| `contact_blacklist` | Questi sensori contatto/porta esclusi dall'allarme |
-| `proximity_sensors` | Sensore distanza casa per sapere se stai arrivando/partendo |
-| `energy_sensors` | Mappa i tuoi sensori ai ruoli energia di HomeMind |
-| `language` | `"it"` o `"en"` — lingua dell'interfaccia |
-
-### Casi d'uso tipici
-
-**Problema: il sensore del telefono triggera l'allarme**
-```json
-{ "motion_blacklist": ["binary_sensor.sm_s931b_motion"] }
-```
-
-**Problema: persona virtuale/MQTT viene rilevata**
-```json
-{ "person_blacklist": ["person.mqtt"] }
-```
-
-**Voglio usare SOLO i sensori fisici per la sicurezza**
-```json
-{
-  "motion_whitelist": [
-    "binary_sensor.pir_ingresso",
-    "binary_sensor.pir_salone",
-    "binary_sensor.pir_corridoio"
-  ]
-}
-```
-
-**Logica antifurto automatica:**
-```
-Tutti escono          → HomeMind arma l'allarme
-Qualcuno rientra      → HomeMind disarma (dopo 20s anti-rimbalzo)
-Tutti via + movimento → ALLARME (servono ≥2 sensori entro 45s per evitare falsi positivi)
-Contatti aperti       → Notifica Telegram prima di armare
-```
-
----
-
-## 🎨 Generare card Lovelace
-
-### Stili disponibili
-
-| Stile | Sinonimo IT | Sinonimo EN | Richiede HACS |
-|-------|-------------|-------------|----------------|
-| `mushroom` | `sicurezza`, `luci` | `lights`, `security` | ✅ Sì |
-| `gauge` | `grafico`, `termometro` | `chart`, `graph` | ❌ No |
-| `tile` | `minimal` | `minimal` | ❌ No |
-| `bubble` | — | — | ✅ Sì |
-| `energia` | — | `energy` | ❌ No |
-
-### Esempi di generazione
-
-```
-# Sensore singolo con stile gauge
-crea card gauge: sensor.temperatura_soggiorno
-
-# Tutte le luci con stile mushroom
-crea card lights
-
-# Card energia fotovoltaico
-crea card energia
-
-# Tutte le temperature (HomeMind le cerca da solo)
-crea card tile: tutte le temperature
-
-# Con YAML personalizzato
-crea card mushroom:
-  entity: sensor.temperatura_soggiorno
-  name: Soggiorno
-  icon: mdi:sofa
-
-# Card sicurezza completa
-crea card security
-```
-
-### Come installare il YAML in HA
-
-1. Copia il blocco YAML dalla risposta Telegram
-2. In HA → **Dashboard** → icona matita → **Modifica**
-3. **+ Aggiungi card** → **Manuale** → incolla il YAML
-4. Salva
-
-> Per mushroom e bubble: installare prima i plugin HACS
-> - [mushroom](https://github.com/piitaya/lovelace-mushroom)
-> - [bubble-card](https://github.com/Clooos/Bubble-Card)
-
----
-
-## 🗑️ Calendario spazzatura
-
-### Caricare il PDF
-
-**Metodo 1 — Browser (consigliato)**
-1. Apri `http://IP-HA:8099/spazzatura`
-2. Trascina il PDF nel riquadro
-3. HomeMind lo legge con l'AI e salva il calendario
-
-**Metodo 2 — File diretto**
-1. Copia il PDF in `/config/homemind_patches/spazzatura.pdf`
-2. Scrivi `/ricarica_spazzatura` su Telegram
-
-### Formato notifica serale
-
-Ogni sera all'orario configurato (default 20:00):
-
-```
-🗑️ Domani si raccoglie:
-   ♻️ Plastica
-   🔩 Metalli
-```
-
-### Formato JSON manuale (avanzato)
-
-Se il PDF non viene letto correttamente, crea manualmente:
-`/config/homemind_patches/spazzatura_calendario.json`
-
-```json
-{
-  "2026-03-09": ["Organico"],
-  "2026-03-11": ["Carta", "Cartone"],
-  "2026-03-13": ["Plastica", "Metalli"],
-  "2026-03-16": ["Indifferenziato"],
-  "2026-03-18": ["Vetro"],
-  "2026-03-20": ["Ingombranti"]
-}
-```
-
-Formato data: `YYYY-MM-DD`. Tipi riconosciuti con emoji:
-`Plastica` ♻️ · `Organico` 🌿 · `Carta` 📄 · `Cartone` 📦 · `Vetro` 🍶 · `Metalli` 🔩 · `Indifferenziato` 🗑️ · `Ingombranti` 🛋️ · `RAEE` 💻
-
----
-
-## 🌍 Lingua
-
-```
-/lingua it    → Passa all'italiano
-/lingua en    → Switch to English
-/lingua       → Mostra lingua attuale
-```
-
-La lingua viene salvata in `person_config.json` e persiste dopo i riavvii.
-
----
-
-## 📚 Esempi pratici
-
-### Primo avvio
-
-```
-Tu:        /start
-HomeMind:  Ciao! HomeMind attivo 🧠
-           1596 entità caricate, 2 persone trovate.
-           Scrivi qualcosa o usa i pulsanti rapidi!
-```
-
-### Stato completo della casa
-
-```
-Tu:        dimmi lo stato della casa
-
-HomeMind:  🏠 Casa occupata: Agostino (casa), Rosa (fuori)
-           🔒 Allarme: Disarmato
-           💡 Luci accese: soggiorno, cucina (2 totali)
-           🌡️ Temperatura media: 21.5°C
-           ⚡ FV: 2.4 kW | Consumo: 1.1 kW | Batteria: 78%
-           🤖 via Gemini (Google) 🆓
-```
-
-### Generare una card
-
-```
-Tu:        crea card gauge: sensor.temperatura_soggiorno
-
-HomeMind:  ✅ Card generata:
-
-           type: gauge
-           entity: sensor.temperatura_soggiorno
-           name: Temperatura Soggiorno
-           min: 0
-           max: 40
-           severity:
-             green: 18
-             yellow: 26
-             red: 30
-
-           🤖 via Gemini (Google) 🆓
-```
-
-### Verifica provider AI
-
-```
-Tu:        /providers
-
-HomeMind:  🤖 Test AI Provider
-
-           🥇 ✅ Gemini (Google) 🆓
-              gemini-2.0-flash · Risposta: OK
-
-           🥈 ✅ Groq/Llama 🆓
-              llama-3.3-70b-versatile · Risposta: OK
-
-           🥉 ✅ Cerebras 🆓
-              llama3.1-8b · Risposta: OK
-
-           ⚡ Attivo ora: Gemini (Google) 🆓
-```
-
-### Cambio lingua
-
-```
-Tu:        /lingua en
-HomeMind:  ✅ Language set to English
-
-Tu:        what lights are on?
-HomeMind:  💡 Lights on: Living room, Kitchen
-           🤖 via Groq/Llama 🆓
-```
-
----
-
-## 📁 Struttura file
-
-```
-/config/homemind_patches/           ← Cartella configurazione (creata automaticamente)
-├── person_config.json              ← Filtri, energie, lingua (opzionale, vedi sopra)
-├── spazzatura.pdf                  ← PDF calendario raccolta rifiuti
-├── spazzatura_calendario.json      ← Calendario estratto (auto-generato)
-└── *.yaml                          ← Patch configurazione HA (generate da HomeMind)
-
-/data/options.json                  ← Opzioni add-on (gestite da HA)
-```
-
----
-
-## ❓ FAQ
-
-**Il bot non risponde**
-→ Verifica `telegram_bot_token` e `telegram_chat_id` nelle Opzioni.
-→ Assicurati che il bot sia attivo scrivendo `/start` a @BotFather.
-→ Il `telegram_chat_id` si ottiene scrivendo a [@userinfobot](https://t.me/userinfobot).
-
-**"Nessun provider AI disponibile"**
-→ Inserisci almeno una API key nelle Opzioni.
-→ Usa `/providers` per vedere quale provider ha problemi.
-
-**L'allarme si arma/disarma da solo**
-→ È il comportamento corretto. HomeMind arma quando tutti escono.
-→ Per disabilitare: aggiungi le tue persone in `person_blacklist`.
-
-**`person.mqtt` viene rilevato come persona**
-→ Aggiungilo in `person_blacklist` nelle Opzioni oppure in `person_config.json`.
-
-**La card generata non funziona**
-→ Controlla che l'`entity_id` esista (HA → Strumenti di sviluppo → Stati).
-→ Per mushroom/bubble installa prima i plugin HACS.
-
-**Il PDF spazzatura non viene letto**
-→ Assicurati che il PDF non sia protetto da password.
-→ Riprova con `/ricarica_spazzatura`.
-→ In alternativa crea manualmente il file JSON.
-
-**HomeMind usa sempre Groq invece di Gemini**
-→ Gemini ha raggiunto la quota giornaliera (1.500 req). Si resetta il giorno dopo.
-→ Usa `/providers` per vedere l'errore esatto.
-
----
-
----
-
-# 🇬🇧 English
-
-HomeMind is a **Home Assistant add-on** that brings an AI agent to your home. It monitors sensors, anomalies, and security, and replies to you on **Telegram** in natural language. It generates Lovelace cards, analyzes energy, manages your alarm, and sends you a morning briefing every day.
-
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Installation](#-installation-1)
-- [Configuration](#-configuration-1)
-- [AI Providers](#-ai-providers--which-one-to-choose)
-- [Telegram Bot — Commands](#-telegram-bot--all-commands)
-- [Person & Sensor Filters](#-person--sensor-filters)
-- [Generating Lovelace Cards](#-generating-lovelace-cards)
-- [Waste Collection Calendar](#-waste-collection-calendar)
-- [Language](#-language)
-- [Practical Examples](#-practical-examples)
-- [File Structure](#-file-structure-1)
-- [FAQ](#-faq-1)
-
----
-
-## ✨ Features
-
-| Feature | Description |
+| `/briefing` | Ricevi subito il briefing mattutino |
+| `/aggiornamenti` | Controlla aggiornamenti disponibili HA |
+| `/riparazioni` | Problemi segnalati da Home Assistant |
+| `/providers` | Provider AI attivi e catena fallback |
+| `/comandi` | Questa lista |
+
+### Lingua
+| Comando | Descrizione |
 |---------|-------------|
-| 💬 **AI Chat** | Ask questions about your home in natural language via Telegram |
-| 🔒 **Security** | Auto arm/disarm alarm, motion notifications, welcome-home messages |
-| ⚡ **Energy** | Solar, battery, grid analysis, daily/yesterday reports |
-| 🎨 **Lovelace Cards** | Generate ready-to-use YAML cards (mushroom, gauge, bubble, tile) |
-| 🔍 **Anomaly Detection** | Detects sensors with impossible values, forgotten lights, etc. |
-| 🛠️ **YAML Patches** | Generates and applies HA config patches to fix anomalies |
-| 🌅 **Morning Briefing** | AI report at 07:00 with energy, weather, trash, nightly anomalies |
-| 🗑️ **Waste Collection** | Upload municipal PDF calendar → automatic evening reminders |
-| 🔄 **Update Checker** | Checks HA and add-on updates every 6 hours |
-| 🩺 **Repairs** | Checks official HA issues every 4 hours |
-| 🤖 **Multi-provider AI** | Auto-fallback: Gemini → Groq → Cerebras → DeepSeek → Claude → OpenAI |
-| 🌍 **Multilingual** | Italian and English, switch on the fly with `/lang en` |
-| 📊 **Web Dashboard** | Chat interface at `http://IP:8099` with quick action buttons |
+| `/lingua it` | Passa all'italiano |
+| `/lingua en` | Switch to English |
 
 ---
 
-## 🚀 Installation
+## ❓ FAQ & Problemi comuni
 
-### 1. Add the repository
+**L'allarme si arma mentre sono ancora in casa**
+→ Aggiungi il sensore di prossimità GPS in `proximity_sensors`. Con il sensore distanza HomeMind sa esattamente dove sei.
 
-In Home Assistant: **Settings → Add-ons → Store → ⋮ → Repositories**
+**HomeMind mi considera assente anche se sono in casa**
+→ Controlla che la tua entità `person.nome` sia nella `person_whitelist`. Verifica in HA che lo stato sia "home".
 
-Add your GitHub URL:
-```
-https://github.com/YOUR_USER/homemind-orchestrator
-```
+**Il sensore movimento del telefono fa scattare l'allarme**
+→ Aggiungi `binary_sensor.nomeTelefono_motion` nella `motion_blacklist`.
 
-### 2. Install
+**La lavatrice notifica che ha finito troppo presto / tardi**
+→ Aggiusta `min_cycle_minutes` (aumenta se notifica troppo presto) e `max_idle_minutes` (aumenta se notifica prima della fine reale).
 
-Search for **HomeMind Orchestrator** and click **Install**.
+**Il surplus solare non supera mai la soglia**
+→ Abbassa `min_surplus_w` nel `solar_optimizer`. Con pannelli da 3kW e consumi normali, 300-400W è una soglia realistica nei periodi nuvolosi.
 
-### 3. Minimum configuration
+**Non ricevo notifiche Telegram**
+→ Verifica che il `telegram_chat_id` nella configurazione dell'add-on sia corretto. Usa @userinfobot per trovarlo.
 
-**Settings → Add-ons → HomeMind → Configuration**:
+**HomeMind riporta "Finestra bagno sempre aperta"**
+→ Aggiungi quel sensore nella `contact_blacklist` per non ricevere avvisi su aperture intenzionali.
 
-```yaml
-gemini_api_key: "AIzaSy..."
-telegram_bot_token: "123456:ABC..."
-telegram_chat_id: "360307101"
-```
-
-### 4. Start
-
-Click **Start**. Within 10 seconds you'll receive your first Telegram message.
-
----
-
-## ⚙️ Configuration
-
-### AI Providers
-
-```yaml
-gemini_api_key: "AIzaSy..."         # 🟦 Google Gemini — FREE 1500/day
-gemini_model: "gemini-2.0-flash"
-
-groq_api_key: "gsk_..."             # ⚡ Groq — FREE 14400/day
-groq_model: "llama-3.3-70b-versatile"
-
-cerebras_api_key: "csk-..."         # 🧠 Cerebras — FREE 1M tokens/min
-cerebras_model: "llama3.1-8b"       # or: gpt-oss-120b
-
-deepseek_api_key: "sk-..."          # 🔵 DeepSeek — nearly free
-deepseek_model: "deepseek-chat"
-
-claude_api_key: "sk-ant-..."        # 🟠 Claude — paid
-claude_model: "claude-3-5-haiku-20241022"
-
-openai_api_key: "sk-..."            # 🟢 OpenAI — paid
-openai_model: "gpt-4o-mini"
-
-ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
-```
-
-### Telegram
-
-```yaml
-telegram_bot_token: "..."    # From @BotFather
-telegram_chat_id: "..."      # From @userinfobot
-```
-
-### Filters
-
-```yaml
-person_blacklist: "person.mqtt"
-motion_blacklist: "binary_sensor.phone_motion"
-```
-
----
-
-## 🤖 AI Providers — Which One to Choose?
-
-> Recommendation: activate at least **Gemini + Groq**. HomeMind switches automatically if one fails.
-
-| Provider | Cost | Free Limit | Link |
-|----------|------|------------|------|
-| 🟦 **Google Gemini** | Free | 1,500 req/day | [aistudio.google.com](https://aistudio.google.com) |
-| ⚡ **Groq** | Free | 14,400 req/day | [console.groq.com](https://console.groq.com) |
-| 🧠 **Cerebras** | Free | 1M tokens/min | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
-| 🔵 **DeepSeek** | ~Free | $0.014/1M tokens | [platform.deepseek.com](https://platform.deepseek.com) |
-| 🟠 **Claude** | Paid | — | [console.anthropic.com](https://console.anthropic.com) |
-| 🟢 **OpenAI** | Paid | — | [platform.openai.com](https://platform.openai.com) |
-
-### How to get free API keys
-
-**Gemini** → [aistudio.google.com](https://aistudio.google.com) → Sign in with Google → **Get API key** → key starts with `AIzaSy...`
-
-**Groq** → [console.groq.com](https://console.groq.com) → Free account → **API Keys** → key starts with `gsk_...`
-
-**Cerebras** → [cloud.cerebras.ai](https://cloud.cerebras.ai) → Free account → **API Keys** → key starts with `csk-...` · Models: `llama3.1-8b` or `gpt-oss-120b`
-
-**DeepSeek** → [platform.deepseek.com](https://platform.deepseek.com) → Account gets $5 free credits → **API Keys**
-
----
-
-## 💬 Telegram Bot — All Commands
-
-### General
-
-| Command | Description |
-|---------|-------------|
-| `/start` · `hello` | Welcome message |
-| `/commands` | All commands |
-| `/status` | Full home status |
-| `/briefing` | Immediate AI briefing |
-| `/providers` | Live test all AI providers |
-| `/lang it` · `/lang en` | Switch language |
-
-### Security
-
-| Command | Description |
-|---------|-------------|
-| `/alarm` | Current alarm status |
-| `who is home?` | People at home |
-| `where is [name]?` | Person location |
-
-### Energy
-
-| Command | Description |
-|---------|-------------|
-| `/energy` | Today's energy report |
-| `/yesterday` | Yesterday's report |
-
-### Lovelace Cards
-
-| Example | Generates |
-|---------|-----------|
-| `create card gauge: sensor.temperature_living` | Gauge card |
-| `create card lights` | All lights mushroom card |
-| `create card energy` | Solar/battery card |
-| `create card security` | Security/motion card |
-| `create card tile: all temperatures` | All thermometers |
-
-### Maintenance
-
-| Command | Description |
-|---------|-------------|
-| `/updates` | Check HA updates |
-| `/repairs` | Official HA issues |
-| `/trash` | Next waste collection |
-| `/reload_trash` | Reload PDF calendar |
-
-### Free chat examples
-
-```
-How many lights are on?
-What's the temperature in the living room?
-Any sensor anomalies?
-Analyze yesterday's energy consumption
-Where is John?
-Suggest HA configuration improvements
-```
-
----
-
-## 👤 Person & Sensor Filters
-
-### Basic (in add-on Options)
-
-```yaml
-person_blacklist: "person.mqtt,person.guest"
-motion_blacklist: "binary_sensor.phone_motion"
-```
-
-### Advanced — `person_config.json`
-
-Create `/config/homemind_patches/person_config.json`:
-
-```json
-{
-  "person_whitelist": ["person.john", "person.mary"],
-  "person_blacklist": ["person.mqtt"],
-  "motion_whitelist": [
-    "binary_sensor.entrance_pir",
-    "binary_sensor.living_room_pir"
-  ],
-  "motion_blacklist": [
-    "binary_sensor.phone_motion",
-    "binary_sensor.test_sensor"
-  ],
-  "contact_blacklist": ["binary_sensor.contact_door"],
-  "proximity_sensors": {
-    "person.john": {
-      "sensor": "sensor.home_distance",
-      "threshold_m": 100
-    }
-  },
-  "energy_sensors": {
-    "produzione_fv": "sensor.solar_production",
-    "consumo_casa":  "sensor.daily_energy",
-    "rete_enel":     "sensor.grid_import",
-    "batteria_wh":   "sensor.battery_wh"
-  },
-  "language": "en"
-}
-```
-
-### Field reference
-
-| Field | Behavior |
-|-------|----------|
-| `person_whitelist` | **Only** these people are tracked. Empty = auto-detect all |
-| `person_blacklist` | Always ignore these (e.g. MQTT virtual persons) |
-| `motion_whitelist` | **Only** these sensors used for security. Empty = use all |
-| `motion_blacklist` | Always ignore these (e.g. phone sensors) |
-| `contact_blacklist` | Exclude these door/contact sensors from alarm |
-| `proximity_sensors` | Distance sensor for arrival/departure detection |
-| `energy_sensors` | Map your sensors to HomeMind energy roles |
-
-### Alarm logic
-
-```
-Everyone leaves        → arm alarm
-Someone returns        → disarm (20s debounce)
-Everyone away + motion → ALARM (needs ≥2 sensors within 45s)
-Open contacts at arm   → Telegram warning
-```
-
----
-
-## 🎨 Generating Lovelace Cards
-
-### Available styles
-
-| Style | Aliases | Requires HACS |
-|-------|---------|----------------|
-| `mushroom` | `lights`, `security` | ✅ Yes |
-| `gauge` | `chart`, `graph` | ❌ No |
-| `tile` | `minimal` | ❌ No |
-| `bubble` | — | ✅ Yes |
-| `energy` | — | ❌ No |
-
-### Examples
-
-```
-create card gauge: sensor.temperature_living_room
-create card lights
-create card energy
-create card security
-create card tile: all temperatures
-```
-
-### Installing the YAML
-
-1. Copy the YAML from Telegram
-2. HA → **Dashboard** → pencil icon → **Edit**
-3. **+ Add card** → **Manual** → paste YAML → Save
-
----
-
-## 🗑️ Waste Collection Calendar
-
-### Method 1 — Browser upload
-
-Open `http://HA-IP:8099/spazzatura` → drag and drop your PDF.
-
-### Method 2 — File
-
-Copy PDF to `/config/homemind_patches/spazzatura.pdf` → type `/reload_trash`.
-
-### Evening notification example
-
-```
-🗑️ Tomorrow's collection:
-   ♻️ Plastic
-   🔩 Metals
-```
-
-### Manual JSON format
-
-`/config/homemind_patches/spazzatura_calendario.json`:
-
-```json
-{
-  "2026-03-09": ["Organic"],
-  "2026-03-11": ["Paper", "Cardboard"],
-  "2026-03-13": ["Plastic", "Metals"],
-  "2026-03-16": ["General waste"],
-  "2026-03-18": ["Glass"]
-}
-```
-
----
-
-## 🌍 Language
-
-```
-/lang it   → Switch to Italian
-/lang en   → Switch to English
-/lang      → Show current language
-```
-
----
-
-## 📚 Practical Examples
-
-### First startup
-
-```
-You:       /start
-HomeMind:  Hello! HomeMind active 🧠 — 1596 entities, 2 people found.
-```
-
-### Home status
-
-```
-You:       what's the home status?
-HomeMind:  🏠 Home occupied: John (home), Mary (away)
-           🔒 Alarm: Disarmed
-           💡 Lights on: 2 (living room, kitchen)
-           🌡️ Living room: 21.5°C
-           ⚡ Solar: 2.4 kW | Usage: 1.1 kW | Battery: 78%
-           🤖 via Gemini (Google) 🆓
-```
-
-### Exclude a phone motion sensor
-
-```json
-{ "motion_blacklist": ["binary_sensor.iphone_motion"] }
-```
-
-### Use only specific sensors for security
-
-```json
-{
-  "motion_whitelist": [
-    "binary_sensor.entrance_pir",
-    "binary_sensor.living_room_pir"
-  ]
-}
-```
-
----
-
-## 📁 File Structure
-
-```
-/config/homemind_patches/
-├── person_config.json         ← Filters, energy, language (optional)
-├── spazzatura.pdf             ← Municipal waste PDF
-├── spazzatura_calendario.json ← Extracted calendar (auto-generated)
-└── *.yaml                     ← HA config patches (auto-generated)
-```
-
----
-
-## ❓ FAQ
-
-**Bot doesn't respond**
-→ Check `telegram_bot_token` and `telegram_chat_id` in Options.
-→ Get your chat ID from [@userinfobot](https://t.me/userinfobot).
-
-**"No AI provider available"**
-→ Enter at least one API key in Options.
-→ Use `/providers` to see which provider has issues.
-
-**Alarm arms/disarms by itself**
-→ Expected! HomeMind arms when everyone leaves.
-→ To disable: add everyone to `person_blacklist`.
-
-**`person.mqtt` detected as a person**
-→ Add it to `person_blacklist` in Options or `person_config.json`.
-
-**Generated card doesn't work**
-→ Check the `entity_id` exists (Developer Tools → States).
-→ Install HACS plugins for mushroom/bubble cards.
-
-**PDF not being read**
-→ Make sure the PDF isn't password-protected.
-→ Try `/reload_trash` or create the JSON manually.
-
-**Always using Groq instead of Gemini**
-→ Gemini hit its daily quota. Resets the next day.
-→ Use `/providers` to see the exact error.
+**Voglio testare senza che armi l'allarme**
+→ In HA, metti l'allarme in modalità "disarmato" manualmente. HomeMind non armerà se è già in uno stato insolito.
 
 ---
 
 <div align="center">
 
-Made with ❤️ for Home Assistant
+**HomeMind Orchestrator** — *La tua casa, finalmente intelligente.*
 
 </div>
