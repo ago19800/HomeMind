@@ -2,7 +2,7 @@ name: "HomeMind Orchestrator"
 version: "1.0.0"
 slug: "homemind_orchestrator"
 description: "Autonomous AI Agent for Home Assistant — proactive monitoring, anomaly correction and Lovelace UI generation."
-url: "https://github.com/youruser/homemind-orchestrator"
+url: "https://github.com/ago19800/HomeMind"
 arch:
   - aarch64
   - amd64
