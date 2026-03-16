@@ -100,7 +100,7 @@ HomeMind si connette a Home Assistant tramite WebSocket, legge tutti i sensori i
 
 In Home Assistant:
 ```
-Impostazioni → Add-on Store → ⋮ (menu tre puntini) → Repositories
+Impostazioni → Applicazioni → Installa l'app ⋮ (menu tre puntini) → Repositories
 → Incolla l'URL del repository HomeMind → Aggiungi → https://github.com/ago19800/HomeMind
 
 ```
