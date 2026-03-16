@@ -21,6 +21,14 @@
 *Ogni donazione mi aiuta a continuare a sviluppare e migliorare questo addon!* 🙏
 
 </div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100118_Telegram.jpg" width="260" alt="Foto 1">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100210_Telegram.jpg" width="260" alt="Foto 2">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100254_Telegram.jpg" width="260" alt="Foto 3">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100347_Telegram.jpg" width="260" alt="Foto 4">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_103252_Telegram.jpg" width="260" alt="Foto 5">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_103806_Telegram.jpg" width="260" alt="Foto 6">
+</p>
 
 ---
 
