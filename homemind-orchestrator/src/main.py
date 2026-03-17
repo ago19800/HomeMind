@@ -446,10 +446,10 @@ def _system_prompt(ctx: str) -> str:
 
 async def _exec_actions(reply: str) -> list:
     done = []
-    matches = list(re.finditer(r'\[CALL_SERVICE:([^.]+)\.([^:]+):([^\]:]+)(?::(.*))?  \]', reply))
+            matches = list(re.finditer(r'\[CALL_SERVICE:([^.]+)\.([^:]+):([^:]+)(?:::(.*?))?\]', reply))
     # Fix regex: allow no-space
     if not matches:
-        matches = list(re.finditer(r'\[CALL_SERVICE:([^.]+)\.([^:]+):([^\]:]+)(?::(.*?))?\]', reply))
+                matches = list(re.finditer(r'\[CALL_SERVICE:([^.]+)\.([^:]+):([^:]+)(?:::(.*?))?\]', reply))
     if not matches:
         logger.debug("_exec_actions: nessun CALL_SERVICE trovato nella risposta AI")
 
