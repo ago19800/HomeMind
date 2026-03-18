@@ -1,3 +1,72 @@
+# 🔒 HomeMind 1.0.3 — Security & Bug Fix Release
+
+## Cosa è cambiato
+
+Questa release risolve le vulnerabilità di sicurezza segnalate nella issue [#2](https://github.com/ago19800/HomeMind/issues/2) e include ulteriori correzioni di stabilità.
+
+---
+
+## 🛡️ Fix Sicurezza
+
+### 1. Codice allarme non più esposto all'AI (Critico)
+Il PIN dell'allarme veniva inviato in chiaro al provider AI esterno (Gemini, Groq, ecc.) dentro il system prompt.  
+**Fix:** Il prompt ora usa un placeholder `__ALARM_CODE__` che viene sostituito con il valore reale solo nel momento della chiamata a Home Assistant — l'AI non riceve mai il codice.  
+**File:** `src/main.py`
+
+### 2. Autenticazione sulla Web UI (Alto)
+Tutti gli endpoint FastAPI (`/chat`, `/spazzatura/upload`, `/api/status`, ecc.) erano accessibili senza autenticazione.  
+**Fix:** Aggiunto middleware di autenticazione. Le richieste via HA Ingress passano automaticamente (già autenticate da HA). Gli accessi diretti alla porta 8099 richiedono il `SUPERVISOR_TOKEN` nell'header `Authorization: Bearer <token>`.  
+**File:** `src/main.py`
+
+### 3. Messaggi Telegram non più loggati (Medio)
+Il contenuto di ogni messaggio Telegram ricevuto veniva scritto nei log dell'addon, inclusi i nomi utente degli accessi negati.  
+**Fix:** I messaggi non vengono più loggati in chiaro. I log mostrano solo la lunghezza (`[23 chars]`). Gli username sono rimossi dai log di accesso negato.  
+**File:** `src/telegram_bot.py`
+
+### 4. Parsing YAML automazioni reso robusto (Medio)
+Il parser delle automazioni usava regex su stringhe, facilmente ingannabile da alias o descrizioni che contenevano `- id:` o `- alias:`, con rischio di corruzione del file.  
+**Fix:** Sostituito con `PyYAML` (`yaml.safe_load`) già presente nelle dipendenze. Il vecchio parser regex rimane come fallback in caso di errore.  
+**File:** `src/agent/automations_manager.py`
+
+---
+
+## 🐛 Bug Fix
+
+### 5. Dockerfile — file calendario non trovato al build
+Il file `spazzatura_calendario_lanciano_2026.json` era stato rinominato in `spazzatura_calendario_2026.json` ma il `Dockerfile` e `run.sh` cercavano ancora il nome vecchio, causando un errore di build Docker.  
+**Fix:** Aggiornati `Dockerfile` e `run.sh` con il nuovo nome del file.  
+**File:** `Dockerfile`, `run.sh`
+
+---
+
+## ✅ Verificato su
+
+- Home Assistant OS 2026.3.2
+- Addon installato da repository GitHub
+- Provider AI: Gemini, Groq, Cerebras
+- Test eseguiti: alarm code non esposto nei log, messaggi Telegram mascherati, autenticazione Ingress funzionante, PyYAML attivo senza errori
+
+---
+
+## 📁 File modificati
+
+| File | Modifica |
+|------|----------|
+| `src/main.py` | Placeholder alarm code, middleware autenticazione, fix upload path |
+| `src/telegram_bot.py` | Log messaggi mascherati, username rimosso |
+| `src/agent/automations_manager.py` | YAML parsing con PyYAML |
+| `Dockerfile` | Nome file calendario aggiornato |
+| `run.sh` | Nome file calendario aggiornato |
+| `config.yaml` | Versione bump a `1.0.2` |
+
+---
+
+*Grazie a [@peppeg](https://github.com/peppeg) per la segnalazione delle vulnerabilità nella issue #2.*
+
+
+
+
+
 ---
 
 ## 📝 Changelog
