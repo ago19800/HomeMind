@@ -1,4 +1,4 @@
-<div align="center">
+
 
 # 🧠 HomeMind Orchestrator
 
@@ -37,17 +37,17 @@
  
 - [Cos'è HomeMind](#-cosè-homemind)
 - [Installazione](#-installazione)
-- [Configurazione Addon](#-configurazione-addon)
-- [⚙️ Pagina Impostazioni Web](#️-pagina-impostazioni-web-novità-v120)
-- [📁 Configurazione Avanzata via File](#-configurazione-avanzata-via-file)
-- [Configurazione BASE](#-configurazione-base)
-- [Configurazione MEDIA](#-configurazione-media)
-- [Configurazione AVANZATA](#-configurazione-avanzata)
-- [Moduli e funzionalità](#-moduli-e-funzionalità)
-- [Comandi Telegram](#-comandi-telegram)
-- [Interfaccia Vocale](#-interfaccia-vocale-telegram)
-- [Sicurezza](#-sicurezza)
-- [FAQ](#-faq--problemi-comuni)
+- [Configurazione Addon](#configurazione-addon)
+- [Pagina Impostazioni Web](#pagina-impostazioni-web)
+- [Configurazione Avanzata via File](#configurazione-avanzata-via-file)
+- [Configurazione BASE](#configurazione-base)
+- [Configurazione MEDIA](#configurazione-media)
+- [Configurazione AVANZATA](#configurazione-avanzata)
+- [Moduli e funzionalità](#moduli-e-funzionalità)
+- [Comandi Telegram](#comandi-telegram)
+- [Interfaccia Vocale](#interfaccia-vocale-telegram)
+- [Sicurezza](#sicurezza)
+- [FAQ](#faq-e-problemi-comuni)
  
 ---
  
@@ -110,7 +110,7 @@ HomeMind Orchestrator
  
 ---
  
-## ⚙️ Configurazione Addon
+## Configurazione Addon
  
 Questi campi si trovano nella scheda **Configurazione** dell'addon in Home Assistant.
  
@@ -178,7 +178,7 @@ spazzatura_notify_hour: "20"
  
 ---
  
-## ⚙️ Pagina Impostazioni Web (Novità v1.2.0)
+## Pagina Impostazioni Web
  
 Dalla versione 1.2.0 puoi configurare HomeMind direttamente dall'interfaccia web **senza modificare nessun file**.
  
@@ -222,7 +222,7 @@ Quando clicchi **💾 Salva impostazioni**:
  
 ---
  
-## 📁 Configurazione Avanzata via File
+## Configurazione Avanzata via File
  
 Per le funzioni avanzate — GPS preciso, ottimizzatore solare, elettrodomestici dettagliati — devi modificare direttamente il file:
  
@@ -245,7 +245,7 @@ L'entity_id è il codice tipo `sensor.temperatura_soggiorno` o `binary_sensor.po
  
 ---
  
-## 🟢 Configurazione BASE
+## Configurazione BASE
  
 La configurazione minima per avere HomeMind funzionante: presenza, allarme e AI via Telegram.
  
@@ -279,7 +279,7 @@ La configurazione minima per avere HomeMind funzionante: presenza, allarme e AI 
  
 ---
  
-## 🟡 Configurazione MEDIA
+## Configurazione MEDIA
  
 Aggiunge GPS preciso, sensori contatto, elettrodomestici e analisi energetica.
  
@@ -355,7 +355,7 @@ Aggiunge GPS preciso, sensori contatto, elettrodomestici e analisi energetica.
  
 ---
  
-## 🔴 Configurazione AVANZATA
+## Configurazione AVANZATA
  
 Aggiunge ottimizzatore solare, sensori W istantanei, più elettrodomestici.
  
@@ -469,7 +469,7 @@ Aggiunge ottimizzatore solare, sensori W istantanei, più elettrodomestici.
  
 ---
  
-## 📦 Moduli e funzionalità
+## Moduli e funzionalità
  
 ### 🔒 Sicurezza & Allarme
  
@@ -633,7 +633,7 @@ HomeMind ti avvisa ogni sera prima della raccolta. L'orario si configura dalla *
  
 ---
  
-## 🎙️ Interfaccia Vocale Telegram
+## Interfaccia Vocale Telegram
  
 Manda un **messaggio vocale** al bot Telegram — HomeMind lo trascrive e lo tratta come un comando normale.
  
@@ -657,7 +657,7 @@ Con $5 di crediti OpenAI hai circa 10.000 comandi vocali da 5 secondi.
  
 ---
  
-## 🔐 Sicurezza
+## Sicurezza
  
 HomeMind implementa le seguenti protezioni:
  
@@ -671,7 +671,7 @@ HomeMind implementa le seguenti protezioni:
  
 ---
  
-## 📱 Comandi Telegram
+## Comandi Telegram
  
 | Comando | Descrizione |
 |---------|-------------|
@@ -694,7 +694,7 @@ Oppure scrivi qualsiasi cosa in italiano naturale — non servono comandi precis
  
 ---
  
-## ❓ FAQ & Problemi comuni
+## FAQ e Problemi comuni
  
 **L'allarme si arma mentre sono ancora in casa**  
 → Aggiungi il sensore GPS in `proximity_sensors`. Con il sensore distanza HomeMind sa esattamente dove sei.
@@ -728,7 +728,7 @@ Oppure scrivi qualsiasi cosa in italiano naturale — non servono comandi precis
  
 ---
  
-## 📝 Changelog
+## Changelog
  
 **v1.2.0** — Merge automatico: la pagina web preserva i campi avanzati del file JSON  
 **v1.1.x** — Pagina Impostazioni web completa con selezione entità da HA  
@@ -745,3 +745,4 @@ Oppure scrivi qualsiasi cosa in italiano naturale — non servono comandi precis
 [![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
  
 **[paypal.me/ago19800](https://paypal.me/ago19800)**
+ 
