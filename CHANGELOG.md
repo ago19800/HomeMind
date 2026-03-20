@@ -1,5 +1,6 @@
 # 📋 Changelog — HomeMind Orchestrator
-
+## v1.3.2
+-  Fix nome
 ## v1.3.0
 - Fix campo `notify_entity` vuoto che causava errore 400 e bloccava tutte le notifiche Telegram
 - Campo `notify_entity` ora opzionale — puoi lasciarlo vuoto senza problemi
