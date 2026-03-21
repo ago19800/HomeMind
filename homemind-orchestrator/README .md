@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🧠 HomeMind Orchestrator
 
 **L'agente AI che trasforma Home Assistant in una casa davvero intelligente**
@@ -7,31 +5,54 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
+[![Version](https://img.shields.io/badge/versione-1.3.0-brightgreen)]()
 
+<div align="center">
+☕ Supporta il Progetto
+
+**Se questo addon ti è utile, offrimi un caffè!**
+
+[![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
+
+**[paypal.me/ago19800](https://paypal.me/ago19800)**
+
+*Ogni donazione mi aiuta a continuare a sviluppare e migliorare questo addon!* 🙏
 </div>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100118_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100210_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100254_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_100347_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_103252_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_103806_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_110137_Telegram.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123749_Home Assistant.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123738_Home Assistant.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123729_Home Assistant.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/567129635-8dbdb604-953d-48ca-b20c-481fe74f8934.jpg" width="260">
+  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/567129636-e5f57e9e-e6fd-4957-8745-43771da01269.jpg" width="260">
+</p>
 
 ---
 
 ## 📋 Indice
 
 - [Cos'è HomeMind](#-cosè-homemind)
-- [Come funziona](#-come-funziona)
 - [Installazione](#-installazione)
-- [Il file di configurazione](#-il-file-di-configurazione)
-- [Configurazione BASE](#-configurazione-base--partire-in-5-minuti)
-- [Configurazione MEDIA](#-configurazione-media--funzionalità-complete)
-- [Configurazione AVANZATA](#-configurazione-avanzata--tutto-attivo)
-- [Moduli e funzionalità](#-moduli-e-funzionalità)
-  - [🔒 Sicurezza & Allarme](#-sicurezza--allarme)
-  - [👤 Presenza & Prossimità GPS](#-presenza--prossimità-gps)
-  - [⚡ Monitor Elettrodomestici](#-monitor-elettrodomestici)
-  - [☀️ Ottimizzatore Solare](#️-ottimizzatore-solare)
-  - [📊 Analisi Energetica](#-analisi-energetica)
-  - [🌅 Briefing Mattutino](#-briefing-mattutino)
-  - [🗑️ Calendario Spazzatura](#️-calendario-spazzatura)
-  - [🤖 Controllo AI via Telegram](#-controllo-ai-via-telegram)
-- [Comandi Telegram](#-comandi-telegram)
-- [FAQ & Problemi comuni](#-faq--problemi-comuni)
+- [Configurazione Addon](#configurazione-addon)
+- [Pagina Impostazioni Web](#pagina-impostazioni-web)
+- [Configurazione Avanzata via File](#configurazione-avanzata-via-file)
+- [Configurazione BASE](#configurazione-base)
+- [Configurazione MEDIA](#configurazione-media)
+- [Configurazione AVANZATA](#configurazione-avanzata)
+- [Moduli e funzionalità](#moduli-e-funzionalità)
+- [Allarme Personalizzato](#-allarme-personalizzato-risco-paradox-ajax-e-altri)
+- [Telecamere Frigate](#telecamere-frigate)
+- [Comandi Telegram](#comandi-telegram)
+- [Interfaccia Vocale](#interfaccia-vocale-telegram)
+- [Sicurezza](#sicurezza)
+- [FAQ](#faq-e-problemi-comuni)
 
 ---
 
@@ -40,12 +61,13 @@
 HomeMind è un **add-on per Home Assistant** che aggiunge un cervello AI alla tua casa. Non è una semplice automazione — è un agente che capisce il contesto, impara la tua routine e ti avvisa solo quando serve davvero.
 
 **Parlagli su Telegram in italiano naturale:**
-> *"Accendi la luce del salotto"*
-> *"Quanta energia ho prodotto oggi?"*
-> *"Arma l'allarme"*
+
+> *"Accendi la luce del salotto"*  
+> *"Quanta energia ho prodotto oggi?"*  
+> *"Arma l'allarme"*  
 > *"Cosa succede in casa?"*
 
-**Lui capisce, risponde e agisce.**
+**Lui capisce, risponde e agisce.** Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la tratta come un comando normale.
 
 ### Cosa fa in modo autonomo
 
@@ -53,23 +75,13 @@ HomeMind è un **add-on per Home Assistant** che aggiunge un cervello AI alla tu
 |----------|-------------|
 | 🔒 **Allarme automatico** | Arma quando tutti escono, disarma quando torni |
 | 👋 **Benvenuto a casa** | Ti accoglie con un messaggio quando rientri |
+| 📷 **Snapshot telecamere** | Foto automatica su Telegram quando scatta l'allarme |
 | ⚡ **Monitor elettrodomestici** | Ti avvisa quando lavatrice/lavastoviglie finiscono |
 | ☀️ **Ottimizzatore solare** | Ti suggerisce quando avviare elettrodomestici col surplus FV |
 | 📊 **Analisi energia** | Ogni mattina ti dice se hai consumato più o meno del solito |
 | 🌅 **Briefing mattutino** | Alle 7:00 ti manda meteo, energia, spazzatura e un consiglio AI |
 | 🗑️ **Spazzatura** | La sera prima ti ricorda cosa mettere fuori |
-| 🚨 **Allarme intrusione** | Rilevamento movimento in casa con allarme armato |
-
----
-
-## ⚙️ Come funziona
-
-```
-Home Assistant  ──→  HomeMind  ──→  Telegram
-    (sensori)        (cervello AI)    (tu)
-```
-
-HomeMind si connette a Home Assistant tramite WebSocket, legge tutti i sensori in tempo reale, li elabora con AI e ti comunica solo le cose importanti. Non hai bisogno di toccare nulla in HA — tutto avviene tramite HomeMind.
+| 🚨 **Allarme intrusione** | Rilevamento movimento con allarme armato |
 
 ---
 
@@ -77,257 +89,151 @@ HomeMind si connette a Home Assistant tramite WebSocket, legge tutti i sensori i
 
 ### 1. Aggiungi il repository
 
-In Home Assistant:
 ```
-Impostazioni → Add-on Store → ⋮ (menu tre puntini) → Repositories
-→ Incolla l'URL del repository HomeMind → Aggiungi
-```
-
-### 2. Installa e configura l'add-on
-
-Nella scheda **Configurazione** dell'add-on imposta:
-
-```yaml
-ha_token: "il_tuo_long_lived_access_token"
-telegram_token: "token_del_tuo_bot_telegram"
-telegram_chat_id: "il_tuo_chat_id"
-alarm_code: "1234"
-gemini_api_key: "chiave_gemini_opzionale"
+Impostazioni → Add-on Store → ⋮ → Repositories
+→ https://github.com/ago19800/HomeMind → Aggiungi
 ```
 
-> **Come ottenere il token HA:** Profilo → Token di accesso a lunga durata → Crea token
+### 2. Installa l'addon
 
-> **Come ottenere token Telegram:** Cerca @BotFather su Telegram → `/newbot`
+Cerca **HomeMind Orchestrator** nello store e clicca **Installa**.
 
-> **Come trovare il tuo Chat ID:** Cerca @userinfobot su Telegram → manda `/start`
+### 3. Configura e avvia
 
-### 3. Crea il file di configurazione personale
+1. Clicca su **HomeMind Orchestrator** per aprire la pagina dell'addon
+2. Clicca sulla scheda **Configurazione** (in alto, accanto a Info e Log)
+3. Inserisci almeno il token Telegram e il chat ID
+4. Clicca **Salva**
+5. Torna alla scheda **Info** e clicca **Avvia**
 
-Crea il file `/config/homemind_patches/person_config.json` — questo è il file dove dici a HomeMind quali sono i **tuoi** dispositivi.
+```
+HomeMind Orchestrator
+├── 📋 Info          ← clicca Avvia qui
+├── ⚙️ Configurazione ← inserisci le chiavi qui
+├── 📄 Log           ← controlla gli errori qui
+└── 🔧 Rete
+```
 
 ---
 
-## 📁 Il file di configurazione
+## Configurazione Addon
 
-Il file si chiama `person_config.json` e si trova in:
+Questi campi si trovano nella scheda **Configurazione** dell'addon in Home Assistant.
+
+### Telegram (obbligatorio)
+
+```yaml
+telegram_bot_token: "TOKEN_DA_BOTFATHER"
+telegram_chat_id: "IL_TUO_CHAT_ID_NUMERICO"
+```
+
+> **Token bot:** cerca @BotFather su Telegram → `/newbot`  
+> **Chat ID:** cerca @userinfobot su Telegram → manda `/start` → copia il numero
+
+### Codice Allarme
+
+```yaml
+alarm_code: "1234"
+```
+
+> Il codice viene usato solo per armare/disarmare — non viene mai mostrato nei log o all'AI.
+
+### Provider AI
+
+Inserisci almeno **Gemini + Groq** per avere un sistema con fallback automatico.
+
+```yaml
+gemini_api_key: "AIzaSy..."          # 🟦 Google Gemini — GRATIS 1.500 req/giorno
+gemini_model: "gemini-2.0-flash"
+
+groq_api_key: "gsk_..."              # ⚡ Groq — GRATIS 100.000 token/giorno
+groq_model: "llama-3.3-70b-versatile"
+
+cerebras_api_key: "csk_..."          # 🧠 Cerebras — GRATIS 1M token/min
+cerebras_model: "llama3.1-8b"
+
+openai_api_key: "sk-..."             # 🟢 OpenAI — solo per messaggi vocali
+openai_model: "gpt-4o-mini"
+
+ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
+```
+
+| Provider | Costo | Limite | Link |
+|----------|-------|--------|------|
+| 🟦 **Google Gemini** | Gratis | 1.500 req/giorno | [aistudio.google.com](https://aistudio.google.com) |
+| ⚡ **Groq** | Gratis | 100.000 token/giorno | [console.groq.com](https://console.groq.com) |
+| 🧠 **Cerebras** | Gratis | 1M token/min | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
+| 🔵 **DeepSeek** | ~Gratis | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
+| 🟢 **OpenAI** | A pagamento | $0.006/min audio | [platform.openai.com](https://platform.openai.com) |
+
+---
+
+## Pagina Impostazioni Web
+
+Dalla versione 1.2.0 puoi configurare HomeMind direttamente dall'interfaccia web **senza modificare nessun file**.
+
+### Come accedere
+
+Apri l'addon HomeMind dal pannello HA → clicca il pulsante **⚙️** nella barra in alto.
+
+La pagina è divisa in 5 tab:
+
+**👤 Persone** — seleziona chi monitorare e chi escludere con un semplice click
+
+**🚶 Sensori** — sensori di movimento da usare o ignorare, porte/finestre da escludere
+
+**🗑️ Spazzatura** — toggle on/off e orario notifica, si applicano subito senza riavvio
+
+**⚡ Energia** — seleziona i sensori per fotovoltaico, consumo e rete
+
+**📹 Frigate** — configura le telecamere per gli snapshot automatici (vedi sezione dedicata)
+
+> Quando salvi, i campi avanzati (`proximity_sensors`, `solar_optimizer`, `appliances` ecc.) vengono **preservati automaticamente** — non vengono mai cancellati.
+
+---
+
+## Configurazione Avanzata via File
+
+Per GPS preciso, ottimizzatore solare ed elettrodomestici dettagliati, modifica il file:
+
 ```
 /config/homemind_patches/person_config.json
 ```
 
-È un file **JSON** — un formato semplice con `{` chiavi `}` e valori. Ogni sezione attiva una funzionalità diversa. Se una sezione manca, quella funzionalità è semplicemente disattivata.
-
-### Come trovare gli entity_id dei tuoi dispositivi
-
-In Home Assistant:
-```
-Strumenti Sviluppatore → Stati → cerca il nome del dispositivo
-```
-L'**entity_id** è il codice tipo `sensor.temperatura_soggiorno` o `binary_sensor.porta_ingresso`.
+Usa l'addon **File Editor** o **Studio Code Server** in HA per aprirlo.
 
 ---
 
-## 🟢 Configurazione BASE — Partire in 5 minuti
-
-La configurazione minima per avere HomeMind funzionante con le funzioni essenziali: presenza, allarme automatico e controllo AI.
+## Configurazione BASE
 
 ```json
 {
   "language": "it",
-
-  "person_whitelist": [
-    "person.mario",
-    "person.lucia"
-  ],
-
+  "person_whitelist": ["person.mario", "person.lucia"],
   "person_blacklist": [],
-
   "motion_whitelist": [
-    "binary_sensor.sensore_movimento_ingresso",
-    "binary_sensor.sensore_movimento_soggiorno"
+    "binary_sensor.sensore_ingresso",
+    "binary_sensor.sensore_soggiorno"
   ],
-
   "motion_blacklist": []
 }
 ```
 
-**Con questa configurazione hai:**
-- ✅ HomeMind parla italiano
-- ✅ Monitora la presenza di Mario e Lucia
-- ✅ Allarme si arma quando tutti escono
-- ✅ Allarme si disarma quando qualcuno rientra
-- ✅ Rilevamento movimento con allarme armato
-- ✅ Controllo AI via Telegram (linguaggio naturale)
-- ✅ Briefing mattutino alle 7:00
-
-**Come trovare le persone:**
-```
-Strumenti Sviluppatore → Stati → cerca "person."
-```
-Vedrai `person.mario`, `person.lucia` ecc.
-
-**Come trovare i sensori movimento:**
-```
-Strumenti Sviluppatore → Stati → cerca "occupancy" o "motion"
-```
-
 ---
 
-## 🟡 Configurazione MEDIA — Funzionalità complete
-
-Aggiunge: prossimità GPS precisa, sensori contatto, elettrodomestici e energia.
+## Configurazione MEDIA
 
 ```json
 {
   "language": "it",
-
-  "person_whitelist": [
-    "person.mario",
-    "person.lucia"
-  ],
-
-  "person_blacklist": [
-    "person.mqtt_finto"
-  ],
-
+  "person_whitelist": ["person.mario", "person.lucia"],
+  "person_blacklist": ["person.mqtt_finto"],
   "motion_whitelist": [
-    "binary_sensor.sensore_movimento_ingresso",
-    "binary_sensor.sensore_movimento_soggiorno",
-    "binary_sensor.sensore_movimento_cucina"
+    "binary_sensor.sensore_ingresso_occupancy",
+    "binary_sensor.sensore_soggiorno_occupancy"
   ],
-
-  "motion_blacklist": [
-    "binary_sensor.telefono_mario_motion",
-    "binary_sensor.sensore_test"
-  ],
-
-  "contact_blacklist": [
-    "binary_sensor.porta_garage"
-  ],
-
-  "proximity_sensors": {
-    "person.mario": {
-      "sensor": "sensor.casa_telefono_mario_distance",
-      "threshold_m": 100,
-      "stale_check": true
-    }
-  },
-
-  "energy_sensors": {
-    "produzione_fv":   "sensor.fv_tot",
-    "consumo_casa":    "sensor.consumi_giornalieri",
-    "rete_enel":       "sensor.enel_giornaliero",
-    "batteria_wh":     "sensor.batteria_wh"
-  },
-
-  "appliances": {
-    "lavatrice": {
-      "enabled": true,
-      "name": "Lavatrice",
-      "icon": "🫧",
-      "mode": "power",
-      "power_sensor": "sensor.presa_lavatrice_power",
-      "power_on_threshold": 50,
-      "power_off_threshold": 10,
-      "min_cycle_minutes": 20,
-      "max_idle_minutes": 5,
-      "notify_on_start": false
-    },
-    "lavastoviglie": {
-      "enabled": true,
-      "name": "Lavastoviglie",
-      "icon": "🍽️",
-      "mode": "smart",
-      "state_sensor": "sensor.lavastoviglie_operation_state",
-      "running_states": ["Run"],
-      "done_states": ["Finished", "Ready"],
-      "notify_on_start": false
-    }
-  }
-}
-```
-
-**In più rispetto alla BASE:**
-- ✅ **Prossimità GPS** — usa il sensore distanza del telefono per sapere esattamente quando sei vicino a casa, evitando falsi allarmi da GPS che salta
-- ✅ **Sensori contatto** — porte e finestre monitorate (con blacklist per quelle sempre aperte)
-- ✅ **Monitor lavatrice** — notifica quando finisce
-- ✅ **Monitor lavastoviglie** — notifica quando finisce
-- ✅ **Analisi energetica** — confronto consumi giornalieri
-
-### Spiegazione dei campi importanti
-
-#### `person_blacklist`
-Persone da ignorare completamente — utile per entità "fantasma" create da MQTT o altri sistemi.
-
-#### `motion_blacklist`
-Sensori di movimento da ignorare — tipicamente il sensore del telefono (si attiva sempre), sensori di test o telecamere PTZ.
-
-#### `contact_blacklist`
-Porte/finestre da NON monitorare — es. garage sempre aperto, finestra tenuta aperta di proposito.
-
-#### `proximity_sensors`
-Il sensore distanza GPS più preciso. Se non ce l'hai, HomeMind usa solo il GPS nativo di HA.
-
-| Campo | Descrizione | Default |
-|-------|-------------|---------|
-| `sensor` | Entity ID del sensore distanza | — |
-| `threshold_m` | Distanza in metri per "a casa" | 100 |
-| `stale_check` | `true` = smette di considerare il sensore se i dati sono vecchi, `false` = usa sempre l'ultimo valore anche se vecchio | true |
-
-> **`stale_check: false`** è utile se il tuo telefono non aggiorna spesso il GPS — HomeMind userà l'ultimo valore valido anche dopo ore.
-
-#### Modalità elettrodomestici
-
-**`mode: "power"`** — per elettrodomestici su presa smart con misura di potenza:
-```json
-"power_sensor": "sensor.presa_lavatrice_power",
-"power_on_threshold": 50,    ← inizia ciclo quando supera 50W
-"power_off_threshold": 10,   ← fine ciclo quando scende sotto 10W
-"min_cycle_minutes": 20,     ← ciclo minimo valido (evita falsi start)
-"max_idle_minutes": 5        ← tolleranza pause durante il ciclo
-```
-
-**`mode: "smart"`** — per elettrodomestici con sensore stato nativo (es. Bosch Home Connect):
-```json
-"state_sensor": "sensor.lavastoviglie_operation_state",
-"running_states": ["Run"],
-"done_states": ["Finished", "Ready"]
-```
-
----
-
-## 🔴 Configurazione AVANZATA — Tutto attivo
-
-Aggiunge: ottimizzatore solare con auto-avvio, sensori W istantanei, più elettrodomestici.
-
-```json
-{
-  "language": "it",
-
-  "person_whitelist": [
-    "person.mario",
-    "person.lucia"
-  ],
-
-  "person_blacklist": [
-    "person.mqtt_finto"
-  ],
-
-  "motion_whitelist": [
-    "binary_sensor.sensore_movimento_ingresso",
-    "binary_sensor.sensore_movimento_soggiorno",
-    "binary_sensor.sensore_movimento_cucina",
-    "binary_sensor.sensore_movimento_garage"
-  ],
-
-  "motion_blacklist": [
-    "binary_sensor.telefono_mario_motion",
-    "binary_sensor.sensore_test"
-  ],
-
-  "contact_blacklist": [
-    "binary_sensor.porta_garage"
-  ],
-
+  "motion_blacklist": ["binary_sensor.telefono_mario_motion"],
+  "contact_blacklist": ["binary_sensor.porta_garage_contact"],
   "proximity_sensors": {
     "person.mario": {
       "sensor": "sensor.casa_telefono_mario_distance",
@@ -335,17 +241,11 @@ Aggiunge: ottimizzatore solare con auto-avvio, sensori W istantanei, più elettr
       "stale_check": false
     }
   },
-
   "energy_sensors": {
-    "produzione_fv":   "sensor.fv_tot",
-    "consumo_casa":    "sensor.consumi_giornalieri",
-    "rete_enel":       "sensor.enel_giornaliero",
-    "batteria_wh":     "sensor.batteria_wh",
-    "produzione_fv_w": "sensor.fotovoltaica_totale_w",
-    "consumo_casa_w":  "sensor.inverter_ac_output_power",
-    "rete_enel_w":     "sensor.shelly_channel_1_power"
+    "produzione_fv": "sensor.fv_tot",
+    "consumo_casa":  "sensor.consumi_giornalieri",
+    "rete_enel":     "sensor.enel_giornaliero"
   },
-
   "appliances": {
     "lavatrice": {
       "enabled": true,
@@ -358,43 +258,52 @@ Aggiunge: ottimizzatore solare con auto-avvio, sensori W istantanei, più elettr
       "min_cycle_minutes": 20,
       "max_idle_minutes": 5,
       "notify_on_start": false
-    },
-    "lavastoviglie": {
-      "enabled": true,
-      "name": "Lavastoviglie",
-      "icon": "🍽️",
-      "mode": "smart",
-      "state_sensor": "sensor.lavastoviglie_operation_state",
-      "running_states": ["Run"],
-      "done_states": ["Finished", "Ready"],
-      "notify_on_start": false
-    },
-    "asciugatrice": {
-      "enabled": true,
-      "name": "Asciugatrice",
-      "icon": "🌀",
-      "mode": "power",
-      "power_sensor": "sensor.presa_asciugatrice_power",
-      "power_on_threshold": 100,
-      "power_off_threshold": 15,
-      "min_cycle_minutes": 25,
-      "max_idle_minutes": 8,
-      "notify_on_start": false
-    },
-    "forno": {
-      "enabled": true,
-      "name": "Forno",
-      "icon": "🔥",
-      "mode": "power",
-      "power_sensor": "sensor.presa_forno_power",
-      "power_on_threshold": 500,
-      "power_off_threshold": 30,
-      "min_cycle_minutes": 10,
-      "max_idle_minutes": 3,
-      "notify_on_start": true
+    }
+  }
+}
+```
+
+---
+
+## Configurazione AVANZATA
+
+```json
+{
+  "language": "it",
+  "person_whitelist": ["person.mario", "person.lucia"],
+  "person_blacklist": ["person.mqtt_finto"],
+  "motion_whitelist": ["binary_sensor.sensore_ingresso_occupancy"],
+  "motion_blacklist": ["binary_sensor.telefono_mario_motion"],
+  "contact_blacklist": ["binary_sensor.porta_garage_contact"],
+  "proximity_sensors": {
+    "person.mario": {
+      "sensor": "sensor.casa_telefono_mario_distance",
+      "threshold_m": 100,
+      "stale_check": false
     }
   },
-
+  "energy_sensors": {
+    "produzione_fv":   "sensor.fv_tot",
+    "consumo_casa":    "sensor.consumi_giornalieri",
+    "rete_enel":       "sensor.enel_giornaliero",
+    "produzione_fv_w": "sensor.fotovoltaica_totale_w",
+    "consumo_casa_w":  "sensor.inverter_ac_output_power",
+    "rete_enel_w":     "sensor.shelly_channel_1_power"
+  },
+  "appliances": {
+    "lavatrice": {
+      "enabled": true, "name": "Lavatrice", "icon": "🫧", "mode": "power",
+      "power_sensor": "sensor.presa_lavatrice_power",
+      "power_on_threshold": 50, "power_off_threshold": 10,
+      "min_cycle_minutes": 20, "max_idle_minutes": 5, "notify_on_start": false
+    },
+    "lavastoviglie": {
+      "enabled": true, "name": "Lavastoviglie", "icon": "🍽️", "mode": "smart",
+      "state_sensor": "sensor.lavastoviglie_operation_state",
+      "running_states": ["Run"], "done_states": ["Finished", "Ready"],
+      "notify_on_start": false
+    }
+  },
   "solar_optimizer": {
     "enabled": true,
     "min_surplus_w": 500,
@@ -406,107 +315,63 @@ Aggiunge: ottimizzatore solare con auto-avvio, sensori W istantanei, più elettr
         "switch": "switch.presa_lavatrice",
         "min_surplus_w": 800,
         "auto_start": false
-      },
-      "lavastoviglie": {
-        "enabled": true,
-        "switch": null,
-        "min_surplus_w": 500,
-        "auto_start": false
-      },
-      "pompa_piscina": {
-        "enabled": true,
-        "switch": "switch.pompa_piscina",
-        "min_surplus_w": 400,
-        "auto_start": true
       }
+    },
+    "battery_soc_sensor": "sensor.batteria_percentuale",
+    "battery_full_threshold": 95,
+    "min_sun_elevation": 10
+  },
+  "location_tracker": {
+    "mario": "device_tracker.telefono_mario"
+  },
+  "frigate": {
+    "enabled": true,
+    "host": "192.168.1.100",
+    "port": 5000,
+    "snapshot_on_alarm": true,
+    "cameras": {
+      "ingresso": "binary_sensor.sensore_ingresso_occupancy",
+      "garage":   "binary_sensor.sensore_garage_occupancy"
     }
   }
 }
 ```
 
-**In più rispetto alla MEDIA:**
-- ✅ **Sensori W istantanei** — calcolo surplus solare preciso al watt (nessuna derivata)
-- ✅ **Ottimizzatore solare attivo** — ti avvisa quando c'è surplus FV
-- ✅ **Conferma via Telegram** — rispondi "sì" per avviare
-- ✅ **Auto-start** per dispositivi come pompe (partono da soli, senza chiedere)
-- ✅ **Asciugatrice e forno** monitorati
-
 ---
 
-## 📦 Moduli e funzionalità
+## Moduli e funzionalità
 
 ### 🔒 Sicurezza & Allarme
 
-HomeMind gestisce l'allarme in modo completamente automatico.
+HomeMind gestisce l'allarme automaticamente in base alla presenza.
 
-**Armo automatico:**
 ```
-Tutti escono di casa → HomeMind aspetta 30 secondi → Arma l'allarme
+Tutti escono → attesa 30s → allarme armato
+Qualcuno si avvicina → HomeMind rileva → disarma prima che entri
+Allarme armato + movimento → notifica Telegram + foto telecamera
 ```
-
-**Disarmo automatico:**
-```
-Qualcuno si avvicina a casa → HomeMind rileva → Disarma prima che entri
-```
-
-**Rilevamento intrusione:**
-```
-Allarme armato + movimento rilevato → Notifica immediata su Telegram
-```
-
-**Sensori contatto:**
-```
-Porta/finestra aperta con allarme armato → Avviso
-Porta aperta durante armamento → Avviso (non blocca l'armamento)
-```
-
-> Le porte in `contact_blacklist` vengono ignorate completamente — utile per porte che restano spesso aperte.
-
----
 
 ### 👤 Presenza & Prossimità GPS
 
-HomeMind sa sempre chi è in casa usando due livelli di rilevamento:
+Con il sensore distanza configurato, la distanza vince sempre sul GPS — risolve il problema del GPS che "salta" e arma l'allarme mentre sei ancora in casa.
 
-**Livello 1 — GPS nativo HA:** `person.mario` = home / not_home
-
-**Livello 2 — Sensore distanza (opzionale):** Distanza precisa in metri dal telefono
-
-Quando hai il sensore distanza configurato, **la distanza vince sempre sul GPS**. Questo risolve il problema classico del GPS che "salta" e arma l'allarme mentre sei ancora in casa.
-
-```
-Sensore dice 45m → sei a casa (anche se GPS dice "not_home")
-Sensore dice 1200m → sei fuori (anche se GPS dice "home")
-```
-
-**`stale_check`:** controlla se i dati del sensore sono freschi.
-- `true` (consigliato per chi ha buon GPS) → dopo 5 minuti senza aggiornamento torna al GPS
-- `false` (consigliato se il GPS del telefono è pigro) → usa sempre l'ultimo valore valido
-
----
+| Campo | Descrizione |
+|-------|-------------|
+| `sensor` | Entity ID del sensore distanza in metri |
+| `threshold_m` | Distanza soglia "a casa" (default: 100m) |
+| `stale_check` | `false` = usa sempre l'ultimo valore anche se vecchio |
 
 ### ⚡ Monitor Elettrodomestici
 
-HomeMind sa quando gli elettrodomestici partono e finiscono, e ti avvisa su Telegram.
-
-**Notifica fine ciclo:**
-```
-Lavatrice finita → "🫧 Lavatrice terminata! Ciclo durato 1h 23min."
-```
-
-**Due modalità:**
-
-**POWER** — per prese smart con misura potenza (Zigbee, Shelly, Tasmota):
+**Modalità POWER** — presa smart con misura potenza (Zigbee, Shelly):
 ```json
 "mode": "power",
 "power_sensor": "sensor.presa_lavatrice_power",
-"power_on_threshold": 50,    ← sopra = sta girando
-"power_off_threshold": 10,   ← sotto = ha finito
-"min_cycle_minutes": 20,     ← ignora accensioni brevi (es. standby)
-"max_idle_minutes": 5        ← tolleranza per pause di centrifuga
+"power_on_threshold": 50,
+"power_off_threshold": 10
 ```
 
-**SMART** — per elettrodomestici connessi (Bosch, Siemens, Miele via Home Connect):
+**Modalità SMART** — elettrodomestici connessi (Bosch Home Connect ecc.):
 ```json
 "mode": "smart",
 "state_sensor": "sensor.lavastoviglie_operation_state",
@@ -514,239 +379,241 @@ Lavatrice finita → "🫧 Lavatrice terminata! Ciclo durato 1h 23min."
 "done_states": ["Finished", "Ready"]
 ```
 
-**`notify_on_start: true`** → ricevi notifica anche all'avvio (default: false)
-
----
-
 ### ☀️ Ottimizzatore Solare
 
-HomeMind monitora il surplus fotovoltaico in tempo reale e ti suggerisce quando è il momento migliore per avviare gli elettrodomestici pesanti.
-
-**Come funziona:**
-```
-Ogni 2 minuti controlla:
-  produzione FV - consumo casa = surplus
-
-Se surplus ≥ soglia per X minuti consecutivi:
-  → Notifica Telegram con l'elettrodomestico suggerito
-
-Tu rispondi "sì" → HomeMind accende la presa (se configurata)
-```
-
-**Parametri principali:**
-
-| Campo | Descrizione | Default |
-|-------|-------------|---------|
-| `enabled` | Attiva/disattiva tutto | false |
-| `min_surplus_w` | Surplus minimo generale in Watt | 500 |
-| `confirm_minutes` | Minuti di surplus stabile prima di notificare | 5 |
-| `cooldown_hours` | Ore minime tra una notifica e l'altra | 2 |
-
-**Parametri per singolo elettrodomestico:**
-
-| Campo | Descrizione |
-|-------|-------------|
-| `enabled` | Includi questo elettrodomestico |
-| `switch` | Entity ID presa smart da accendere (null = solo notifica) |
-| `min_surplus_w` | Soglia surplus specifica per questo elettrodomestico |
-| `auto_start` | `true` = parte da solo, `false` = chiede conferma |
-
-**Sensori W istantanei (raccomandati):**
-Se hai sensori che misurano Watt in tempo reale (inverter, Shelly EM), aggiungili nella sezione `energy_sensors` con suffisso `_w`:
-```json
-"produzione_fv_w": "sensor.fotovoltaica_totale",
-"consumo_casa_w":  "sensor.inverter_ac_output_power",
-"rete_enel_w":     "sensor.shelly_channel_1_power"
-```
-Senza di essi HomeMind usa i sensori kWh giornalieri con calcolo a derivata (meno preciso ma funziona).
-
-**Comandi Telegram:**
-- `/solare` — mostra surplus attuale, elettrodomestici configurati e conferme in attesa
-
----
-
-### 📊 Analisi Energetica
-
-Ogni mattina alle 7:15 (dopo il briefing) HomeMind confronta i consumi di ieri con la media storica degli ultimi 30 giorni. Se trova anomalie te lo dice con una spiegazione AI.
-
-**Esempio notifica:**
-```
-⚡ Analisi energetica ieri
-
-☀️ Produzione FV: 12.4 kWh (+23% rispetto alla media)
-🏠 Consumo casa: 18.2 kWh (+45% ⚠️ anomalia)
-🔌 Prelievo rete: 8.1 kWh
-
-💡 Il consumo di ieri è stato insolitamente alto.
-   Possibile causa: condizionatore acceso tutto il giorno
-   o elettrodomestico rimasto in standby inutilmente.
-```
-
-**Sensori supportati:**
-```json
-"energy_sensors": {
-  "produzione_fv":   "sensor.nome_sensore_kwh_fv",
-  "consumo_casa":    "sensor.nome_sensore_kwh_casa",
-  "rete_enel":       "sensor.nome_sensore_kwh_enel",
-  "batteria_wh":     "sensor.nome_sensore_batteria"
-}
-```
-
----
+Monitora il surplus FV ogni 2 minuti. Quando c'è abbastanza surplus ti avvisa su Telegram — rispondi "sì" per avviare l'elettrodomestico, oppure imposta `auto_start: true` per partenza automatica.
 
 ### 🌅 Briefing Mattutino
 
-Ogni mattina alle 7:00 HomeMind ti manda un riepilogo completo:
-
-```
-🌅 Buongiorno Mario!
-
-🌤️ Meteo: Sole, 18°C - massima 24°C
-   Nessuna pioggia prevista oggi.
-
-⚡ Energia ieri:
-   ☀️ Prodotto: 11.2 kWh
-   🏠 Consumato: 7.8 kWh
-   ✅ Autosufficienza: 100%
-
-🗑️ Spazzatura stasera: Plastica e metallo
-
-💡 Consiglio del giorno:
-   Ottima giornata di sole prevista — 
-   considera di avviare la lavatrice tra le 11 e le 14.
-```
-
-**Si attiva automaticamente** senza configurazione. Usa i sensori energetici se configurati.
-
-**Per riceverlo subito:** scrivi `/briefing` su Telegram.
-
----
+Ogni giorno alle **7:00**: meteo, energia di ieri, raccolta rifiuti, consiglio AI. Scrivi `/briefing` per riceverlo subito.
 
 ### 🗑️ Calendario Spazzatura
 
-HomeMind ti ricorda ogni sera alle 12:00 (mezzanotte) cosa mettere fuori per il giorno dopo.
-
-**Per attivarlo:**
-1. Carica il file PDF del calendario raccolta nel percorso:
-   ```
-   /config/homemind_patches/spazzatura.pdf
-   ```
-2. Scrivi `/ricarica_spazzatura` su Telegram
-3. HomeMind legge il PDF con AI e crea il calendario automaticamente
-
-**Oppure** crea manualmente il file JSON:
-```
-/config/homemind_patches/spazzatura_calendario.json
-```
-
-**Comando:** `/spazzatura` — mostra raccolta prossimi 7 giorni.
+Carica il PDF del calendario in `/config/homemind_patches/spazzatura.pdf`, poi scrivi `/ricarica_spazzatura` su Telegram. HomeMind lo legge con AI e crea il calendario automaticamente.
 
 ---
 
-### 🤖 Controllo AI via Telegram
+## 🔐 Allarme Personalizzato (Risco, Paradox, Ajax e altri)
 
-Puoi scrivere qualsiasi cosa in italiano e HomeMind capisce e risponde. Non servono comandi precisi.
+HomeMind funziona con **qualsiasi antifurto** già integrato in Home Assistant — Risco, Paradox, DSC, Texecom, Ajax, Bentel e qualsiasi altra marca.
 
-**Esempi di controllo:**
+Non parla direttamente con l'antifurto fisico — parla con Home Assistant, che a sua volta parla con il tuo impianto tramite la sua integrazione specifica. Il risultato è che la marca non conta: se HA lo vede, HomeMind lo controlla.
+
 ```
-"Accendi la luce cucina"
-"Spegni tutte le luci"
-"Metti la temperatura a 21 gradi"
-"Arma l'allarme"
-"Disarma l'allarme"
-"Apri le tapparelle"
+HomeMind → Home Assistant → integrazione specifica → antifurto fisico
+                              (Risco, Paradox, Ajax...)
 ```
 
-**Esempi di domande:**
+### Come configurare il tuo antifurto
+
+**Passo 1 — Trova l'entity ID in HA**
+
 ```
-"Cosa succede in casa?"
-"Chi è a casa?"
-"Quanta energia ho prodotto oggi?"
-"La lavatrice sta girando?"
-"Quando è tornato Mario ieri?"
+Strumenti Sviluppatore → Stati → cerca "alarm"
 ```
 
-**AI con fallback automatico:**
-HomeMind usa fino a 3 provider AI in cascata — se uno non risponde passa automaticamente al prossimo:
-1. Gemini (Google) — gratuito
-2. Groq/Llama — gratuito
-3. Cerebras — gratuito
+Vedrai qualcosa tipo:
+- `alarm_control_panel.risco_casa`
+- `alarm_control_panel.paradox_mg5050`
+- `alarm_control_panel.ajax_hub`
+- `alarm_control_panel.home_alarm` ← quello di default HA
+
+**Passo 2 — Aggiungilo nel config**
+
+Apri `/config/homemind_patches/person_config.json` e aggiungi una riga:
+
+```json
+{
+  "person_whitelist": ["person.mario"],
+  ...
+  "alarm_panel": "alarm_control_panel.risco_casa",
+  ...
+}
+```
+
+**Passo 3 — Salva e aspetta 2 minuti**
+
+HomeMind rilegge il config automaticamente. Nel log vedrai:
+
+```
+INFO homemind.model — alarm_panel: alarm_control_panel.risco_casa (personalizzato)
+```
+
+### Esempi per marca
+
+| Marca | Esempio entity ID |
+|-------|-------------------|
+| **Risco** | `alarm_control_panel.risco_casa` |
+| **Paradox** | `alarm_control_panel.paradox_mg5050` |
+| **Ajax** | `alarm_control_panel.ajax_hub` |
+| **DSC** | `alarm_control_panel.dsc_alarmo` |
+| **Texecom** | `alarm_control_panel.texecom_premier` |
+| **Bentel** | `alarm_control_panel.bentel_kyo` |
+| **HA manuale** | `alarm_control_panel.home_alarm` |
+
+> Il nome esatto dipende da come hai configurato l'integrazione in HA — controlla sempre in **Strumenti Sviluppatore → Stati**.
+
+### Se non lo configuri
+
+Nessun problema — HomeMind cerca automaticamente il primo `alarm_control_panel` disponibile, preferendo `home_alarm` se presente. **Non si rompe nulla.**
+
+### Il codice PIN
+
+Il codice che inserisci nel campo `alarm_code` della configurazione addon è il **PIN reale del tuo antifurto** — quello che usi per armarlo/disarmarlo dal tastierino fisico.
+
+```yaml
+alarm_code: "1234"   ← il tuo PIN reale
+```
+
+HomeMind lo usa internamente quando deve disarmare automaticamente al tuo rientro. Non viene mai mostrato nei log né passato all'AI.
+
+> ⚠️ Se il PIN è sbagliato, il disarmo automatico fallirà e l'allarme suonerà all'ingresso.
 
 ---
 
-## 📱 Comandi Telegram
+## Telecamere Frigate
 
-Scrivi questi comandi direttamente nella chat con il bot:
+HomeMind si integra con **Frigate NVR** per mandare uno snapshot su Telegram ogni volta che scatta l'allarme. Funziona anche se Frigate è installato su un **PC diverso** nella stessa rete — basta che siano connessi allo stesso router.
 
-### Info Casa
+### Come funziona
+
+```
+Sensore movimento rileva intruso
+        ↓
+HomeMind chiama Frigate via rete locale
+        ↓
+Frigate risponde con la foto della camera
+        ↓
+📷 Foto arriva su Telegram in pochi secondi
+```
+
+La foto viene presa dalla RAM di Frigate — **nessun video salvato su disco** per questa funzione.
+
+### Configurazione dalla pagina web
+
+1. Apri **Impostazioni ⚙️** → tab **📹 Frigate**
+2. Attiva il toggle **Abilita Frigate**
+3. Inserisci l'**IP** del PC dove gira Frigate (es. `192.168.1.100`) e la **porta** (default `5000`)
+4. Clicca **+ Aggiungi camera** per ogni telecamera
+5. Inserisci il **nome della camera** come appare in Frigate (es. `ingresso`)
+6. Seleziona dal menù il **sensore movimento** corrispondente
+7. Clicca **💾 Salva** — riavvia l'addon
+
+### Configurazione via file JSON
+
+```json
+"frigate": {
+  "enabled": true,
+  "host": "192.168.1.100",
+  "port": 5000,
+  "snapshot_on_alarm": true,
+  "cameras": {
+    "ingresso": "binary_sensor.sensore_ingresso_occupancy",
+    "garage":   "binary_sensor.sensore_garage_occupancy",
+    "giardino": "binary_sensor.sensore_giardino_occupancy"
+  }
+}
+```
+
+**Dove trovo il nome della camera?** Apri Frigate nel browser (`http://IP:5000`) — il nome è quello che appare sopra ogni video.
+
+**Cosa succede se un sensore non ha una camera associata?** HomeMind manda automaticamente le foto di tutte le camere configurate.
+
+**Cooldown anti-spam:** la stessa camera non manda più di uno snapshot ogni 60 secondi, anche se più sensori scattano in rapida successione.
+
+---
+
+## Comandi Telegram
+
 | Comando | Descrizione |
 |---------|-------------|
 | `/stato` | Stato completo: persone, sensori, allarme |
-| `/allarme` | Stato attuale dell'allarme |
+| `/briefing` | Ricevi subito il briefing mattutino |
 | `/energia` | Produzione FV e consumi di oggi |
 | `/ieri` | Produzione e consumi di ieri |
-| `/solare` | Surplus FV in tempo reale e ottimizzatore |
-
-### Elettrodomestici
-| Comando | Descrizione |
-|---------|-------------|
-| `/elettrodomestici` | Stato di lavatrice, lavastoviglie ecc. |
-| `lavatrice` | Stato rapido lavatrice |
-| `lavastoviglie` | Stato rapido lavastoviglie |
-
-### Spazzatura
-| Comando | Descrizione |
-|---------|-------------|
+| `/solare` | Surplus FV e ottimizzatore |
+| `/elettrodomestici` | Stato lavatrice, lavastoviglie ecc. |
+| `/lavatrice` | Stato rapido lavatrice |
+| `/lavastoviglie` | Stato rapido lavastoviglie |
 | `/spazzatura` | Raccolta prossimi 7 giorni |
 | `/ricarica_spazzatura` | Rileggi PDF calendario |
-
-### Sistema
-| Comando | Descrizione |
-|---------|-------------|
-| `/briefing` | Ricevi subito il briefing mattutino |
-| `/aggiornamenti` | Controlla aggiornamenti disponibili HA |
-| `/riparazioni` | Problemi segnalati da Home Assistant |
-| `/providers` | Provider AI attivi e catena fallback |
-| `/comandi` | Questa lista |
-
-### Lingua
-| Comando | Descrizione |
-|---------|-------------|
+| `/aggiornamenti` | Controlla aggiornamenti HA |
+| `/riparazioni` | Problemi segnalati da HA |
+| `/providers` | Provider AI attivi |
 | `/lingua it` | Passa all'italiano |
 | `/lingua en` | Switch to English |
+| `/comandi` | Questa lista |
 
 ---
 
-## ❓ FAQ & Problemi comuni
+## Interfaccia Vocale Telegram
 
-**L'allarme si arma mentre sono ancora in casa**
-→ Aggiungi il sensore di prossimità GPS in `proximity_sensors`. Con il sensore distanza HomeMind sa esattamente dove sei.
+Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta come un comando normale.
 
-**HomeMind mi considera assente anche se sono in casa**
-→ Controlla che la tua entità `person.nome` sia nella `person_whitelist`. Verifica in HA che lo stato sia "home".
+**Attivazione:** inserisci `openai_api_key` nella configurazione addon.
 
-**Il sensore movimento del telefono fa scattare l'allarme**
-→ Aggiungi `binary_sensor.nomeTelefono_motion` nella `motion_blacklist`.
+| Durata vocale | Costo |
+|---------------|-------|
+| ~3 secondi | $0.0003 |
+| ~5 secondi | $0.0005 |
 
-**La lavatrice notifica che ha finito troppo presto / tardi**
-→ Aggiusta `min_cycle_minutes` (aumenta se notifica troppo presto) e `max_idle_minutes` (aumenta se notifica prima della fine reale).
-
-**Il surplus solare non supera mai la soglia**
-→ Abbassa `min_surplus_w` nel `solar_optimizer`. Con pannelli da 3kW e consumi normali, 300-400W è una soglia realistica nei periodi nuvolosi.
-
-**Non ricevo notifiche Telegram**
-→ Verifica che il `telegram_chat_id` nella configurazione dell'add-on sia corretto. Usa @userinfobot per trovarlo.
-
-**HomeMind riporta "Finestra bagno sempre aperta"**
-→ Aggiungi quel sensore nella `contact_blacklist` per non ricevere avvisi su aperture intenzionali.
-
-**Voglio testare senza che armi l'allarme**
-→ In HA, metti l'allarme in modalità "disarmato" manualmente. HomeMind non armerà se è già in uno stato insolito.
+Con $5 di crediti OpenAI hai circa 10.000 comandi vocali. La risposta AI usa sempre Gemini/Groq gratuiti.
 
 ---
 
-<div align="center">
+## Sicurezza
+
+- **Codice allarme protetto** — mai esposto all'AI né ai log
+- **Log senza dati personali** — messaggi Telegram loggati solo come `[N chars]`
+- **YAML parsing sicuro** — con PyYAML e fallback controllato
+
+---
+
+## FAQ e Problemi comuni
+
+**L'allarme si arma mentre sono ancora in casa**  
+→ Aggiungi il sensore GPS in `proximity_sensors`.
+
+**HomeMind non controlla il mio antifurto**  
+→ Aggiungi `"alarm_panel": "alarm_control_panel.nome_del_tuo"` nel `person_config.json`. Trova il nome esatto in **Strumenti Sviluppatore → Stati → cerca "alarm"**.
+
+**Non ricevo notifiche Telegram**  
+→ Verifica che `telegram_chat_id` sia un numero (usa @userinfobot). Lascia **vuoto** il campo `notify_entity` nelle Opzioni addon.
+
+**Il campo `notify_entity` diventa rosso obbligatorio**  
+→ Aggiorna alla v1.3.0 — il campo è ora opzionale. Nel frattempo lascialo vuoto o scrivi `placeholder`.
+
+**Il briefing non arriva**  
+→ Scrivi `/briefing` per testarlo. Verifica nei log che il provider AI sia configurato.
+
+**Frigate non si connette**  
+→ Verifica che l'IP e la porta siano corretti e che Frigate sia raggiungibile dalla rete (`http://IP:5000`).
+
+**Ricevo foto duplicate di Telegram**  
+→ Aggiorna alla v1.3.0 — il cooldown anti-duplicati è incluso.
+
+**La pagina Impostazioni non mostra le entità**  
+→ Aprila qualche secondo dopo l'avvio, quando il log mostra `HomeMind ready`.
+
+**Salvo dalla pagina web ma i campi avanzati spariscono**  
+→ Aggiorna alla v1.2.0 — il merge automatico è incluso.
+
+---
+
+## Changelog
+
+**v1.3.0** — Fix `notify_entity` vuoto che bloccava Telegram, campo ora opzionale, fix foto duplicate Frigate, supporto allarme personalizzato (`alarm_panel`)
+**v1.2.x** — Integrazione Frigate NVR, snapshot automatici su allarme, tab 📹 nella pagina impostazioni  
+**v1.2.0** — Pagina Impostazioni web completa, merge automatico campi avanzati  
+**v1.1.x** — Fix tab navigazione, fix BOM UTF-8, dashboard live  
+**v1.0.4** — Interfaccia vocale Telegram (Whisper)  
+**v1.0.2** — Fix sicurezza: alarm code, autenticazione web, log PII  
+**v1.0.0** — Release iniziale
+
+---
 
 **HomeMind Orchestrator** — *La tua casa, finalmente intelligente.*
 
-</div>
+[![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
+
+**[paypal.me/ago19800](https://paypal.me/ago19800)**
