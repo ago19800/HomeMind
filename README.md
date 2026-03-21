@@ -45,6 +45,7 @@
 - [Configurazione MEDIA](#configurazione-media)
 - [Configurazione AVANZATA](#configurazione-avanzata)
 - [Moduli e funzionalità](#moduli-e-funzionalità)
+- [Allarme Personalizzato](#-allarme-personalizzato-risco-paradox-ajax-e-altri)
 - [Telecamere Frigate](#telecamere-frigate)
 - [Comandi Telegram](#comandi-telegram)
 - [Interfaccia Vocale](#interfaccia-vocale-telegram)
@@ -390,6 +391,84 @@ Carica il PDF del calendario in `/config/homemind_patches/spazzatura.pdf`, poi s
 
 ---
 
+## 🔐 Allarme Personalizzato (Risco, Paradox, Ajax e altri)
+
+HomeMind funziona con **qualsiasi antifurto** già integrato in Home Assistant — Risco, Paradox, DSC, Texecom, Ajax, Bentel e qualsiasi altra marca.
+
+Non parla direttamente con l'antifurto fisico — parla con Home Assistant, che a sua volta parla con il tuo impianto tramite la sua integrazione specifica. Il risultato è che la marca non conta: se HA lo vede, HomeMind lo controlla.
+
+```
+HomeMind → Home Assistant → integrazione specifica → antifurto fisico
+                              (Risco, Paradox, Ajax...)
+```
+
+### Come configurare il tuo antifurto
+
+**Passo 1 — Trova l'entity ID in HA**
+
+```
+Strumenti Sviluppatore → Stati → cerca "alarm"
+```
+
+Vedrai qualcosa tipo:
+- `alarm_control_panel.risco_casa`
+- `alarm_control_panel.paradox_mg5050`
+- `alarm_control_panel.ajax_hub`
+- `alarm_control_panel.home_alarm` ← quello di default HA
+
+**Passo 2 — Aggiungilo nel config**
+
+Apri `/config/homemind_patches/person_config.json` e aggiungi una riga:
+
+```json
+{
+  "person_whitelist": ["person.mario"],
+  ...
+  "alarm_panel": "alarm_control_panel.risco_casa",
+  ...
+}
+```
+
+**Passo 3 — Salva e aspetta 2 minuti**
+
+HomeMind rilegge il config automaticamente. Nel log vedrai:
+
+```
+INFO homemind.model — alarm_panel: alarm_control_panel.risco_casa (personalizzato)
+```
+
+### Esempi per marca
+
+| Marca | Esempio entity ID |
+|-------|-------------------|
+| **Risco** | `alarm_control_panel.risco_casa` |
+| **Paradox** | `alarm_control_panel.paradox_mg5050` |
+| **Ajax** | `alarm_control_panel.ajax_hub` |
+| **DSC** | `alarm_control_panel.dsc_alarmo` |
+| **Texecom** | `alarm_control_panel.texecom_premier` |
+| **Bentel** | `alarm_control_panel.bentel_kyo` |
+| **HA manuale** | `alarm_control_panel.home_alarm` |
+
+> Il nome esatto dipende da come hai configurato l'integrazione in HA — controlla sempre in **Strumenti Sviluppatore → Stati**.
+
+### Se non lo configuri
+
+Nessun problema — HomeMind cerca automaticamente il primo `alarm_control_panel` disponibile, preferendo `home_alarm` se presente. **Non si rompe nulla.**
+
+### Il codice PIN
+
+Il codice che inserisci nel campo `alarm_code` della configurazione addon è il **PIN reale del tuo antifurto** — quello che usi per armarlo/disarmarlo dal tastierino fisico.
+
+```yaml
+alarm_code: "1234"   ← il tuo PIN reale
+```
+
+HomeMind lo usa internamente quando deve disarmare automaticamente al tuo rientro. Non viene mai mostrato nei log né passato all'AI.
+
+> ⚠️ Se il PIN è sbagliato, il disarmo automatico fallirà e l'allarme suonerà all'ingresso.
+
+---
+
 ## Telecamere Frigate
 
 HomeMind si integra con **Frigate NVR** per mandare uno snapshot su Telegram ogni volta che scatta l'allarme. Funziona anche se Frigate è installato su un **PC diverso** nella stessa rete — basta che siano connessi allo stesso router.
@@ -493,6 +572,9 @@ Con $5 di crediti OpenAI hai circa 10.000 comandi vocali. La risposta AI usa sem
 **L'allarme si arma mentre sono ancora in casa**  
 → Aggiungi il sensore GPS in `proximity_sensors`.
 
+**HomeMind non controlla il mio antifurto**  
+→ Aggiungi `"alarm_panel": "alarm_control_panel.nome_del_tuo"` nel `person_config.json`. Trova il nome esatto in **Strumenti Sviluppatore → Stati → cerca "alarm"**.
+
 **Non ricevo notifiche Telegram**  
 → Verifica che `telegram_chat_id` sia un numero (usa @userinfobot). Lascia **vuoto** il campo `notify_entity` nelle Opzioni addon.
 
@@ -518,7 +600,7 @@ Con $5 di crediti OpenAI hai circa 10.000 comandi vocali. La risposta AI usa sem
 
 ## Changelog
 
-**v1.3.0** — Fix `notify_entity` vuoto che bloccava Telegram, campo ora opzionale, fix foto duplicate Frigate  
+**v1.3.0** — Fix `notify_entity` vuoto che bloccava Telegram, campo ora opzionale, fix foto duplicate Frigate, supporto allarme personalizzato (`alarm_panel`)
 **v1.2.x** — Integrazione Frigate NVR, snapshot automatici su allarme, tab 📹 nella pagina impostazioni  
 **v1.2.0** — Pagina Impostazioni web completa, merge automatico campi avanzati  
 **v1.1.x** — Fix tab navigazione, fix BOM UTF-8, dashboard live  
