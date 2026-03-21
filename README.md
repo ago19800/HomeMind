@@ -5,7 +5,7 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.3.3-brightgreen)]()
+[![Version](https://img.shields.io/badge/versione-1.3.4-brightgreen)](https://github.com/ago19800/HomeMind/releases/tag/1.3.4)
 
 <div align="center">
 ☕ Supporta il Progetto
