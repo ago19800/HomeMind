@@ -3,6 +3,8 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
+## [1.3.4] — 2026-03-21
+- Fix: switch
 
 ## [1.3.3] — 2026-03-21
 
