@@ -3,62 +3,108 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
+
+## [1.3.5] — 2026-03-22
+
+### 📅 Smart Routine Manager (NUOVO)
+- HomeMind impara la tua routine reale dai dati HA e anticipa i tuoi bisogni
+- Osserva ogni giorno: orario di uscita, rientro, attività in cucina al mattino
+- Dopo 3 giorni inizia a fare previsioni
+- Quando rileva movimento in cucina vicino all'orario tipico di uscita avvisa su Telegram:
+  *"Di solito esci alle 08:30 — mancano 20 minuti. Vuoi che preparo la casa?"*
+- Risposta "sì" → abbassa riscaldamento e spegne le luci automaticamente
+- Risposta "no" → non fa nulla
+- Salvataggio pattern in `/data/homemind_routine.json`
+- Nuovo comando `/routine` → mostra orari tipici appresi
+- Intercetta conferme "sì/no" su Telegram per la routine
+- Registrazione automatica eventi cucina mattutini per il learning
+
+### 🧠 Memoria Persistente (NUOVO)
+- HomeMind impara le preferenze dell'utente nel tempo e le usa nelle risposte
+- Estrazione automatica dei fatti utili dopo ogni conversazione tramite AI
+- Salvataggio in `/data/homemind_memory.json` — persiste tra i riavvii
+- Massimo 50 fatti memorizzati, organizzati per categoria
+- Categorie: abitudini, preferenze, casa, persone, energia, dispositivi
+- Nuovi comandi Telegram:
+  - `/memoria` → mostra tutto ciò che HomeMind sa sull'utente
+  - `/dimentica <testo>` → rimuove i fatti che contengono quel testo
+  - `/memoria reset` → cancella tutta la memoria
+- La memoria viene iniettata nel system prompt AI ad ogni conversazione
+- Esempio: *"Preferisco 22 gradi la sera"* → HomeMind lo imposta automaticamente la volta dopo
+
+---
+
 ## [1.3.4] — 2026-03-21
-- Fix: switch
 
-## [1.3.3] — 2026-03-21
+### 🔐 Antifurto Personalizzato
+- Nuovo campo `alarm_panel` nel `person_config.json` — supporta qualsiasi marca integrata in HA
+- Supporta due formati:
+  - Stringa semplice: `"alarm_panel": "alarm_control_panel.risco_casa"`
+  - Oggetto avanzato: `"alarm_panel": {"entity": "...", "arm_mode": "armed_home"}`
+- Nuovo campo `arm_mode` per scegliere la modalità di armamento:
+  - `armed_away` — tutti fuori (default)
+  - `armed_home` — perimetrale, qualcuno in casa
+  - `armed_night` — modalità notte
+- Compatibile con: Risco, Paradox, Ajax, DSC, Texecom, Bentel, Verisure e qualsiasi altro
+- Se non configurato → HomeMind trova automaticamente il primo allarme disponibile
+- Se entity ID non trovato in HA → warning nel log + fallback automatico senza bloccarsi
 
-### 🔐 Allarme Personalizzato
-- Aggiunto supporto per antifurto di qualsiasi marca (Risco, Paradox, Ajax, DSC, Texecom, Bentel ecc.)
-- Nuovo campo `alarm_panel` in `person_config.json` — basta aggiungere l'entity ID del proprio antifurto
-- Se non configurato, HomeMind continua a funzionare come prima (cerca automaticamente `home_alarm`)
-- Se l'entity ID è sbagliato, HomeMind avvisa nel log e torna al comportamento automatico senza bloccarsi
-
-```json
-"alarm_panel": "alarm_control_panel.risco_casa"
-```
+### 🌡️ Clima e Riscaldamento Personalizzato
+- Nuovo campo `climate` nel `person_config.json`
+- Ogni utente dichiara il proprio impianto con switch fisico separato e range temperatura
+- L'AI vede gli switch caldaia nel contesto e capisce come usarli correttamente
+- Logica differenziata: con switch → `switch.turn_on`; senza switch → `set_hvac_mode` + `set_temperature`
+- Rispetta i limiti min/max configurati — avvisa l'utente se fuori range
+- Il blocco clima nel contesto AI mostra: stato, temperatura corrente, target, range, switch collegato
 
 ### ☀️ Ottimizzatore Solare — Batteria Piena
-- Aggiunto rilevamento surplus quando la batteria è al 100% e l'inverter throttla il FV
-- Nuovo campo `battery_soc_sensor` per leggere la percentuale batteria
-- Nuovo campo `battery_full_threshold` (default 95%) — soglia per considerare la batteria piena
-- Nuovo campo `battery_full_min_fv_w` (default 300W) — produzione FV minima per attivare la notifica
-- Nessuna notifica se il sole è tramontato — controllo elevazione solare tramite `sun.sun`
-- Nuovo campo `min_sun_elevation` (default 10°) — angolo minimo del sole per attivare le notifiche
+- Rileva surplus anche quando la batteria è al 100% e l'inverter throttla il FV
+- Controllo elevazione solare tramite `sun.sun` — nessuna notifica se il sole è tramontato
+- Nuovi campi: `battery_soc_sensor`, `battery_full_threshold`, `battery_full_min_fv_w`, `min_sun_elevation`
+- Messaggio differenziato: "Batteria carica — energia solare disponibile!"
 
-### ☀️ Ottimizzatore Solare — Fix calcolo surplus
-- Rimossa la media con lo Shelly che distorceva il calcolo
-- Il surplus viene ora calcolato solo con FV - consumo (più preciso)
-- Lo Shelly rimane disponibile come dato diagnostico nel log
+### ☀️ Fix Calcolo Surplus
+- Rimossa la media con Shelly che distorceva il calcolo
+- Surplus calcolato direttamente: FV - consumo (più preciso)
 
-### 🔒 Sicurezza — Fix armamento allarme
-- Fix: l'allarme non si armava più quando il sensore GPS non aggiornava per più di 4 ore
-- Aggiunto limite massimo di 4 ore per i dati proximity: oltre questa soglia HomeMind usa il GPS
-- Fix: notifiche spam "armo" ad ogni aggiornamento GPS quando l'allarme era già in stato `arming`
-- Fix: `last_seen` ora viene inizializzato correttamente all'avvio usando `last_updated` dalla cache HA
+### 🔒 Fix Benvenuto — Proximity + GPS
+- Fix: benvenuto non arrivava quando GPS arrivava prima con proximity ancora alta
+- Nuovo scenario gestito: proximity diventa "near" mentre GPS è già "home" → benvenuto
 
-### 🔒 Sicurezza — Fix notifica benvenuto
-- Fix: il benvenuto non arrivava se c'erano stati rimbalzi GPS durante il giorno (cooldown consumato)
-- Aggiunto filtro anti-rimbalzo: nessun benvenuto se la persona era via da meno di 5 minuti
-- Aggiunto log esplicito del motivo quando il benvenuto viene saltato:
-  - `benvenuto SKIP — rimbalzo GPS (via 0 min)`
-  - `benvenuto SKIP — cooldown attivo (30 min fa)`
-  - `benvenuto schedulato (via 120 min)`
+### 🔒 Fix Proximity Stale 4 ore
+- Aggiunto limite massimo assoluto di 4h per dati proximity vecchi
+- Oltre 4h → HomeMind cede al GPS anche con `stale_check: false`
+- `last_seen` inizializzato correttamente all'avvio dalla cache HA
 
-### 📍 Geocoding — Indirizzi rurali italiani
-- Migliorato il reverse geocoding per zone rurali (Contrada, Località, Frazione)
-- Aggiunto supporto per i campi OSM `hamlet`, `locality`, `isolated_dwelling`
-- Fallback migliorato: usa le prime 3 parti del `display_name` invece del quartiere generico
+### 🔒 Fix Spam Armamento
+- Fix: notifiche "armo" ad ogni aggiornamento GPS con allarme già in `arming`
+- Aggiunto controllo stato prima di triggerare l'armamento
 
-### 💬 Telegram — Comandi spostamenti
-- Aggiunte parole chiave naturali per il location tracker:
-  - `spostamenti rosa`, `spostamenti agostino`
-  - `dove rosa`, `dove agostino`
-- Prima funzionava solo con `spostamenti di rosa` (con "di") — ora riconosce frasi senza preposizione
+### 🔒 Fix Benvenuto Anti-rimbalzo GPS
+- Aggiunto filtro: nessun benvenuto se via meno di 5 minuti (rimbalzo GPS)
+- Log esplicito del motivo skip
 
-### 💬 Telegram — Comando /solare
-- Aggiunto `/solare` alla lista comandi ufficiale (`/comandi`)
-- Il comando ora mostra anche la percentuale batteria se `battery_soc_sensor` è configurato
+### 📍 Geocoding Zone Rurali Italiane
+- Supporto campi OSM: `hamlet`, `locality`, `isolated_dwelling`, `croft`
+- Fallback migliorato su `display_name` per zone senza indirizzo strutturato
+
+### 💡 Switch Visibili all'AI
+- Aggiunto blocco "SWITCH / PRESE" nel contesto passato all'AI
+- L'AI ora sceglie correttamente tra switch fisico e termostato
+- Filtro automatico switch di servizio/sistema
+
+### 💬 Comandi Telegram Ampliati
+- Trigger naturali per spostamenti: "dove rosa", "spostamenti agostino" ecc.
+- Trigger per lista comandi: "cosa sai fare", "cosa puoi fare" ecc.
+- Aggiunti: `/solare`, `/memoria`, `/routine` alla lista comandi ufficiale
+
+### 📊 Fix Stato Casa — Temperature
+- Fix: `/stato` mostrava solo 3 temperature
+- Ora mostra tutte, filtrando automaticamente sensori CPU/sistema non utili all'utente
+
+### 📊 Fix Stato Casa — Allarme
+- Fix: `/stato` ignorava la configurazione `alarm_panel` e mostrava il primo trovato
+- Ora usa sempre l'allarme configurato se presente
 
 ---
 
@@ -66,12 +112,12 @@ Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ### Fix
 - Fix `notify_entity` vuoto che bloccava Telegram — campo ora opzionale
-- Fix foto duplicate Frigate — aggiunto cooldown anti-spam 60 secondi per camera
+- Fix foto duplicate Frigate — cooldown anti-spam 60s per camera
 
 ### Funzionalità
 - Integrazione Frigate NVR completa
 - Snapshot automatici su allarme
-- Tab 📹 Frigate nella pagina impostazioni web
+- Tab Frigate nella pagina impostazioni web
 
 ---
 
@@ -80,7 +126,6 @@ Tutte le modifiche significative al progetto sono documentate in questo file.
 ### Funzionalità
 - Pagina Impostazioni web completa (5 tab: Persone, Sensori, Spazzatura, Energia, Frigate)
 - Merge automatico campi avanzati quando si salva dalla pagina web
-- I campi `proximity_sensors`, `solar_optimizer`, `appliances` non vengono mai sovrascritti
 
 ---
 
@@ -97,7 +142,6 @@ Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ### Funzionalità
 - Interfaccia vocale Telegram tramite OpenAI Whisper
-- Trascrizione automatica messaggi vocali → comando AI
 
 ---
 
@@ -106,19 +150,19 @@ Tutte le modifiche significative al progetto sono documentate in questo file.
 ### Sicurezza
 - Codice allarme mai esposto all'AI né ai log
 - Autenticazione pagina web
-- Log senza dati personali (messaggi Telegram loggati solo come `[N chars]`)
+- Log senza dati personali
 
 ---
 
 ## [1.0.0] — release iniziale
 
-- Gestione allarme automatica (arma/disarma in base alla presenza)
-- Rilevamento presenza con GPS + sensore prossimità
+- Gestione allarme automatica
+- Rilevamento presenza con GPS e sensore prossimità
 - Monitor elettrodomestici (modalità power e smart)
 - Ottimizzatore solare surplus FV
 - Analisi energetica giornaliera con AI
-- Briefing mattutino (meteo, energia, spazzatura, consiglio AI)
+- Briefing mattutino
 - Calendario spazzatura da PDF
 - Controllo AI via Telegram in linguaggio naturale
-- Fallback automatico tra provider AI (Gemini → Groq → Cerebras)
+- Fallback automatico tra provider AI (Gemini, Groq, Cerebras)
 - Supporto italiano e inglese
