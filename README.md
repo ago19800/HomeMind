@@ -5,7 +5,7 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.5.0-brightgreen)](https://github.com/ago19800/HomeMind/releases)
+[![Version](https://img.shields.io/badge/versione-1.3.5-brightgreen)](https://github.com/ago19800/HomeMind/releases)
 
 <div align="center">
 
@@ -766,9 +766,9 @@ Con $5 di crediti OpenAI hai circa 10.000 comandi vocali. La risposta AI usa sem
 
 ## Changelog
 
-**v1.5.0** — Smart Routine Manager: impara orari uscita/rientro, anticipa partenze, comando `/routine`
+**v1.3.5** — Smart Routine Manager: impara orari uscita/rientro, anticipa partenze, comando `/routine`
 
-**v1.4.0** — Memoria persistente (`/memoria`, `/dimentica`, `/memoria reset`), allarme personalizzato con formato stringa e oggetto (supporto `arm_mode` per Verisure/Ajax), clima personalizzato con switch fisico e range temperatura, switch visibili all'AI, ottimizzatore solare batteria piena + elevazione solare, fix benvenuto proximity+GPS, fix proximity stale 4h, fix temperature nel `/stato`
+**v1.3.4** — Memoria persistente (`/memoria`, `/dimentica`, `/memoria reset`), allarme personalizzato con formato stringa e oggetto (supporto `arm_mode` per Verisure/Ajax), clima personalizzato con switch fisico e range temperatura, switch visibili all'AI, ottimizzatore solare batteria piena + elevazione solare, fix benvenuto proximity+GPS, fix proximity stale 4h, fix temperature nel `/stato`
 
 **v1.3.0** — Fix `notify_entity` vuoto che bloccava Telegram, fix foto duplicate Frigate, cooldown anti-spam 60s per camera
 
