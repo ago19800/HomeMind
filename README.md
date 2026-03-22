@@ -975,9 +975,9 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 ## Changelog
 
-**v1.5.0** — Smart Routine Manager: learns departure/arrival times, anticipates departures, `/routine` command
+**v1.3.5** — Smart Routine Manager: learns departure/arrival times, anticipates departures, `/routine` command
 
-**v1.4.0** — Persistent memory (`/memoria`, `/dimentica`, `/memoria reset`), custom alarm panel (string and object format, `arm_mode` support for Verisure/Ajax), custom climate with physical switch and temperature range, switches visible to AI, solar optimizer full battery + sun elevation, welcome fix proximity+GPS, 4h proximity stale fix, temperature fix in `/stato`
+**v1.3.4** — Persistent memory (`/memoria`, `/dimentica`, `/memoria reset`), custom alarm panel (string and object format, `arm_mode` support for Verisure/Ajax), custom climate with physical switch and temperature range, switches visible to AI, solar optimizer full battery + sun elevation, welcome fix proximity+GPS, 4h proximity stale fix, temperature fix in `/stato`
 
 **v1.3.0** — Fix empty `notify_entity` blocking Telegram, fix duplicate Frigate photos, 60s anti-spam cooldown per camera
 
