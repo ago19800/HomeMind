@@ -3,7 +3,8 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
-
+## [1.3.6] — 2026-03-22
+- Fix: Lingua : EN
 ## [1.3.5] — 2026-03-22
 
 ### 📅 Smart Routine Manager (NUOVO)
