@@ -6,8 +6,8 @@
 
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
-[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.3.6-brightgreen)](https://github.com/ago19800/HomeMind/releases)
+[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek-orange)]()
+[![Version](https://img.shields.io/badge/versione-6.0.0-brightgreen)](https://github.com/ago19800/HomeMind/releases)
 
 ☕ **Se questo addon ti è utile, offrimi un caffè! / If this addon is useful, buy me a coffee!**
 
@@ -53,9 +53,13 @@
 - [Sensore Prossimità GPS](#sensore-prossimità-gps)
 - [Elettrodomestici](#monitor-elettrodomestici)
 - [Ottimizzatore Solare](#ottimizzatore-solare)
+- [Power Guard](#power-guard-it)
 - [Clima e Riscaldamento](#clima-e-riscaldamento)
 - [Memoria Persistente](#memoria-persistente)
 - [Routine Intelligente](#routine-intelligente)
+- [Gestione Automazioni](#gestione-automazioni-it)
+- [Analisi Log e Auto-Fix](#analisi-log-e-auto-fix-it)
+- [Generatore Dashboard Lovelace](#generatore-dashboard-lovelace-it)
 - [Telecamere Frigate](#telecamere-frigate-it)
 - [Comandi Telegram](#comandi-telegram-it)
 - [Interfaccia Vocale](#interfaccia-vocale-it)
@@ -74,6 +78,8 @@ HomeMind è un **add-on per Home Assistant** che aggiunge un cervello AI alla tu
 > *"Quanta energia ho prodotto oggi?"*
 > *"Arma l'allarme"*
 > *"Accendi la caldaia a 22 gradi"*
+> *"Crea un'automazione che spenga le luci alle 23"*
+> *"Analizza i log di HA e dimmi se ci sono errori"*
 
 Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la tratta come un comando normale.
 
@@ -92,6 +98,10 @@ Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la 
 | 🗑️ **Spazzatura** | La sera prima ricorda cosa mettere fuori |
 | 🧠 **Memoria persistente** | Impara le tue preferenze nel tempo |
 | 📅 **Routine intelligente** | Anticipa i tuoi bisogni in base alle abitudini reali |
+| ⚠️ **Power Guard** | Protegge dalla soglia contrattuale Enel, spegne in automatico |
+| 🔧 **Automazioni da Telegram** | Crea, modifica ed elimina automazioni HA via chat |
+| 🩺 **Analisi Log AI** | Legge i log HA, trova errori critici e propone fix |
+| 🎨 **Dashboard Lovelace AI** | Genera dashboard Lovelace su misura per le tue entità |
 
 ---
 
@@ -120,10 +130,35 @@ alarm_code:         "1234"                 # PIN reale del tuo antifurto
 ### Provider AI (inserisci almeno Gemini + Groq — gratuiti)
 ```yaml
 gemini_api_key:   "AIzaSy..."   # Gratis 1.500 req/giorno → aistudio.google.com
+gemini_model:     "gemini-2.0-flash"
+
 groq_api_key:     "gsk_..."     # Gratis 100k token/giorno → console.groq.com
+groq_model:       "llama-3.3-70b-versatile"
+
 cerebras_api_key: "csk_..."     # Gratis 1M token/min     → cloud.cerebras.ai
+cerebras_model:   "llama3.1-8b"
+
+deepseek_api_key: "sk-..."      # ~Gratis $0.014/1M token → platform.deepseek.com
+deepseek_model:   "deepseek-chat"
+
+claude_api_key:   "sk-ant-..."  # A pagamento → console.anthropic.com
+claude_model:     "claude-3-5-haiku-20241022"
+
 openai_api_key:   "sk-..."      # Solo per messaggi vocali → platform.openai.com
+openai_model:     "gpt-4o-mini"
+
+# Ordine di priorità — primo provider disponibile viene usato per primo
+ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
 ```
+
+| Provider | Costo | Limite | Link |
+|----------|-------|--------|------|
+| 🟦 **Gemini** | Gratis | 1.500 req/giorno | [aistudio.google.com](https://aistudio.google.com) |
+| ⚡ **Groq** | Gratis | 100k token/giorno | [console.groq.com](https://console.groq.com) |
+| 🧠 **Cerebras** | Gratis | 1M token/min | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
+| 🔵 **DeepSeek** | ~Gratis | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
+| 🟠 **Claude** | A pagamento | — | [console.anthropic.com](https://console.anthropic.com) |
+| 🟢 **OpenAI** | A pagamento | $0.006/min audio | [platform.openai.com](https://platform.openai.com) |
 
 ---
 
@@ -241,6 +276,18 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
       "lavatrice": { "enabled": true, "switch": "switch.presa_lavatrice", "min_surplus_w": 800, "auto_start": false }
     }
   },
+  "power_guard": {
+    "enabled": true,
+    "sensor": "sensor.consumo_casa_w",
+    "threshold_w": 3000,
+    "warning_pct": 90,
+    "mode": "ask",
+    "appliances": [
+      {"name": "Lavatrice",     "switch": "switch.presa_lavatrice",     "priority": 1},
+      {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie", "priority": 2},
+      {"name": "Scaldabagno",   "switch": "switch.scaldabagno",         "priority": 3}
+    ]
+  },
   "frigate": {
     "enabled": true, "host": "192.168.1.100", "port": 5000, "snapshot_on_alarm": true,
     "cameras": { "ingresso": "binary_sensor.sensore_ingresso_occupancy" }
@@ -344,6 +391,41 @@ Monitora il surplus ogni 2 minuti. Rispondi **"sì"** su Telegram per avviare l'
 
 ---
 
+## Power Guard IT
+
+Protegge la tua utenza dalla soglia contrattuale Enel. Quando il consumo si avvicina al limite, HomeMind **notifica** o **spegne automaticamente** gli elettrodomestici meno prioritari.
+
+```json
+"power_guard": {
+  "enabled": true,
+  "sensor": "sensor.consumo_casa_w",
+  "threshold_w": 3000,
+  "warning_pct": 90,
+  "mode": "ask",
+  "appliances": [
+    {"name": "Lavatrice",     "switch": "switch.presa_lavatrice",     "priority": 1},
+    {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie", "priority": 2},
+    {"name": "Scaldabagno",   "switch": "switch.scaldabagno",         "priority": 3}
+  ]
+}
+```
+
+| `mode` | Comportamento |
+|--------|---------------|
+| `warn_only` | Solo notifica, non spegne nulla |
+| `ask` | Chiede conferma prima di spegnere **(consigliato)** |
+| `auto` | Spegne automaticamente senza chiedere |
+
+**Comandi Telegram:**
+```
+/powerguard   → stato attuale + elettrodomestici monitorati
+/pg           → alias breve
+```
+
+> Il cooldown anti-spam è di 10 minuti per evitare messaggi continui.
+
+---
+
 ## Clima e Riscaldamento
 
 ```json
@@ -434,6 +516,73 @@ HomeMind: "🏃 Di solito esci alle 08:30 — mancano 20 minuti.
 
 ---
 
+## Gestione Automazioni IT
+
+Dalla v6.0 puoi creare, modificare ed eliminare automazioni HA **direttamente da Telegram**, in linguaggio naturale. HomeMind scrive il YAML nel tuo `automations.yaml` — senza toccare nient'altro.
+
+### Esempi
+```
+"crea automazione che spenga tutte le luci a mezzanotte"
+→ HomeMind genera il YAML, lo salva in automations.yaml e lo attiva subito
+
+"modifica automazione luci notte — falla scattare all'01:00 invece di mezzanotte"
+→ HomeMind trova la riga giusta e la aggiorna
+
+"elimina automazione luci notte"
+→ Rimuove il blocco e ricarica le automazioni in HA
+
+"mostra le mie automazioni"
+→ Lista completa divisa per attive/disattive con nomi friendly
+```
+
+### Comandi
+```
+/automazioni          → lista completa
+crea automazione ...  → crea in linguaggio naturale
+modifica automazione [nome] — [modifica]
+elimina automazione [nome]
+```
+
+> Ogni modifica viene salvata con backup automatico in `/config/homemind_patches/`.
+
+---
+
+## Analisi Log e Auto-Fix IT
+
+HomeMind legge i log di Home Assistant ogni 5 minuti, identifica errori critici e ti informa con una spiegazione AI e la soluzione consigliata.
+
+```
+HomeMind: "⚠️ Errore critico rilevato in HA:
+  [homeassistant.components.mqtt] Cannot connect to MQTT broker
+
+  💡 Soluzione: Il broker MQTT non è raggiungibile. Verifica che
+  Mosquitto sia in esecuzione e che l'indirizzo host nel file di
+  configurazione sia corretto."
+```
+
+**Configurazione** — per ora automatica, nessuna configurazione necessaria. Attivata di default.
+
+> Anti-spam integrato: lo stesso errore viene notificato al massimo **ogni ora**.
+
+---
+
+## Generatore Dashboard Lovelace IT
+
+HomeMind può generare una dashboard Lovelace completa per la tua installazione HA, basandosi sulle entità reali presenti nel sistema e sulla loro frequenza d'uso.
+
+**Come usarlo:**
+```
+"genera la mia dashboard"
+"crea una dashboard lovelace per le mie entità"
+```
+
+Il file YAML viene salvato in `/config/homemind_dashboards/` pronto per essere importato in HA. Puoi anche chiedere a HomeMind di caricarlo direttamente con:
+```
+"genera dashboard e caricala su HA"
+```
+
+---
+
 ## Telecamere Frigate IT
 
 ```json
@@ -462,6 +611,8 @@ Il nome camera deve corrispondere a quello in Frigate (`http://IP:5000`). Cooldo
 | `/solare` | Surplus FV e ottimizzatore |
 | `/elettrodomestici` | Stato elettrodomestici |
 | `/routine` | Routine appresa |
+| `/automazioni` | Lista automazioni HA |
+| `/powerguard` / `/pg` | Stato Power Guard e consumi |
 | `/memoria` | Cosa HomeMind sa su di te |
 | `/dimentica <testo>` | Rimuovi un fatto |
 | `/memoria reset` | Cancella memoria |
@@ -496,7 +647,11 @@ Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta 
 
 **La routine non si attiva** → Servono 3 giorni di dati. Controlla con `/routine`.
 
-**Il /stato mostra poche temperature** → Aggiorna alla v1.4.0 — ora le mostra tutte.
+**Power Guard notifica continuamente** → Normale se il consumo oscilla attorno alla soglia. Abbassa `warning_pct` o aumenta `threshold_w`.
+
+**L'analisi log non funziona** → Verifica che il log di HA sia accessibile dal container. Controlla i log dell'addon.
+
+**La dashboard generata è vuota** → HomeMind legge le entità in tempo reale — assicurati che l'addon sia in esecuzione e connesso all'API HA.
 
 **Non ricevo notifiche Telegram** → Verifica `telegram_chat_id` con @userinfobot.
 
@@ -521,9 +676,13 @@ Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta 
 - [GPS Proximity Sensor](#gps-proximity-sensor)
 - [Appliance Monitor](#appliance-monitor)
 - [Solar Optimizer](#solar-optimizer)
+- [Power Guard](#power-guard-en)
 - [Climate and Heating](#climate-and-heating)
 - [Persistent Memory](#persistent-memory)
 - [Smart Routine](#smart-routine)
+- [Automations Manager](#automations-manager-en)
+- [Log Analysis and Auto-Fix](#log-analysis-and-auto-fix-en)
+- [Lovelace Dashboard Generator](#lovelace-dashboard-generator-en)
 - [Frigate Cameras](#frigate-cameras)
 - [Telegram Commands](#telegram-commands)
 - [Voice Interface](#voice-interface)
@@ -542,6 +701,8 @@ HomeMind is a **Home Assistant add-on** that adds an AI brain to your home. It's
 > *"How much energy did I produce today?"*
 > *"Arm the alarm"*
 > *"Turn on the boiler at 22 degrees"*
+> *"Create an automation to turn off the lights at 11pm"*
+> *"Analyze the HA logs and tell me if there are any errors"*
 
 You can also send **voice messages** 🎙️ — it transcribes the voice and treats it as a normal command.
 
@@ -560,6 +721,10 @@ You can also send **voice messages** 🎙️ — it transcribes the voice and tr
 | 🗑️ **Trash reminder** | The evening before reminds what to put out |
 | 🧠 **Persistent memory** | Learns your preferences over time |
 | 📅 **Smart routine** | Anticipates your needs based on real habits |
+| ⚠️ **Power Guard** | Protects against Enel contract threshold, auto-shuts appliances |
+| 🔧 **Automations from Telegram** | Create, edit and delete HA automations via chat |
+| 🩺 **AI Log Analysis** | Reads HA logs, finds critical errors and proposes fixes |
+| 🎨 **Lovelace AI Dashboard** | Generates a custom Lovelace dashboard for your entities |
 
 ---
 
@@ -588,10 +753,35 @@ alarm_code:         "1234"                   # real PIN of your alarm system
 ### AI Providers (add at least Gemini + Groq — both free)
 ```yaml
 gemini_api_key:   "AIzaSy..."   # Free 1,500 req/day  → aistudio.google.com
+gemini_model:     "gemini-2.0-flash"
+
 groq_api_key:     "gsk_..."     # Free 100k token/day → console.groq.com
+groq_model:       "llama-3.3-70b-versatile"
+
 cerebras_api_key: "csk_..."     # Free 1M token/min   → cloud.cerebras.ai
+cerebras_model:   "llama3.1-8b"
+
+deepseek_api_key: "sk-..."      # ~Free $0.014/1M tok → platform.deepseek.com
+deepseek_model:   "deepseek-chat"
+
+claude_api_key:   "sk-ant-..."  # Paid → console.anthropic.com
+claude_model:     "claude-3-5-haiku-20241022"
+
 openai_api_key:   "sk-..."      # Only for voice msg  → platform.openai.com
+openai_model:     "gpt-4o-mini"
+
+# Priority order — first available provider is used first
+ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
 ```
+
+| Provider | Cost | Limit | Link |
+|----------|------|-------|------|
+| 🟦 **Gemini** | Free | 1,500 req/day | [aistudio.google.com](https://aistudio.google.com) |
+| ⚡ **Groq** | Free | 100k token/day | [console.groq.com](https://console.groq.com) |
+| 🧠 **Cerebras** | Free | 1M token/min | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
+| 🔵 **DeepSeek** | ~Free | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
+| 🟠 **Claude** | Paid | — | [console.anthropic.com](https://console.anthropic.com) |
+| 🟢 **OpenAI** | Paid | $0.006/min audio | [platform.openai.com](https://platform.openai.com) |
 
 ---
 
@@ -709,6 +899,18 @@ Open HomeMind → click **⚙️** at the top. Configure without editing files:
       "washer": { "enabled": true, "switch": "switch.washer_plug", "min_surplus_w": 800, "auto_start": false }
     }
   },
+  "power_guard": {
+    "enabled": true,
+    "sensor": "sensor.home_power_w",
+    "threshold_w": 3000,
+    "warning_pct": 90,
+    "mode": "ask",
+    "appliances": [
+      {"name": "Washer",      "switch": "switch.washer_plug",      "priority": 1},
+      {"name": "Dishwasher",  "switch": "switch.dishwasher_plug",  "priority": 2},
+      {"name": "Water heater","switch": "switch.water_heater",     "priority": 3}
+    ]
+  },
   "frigate": {
     "enabled": true, "host": "192.168.1.100", "port": 5000, "snapshot_on_alarm": true,
     "cameras": { "entrance": "binary_sensor.entrance_sensor_occupancy" }
@@ -812,6 +1014,41 @@ Monitors surplus every 2 minutes. Reply **"yes"** on Telegram to start the appli
 
 ---
 
+## Power Guard EN
+
+Protects your home from exceeding the contract power threshold. When consumption approaches the limit, HomeMind **notifies** you or **automatically shuts off** the lowest-priority appliances.
+
+```json
+"power_guard": {
+  "enabled": true,
+  "sensor": "sensor.home_power_w",
+  "threshold_w": 3000,
+  "warning_pct": 90,
+  "mode": "ask",
+  "appliances": [
+    {"name": "Washer",      "switch": "switch.washer_plug",      "priority": 1},
+    {"name": "Dishwasher",  "switch": "switch.dishwasher_plug",  "priority": 2},
+    {"name": "Water heater","switch": "switch.water_heater",     "priority": 3}
+  ]
+}
+```
+
+| `mode` | Behavior |
+|--------|----------|
+| `warn_only` | Notify only, no shutoffs |
+| `ask` | Asks confirmation before shutting off **(recommended)** |
+| `auto` | Shuts off automatically without asking |
+
+**Telegram commands:**
+```
+/powerguard   → current status + monitored appliances
+/pg           → short alias
+```
+
+> Built-in 10-minute anti-spam cooldown prevents repeated alerts.
+
+---
+
 ## Climate and Heating
 
 ```json
@@ -902,6 +1139,73 @@ HomeMind: "🏃 You usually leave at 08:30 — 20 minutes to go.
 
 ---
 
+## Automations Manager EN
+
+From v6.0, you can create, edit and delete HA automations **directly from Telegram**, in plain language. HomeMind writes the YAML directly to your `automations.yaml` — without touching anything else.
+
+### Examples
+```
+"create automation to turn off all lights at midnight"
+→ HomeMind generates YAML, saves it to automations.yaml and activates it immediately
+
+"edit automation night lights — change it to trigger at 01:00 instead of midnight"
+→ HomeMind finds the right entry and updates it
+
+"delete automation night lights"
+→ Removes the block and reloads automations in HA
+
+"show my automations"
+→ Full list split by active/inactive with friendly names
+```
+
+### Commands
+```
+/automations               → full list
+create automation ...      → create in plain language
+edit automation [name] — [change]
+delete automation [name]
+```
+
+> Every change is saved with automatic backup in `/config/homemind_patches/`.
+
+---
+
+## Log Analysis and Auto-Fix EN
+
+HomeMind reads Home Assistant logs every 5 minutes, identifies critical errors and notifies you with an AI explanation and recommended solution.
+
+```
+HomeMind: "⚠️ Critical error detected in HA:
+  [homeassistant.components.mqtt] Cannot connect to MQTT broker
+
+  💡 Solution: The MQTT broker is unreachable. Check that
+  Mosquitto is running and that the host address in your
+  configuration file is correct."
+```
+
+**Configuration** — automatic, no setup needed. Enabled by default.
+
+> Built-in anti-spam: same error is reported at most **once per hour**.
+
+---
+
+## Lovelace Dashboard Generator EN
+
+HomeMind can generate a full Lovelace dashboard for your HA installation, based on the actual entities present in your system and their usage frequency.
+
+**How to use:**
+```
+"generate my dashboard"
+"create a lovelace dashboard for my entities"
+```
+
+The YAML file is saved to `/config/homemind_dashboards/` ready to be imported in HA. You can also ask HomeMind to push it directly:
+```
+"generate dashboard and push to HA"
+```
+
+---
+
 ## Frigate Cameras
 
 ```json
@@ -930,6 +1234,8 @@ Camera name must match the name in Frigate (`http://IP:5000`). Anti-spam cooldow
 | `/solare` | FV surplus and optimizer |
 | `/elettrodomestici` | Appliance status |
 | `/routine` | Learned routine |
+| `/automazioni` | List HA automations |
+| `/powerguard` / `/pg` | Power Guard status and consumption |
 | `/memory` | What HomeMind knows about you |
 | `/forget <text>` | Remove a fact |
 | `/memory reset` | Clear all memory |
@@ -963,7 +1269,11 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 **Routine doesn't trigger** → Needs 3 days of data. Check with `/routine`.
 
-**Morning briefing doesn't arrive** → Type `/briefing` to test it. Check logs for AI provider configuration.
+**Power Guard notifies constantly** → Normal if consumption oscillates around the threshold. Lower `warning_pct` or increase `threshold_w`.
+
+**Log analysis not working** → Verify that HA logs are accessible from the container. Check the addon logs.
+
+**Generated dashboard is empty** → HomeMind reads entities in real time — make sure the addon is running and connected to the HA API.
 
 **Not receiving Telegram notifications** → Verify `telegram_chat_id` is a number (use @userinfobot).
 
@@ -975,23 +1285,27 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 ## Changelog
 
-**v1.3.5** — Smart Routine Manager: learns departure/arrival times, anticipates departures, `/routine` command
+**v6.0.0** — Power Guard (protezione soglia contrattuale con 3 modalità: warn/ask/auto), Gestione Automazioni da Telegram (crea/modifica/elimina in linguaggio naturale), Analisi Log HA con AI e anti-spam integrato, Generatore Dashboard Lovelace AI, supporto DeepSeek come provider AI (~gratuito), Anomaly Tracker persistente su disco con cooldown 4h, Patch Writer su `/config/packages/homemind_fixes.yaml` (non tocca mai configuration.yaml), backup automatico prima di ogni modifica ad automazioni e configurazione
 
-**v1.3.4** — Persistent memory (`/memoria`, `/dimentica`, `/memoria reset`), custom alarm panel (string and object format, `arm_mode` support for Verisure/Ajax), custom climate with physical switch and temperature range, switches visible to AI, solar optimizer full battery + sun elevation, welcome fix proximity+GPS, 4h proximity stale fix, temperature fix in `/stato`
+**v1.3.6** — Calendario spazzatura builtin 2026 (Lanciano), copia automatica al primo avvio se non presente
 
-**v1.3.0** — Fix empty `notify_entity` blocking Telegram, fix duplicate Frigate photos, 60s anti-spam cooldown per camera
+**v1.3.5** — Smart Routine Manager: impara orari uscita/rientro, anticipa le partenze, comando `/routine`
 
-**v1.2.x** — Frigate NVR integration, automatic alarm snapshots, Frigate tab in web settings
+**v1.3.4** — Memoria persistente (`/memoria`, `/dimentica`, `/memoria reset`), pannello allarme personalizzato (formato stringa e oggetto, supporto `arm_mode` per Verisure/Ajax), clima personalizzato con switch fisico e range temperatura, switch visibili all'AI, solar optimizer batteria piena + elevazione solare, fix benvenuto proximity+GPS, fix proximity stale 4h, fix temperature in `/stato`
 
-**v1.2.0** — Full web settings page (5 tabs), automatic merge of advanced fields
+**v1.3.0** — Fix campo `notify_entity` vuoto che bloccava Telegram, foto Frigate duplicate risolte, cooldown anti-spam 60s per camera
 
-**v1.1.x** — Navigation tab fix, UTF-8 BOM fix, live dashboard
+**v1.2.x** — Integrazione Frigate NVR, snapshot automatici allarme, tab Frigate nella web UI
 
-**v1.0.4** — Voice interface via Whisper
+**v1.2.0** — Pagina impostazioni web completa (5 tab), merge automatico campi avanzati
 
-**v1.0.2** — Security fixes: alarm code, web auth, PII logs
+**v1.1.x** — Fix tab navigazione, fix UTF-8 BOM, dashboard live
 
-**v1.0.0** — Initial release
+**v1.0.4** — Interfaccia vocale via Whisper
+
+**v1.0.2** — Fix sicurezza: codice allarme, autenticazione Web UI, log senza PII
+
+**v1.0.0** — Release iniziale
 
 ---
 
