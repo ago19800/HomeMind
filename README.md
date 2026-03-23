@@ -652,8 +652,8 @@ Il nome camera deve corrispondere a quello in Frigate (`http://IP:5000`). Cooldo
 | `/providers` | Provider AI attivi |
 | `/lingua it` / `/lingua en` | Cambia lingua |
 | `/comandi` | Questa lista |
-| `/task → lista di tutti i task in coda |
-| `/cancella task → cancella uno specifico |
+| `/task `→ lista di tutti i task in coda |
+| `/cancella task` → cancella uno specifico |
 ---
 
 ## Interfaccia Vocale IT
@@ -1305,8 +1305,8 @@ Camera name must match the name in Frigate (`http://IP:5000`). Anti-spam cooldow
 | `/providers` | Active AI providers |
 | `/lingua it` / `/lingua en` | Change language |
 | `/comandi` | This list |
-| `/task → list of all tasks in the queue |
-| `/cancella task → delete a specific one |
+| `/task` → list of all tasks in the queue |
+| `/cancella task` → delete a specific one |
 ---
 
 ## Voice Interface
