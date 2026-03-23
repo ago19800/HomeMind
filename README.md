@@ -102,7 +102,8 @@ Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la 
 | 🔧 **Automazioni da Telegram** | Crea, modifica ed elimina automazioni HA via chat |
 | 🩺 **Analisi Log AI** | Legge i log HA, trova errori critici e propone fix |
 | 🎨 **Dashboard Lovelace AI** | Genera dashboard Lovelace su misura per le tue entità |
-
+| 🧠 task → lista di tutti i task in coda |
+| 🗑️ cancella task → cancella uno specifico |
 ---
 
 ## Installazione
@@ -491,8 +492,36 @@ HomeMind: "Rosa è fuori — di martedì lavora fuori,
 /memoria reset        → cancella tutto
 ```
 
-> La memoria cambia le **risposte in chat**, non i comportamenti automatici (allarme, avvisi). Per quelli serve il config JSON.
+### Task Scheduling (pianificazione attività). È diversa dalle automazioni HA perché le crei parlando in modo naturale e sono temporanee.
 
+```
+Come funzionerebbe:
+Tu: "Accendi la luce di Mario alle 19:00"
+HomeMind: "✅ Schedulato — accendo luce Mario alle 19:00"
+
+Alle 19:00:
+HomeMind: "⏰ Eseguito — luce Mario accesa!"
+Tu: "Alle 20:30 accendi caldaia e metti 22 gradi"
+HomeMind: "✅ Schedulato — caldaia + 22° alle 20:30"
+
+Alle 20:30:
+HomeMind esegue i due comandi e ti avvisa
+
+Cosa si può schedulare — qualsiasi cosa:
+"Tra 2 ore spegni tutte le luci"
+"Domani mattina alle 7 accendi il riscaldamento"
+"Ogni venerdì alle 18 avvisami di accendere la lavatrice"
+"Tra 30 minuti controlla se la lavatrice è finita"
+"Stasera alle 23 arma l'allarme"
+```
+
+### Gestione task:
+```
+/task          → lista di tutti i task in coda
+/cancella task → cancella uno specifico
+
+> La memoria cambia le **risposte in chat**, non i comportamenti automatici (allarme, avvisi). Per quelli serve il config JSON.
+```
 ---
 
 ## Routine Intelligente
@@ -518,7 +547,7 @@ HomeMind: "🏃 Di solito esci alle 08:30 — mancano 20 minuti.
 
 ## Gestione Automazioni IT
 
-Dalla v6.0 puoi creare, modificare ed eliminare automazioni HA **direttamente da Telegram**, in linguaggio naturale. HomeMind scrive il YAML nel tuo `automations.yaml` — senza toccare nient'altro.
+Dalla v1.3xx puoi creare, modificare ed eliminare automazioni HA **direttamente da Telegram**, in linguaggio naturale. HomeMind scrive il YAML nel tuo `automations.yaml` — senza toccare nient'altro.
 
 ### Esempi
 ```
@@ -623,7 +652,8 @@ Il nome camera deve corrispondere a quello in Frigate (`http://IP:5000`). Cooldo
 | `/providers` | Provider AI attivi |
 | `/lingua it` / `/lingua en` | Cambia lingua |
 | `/comandi` | Questa lista |
-
+| `/task → lista di tutti i task in coda |
+| `/cancella task → cancella uno specifico |
 ---
 
 ## Interfaccia Vocale IT
@@ -1116,6 +1146,36 @@ HomeMind: "Rosa is out — on Tuesdays she works outside,
 
 > Memory changes **AI chat responses**, not automatic behaviors (alarm, open sensor alerts). For those, use the JSON config.
 
+### Task Scheduling. It is different from HA automations because you create them by speaking naturally and they are temporary.
+
+```
+How it would work:
+You: "Turn on Mario's light at 7:00 PM"
+HomeMind: "✅ Scheduled — turning on Mario's light at 7:00 PM"
+
+At 7:00 PM:
+HomeMind: "⏰ Executed — Mario's light turned on!"
+You: "At 8:30 PM turn on the boiler and set it to 22 degrees"
+HomeMind: "✅ Scheduled — boiler + 22° at 8:30 PM"
+
+At 8:30 PM:
+HomeMind executes the two commands and notifies you
+
+What can be scheduled — anything:
+"In 2 hours turn off all lights"
+"Tomorrow morning at 7 turn on the heating"
+"Every Friday at 6 PM remind me to turn on the washing machine"
+"In 30 minutes check if the washing machine is finished"
+"Tonight at 11 PM arm the alarm"
+```
+
+### Task management:
+```
+/task → list of all tasks in queue
+/cancel task → cancel a specific one
+
+
+```
 ---
 
 ## Smart Routine
@@ -1141,7 +1201,7 @@ HomeMind: "🏃 You usually leave at 08:30 — 20 minutes to go.
 
 ## Automations Manager EN
 
-From v6.0, you can create, edit and delete HA automations **directly from Telegram**, in plain language. HomeMind writes the YAML directly to your `automations.yaml` — without touching anything else.
+From v1.3.xxx, you can create, edit and delete HA automations **directly from Telegram**, in plain language. HomeMind writes the YAML directly to your `automations.yaml` — without touching anything else.
 
 ### Examples
 ```
@@ -1245,7 +1305,8 @@ Camera name must match the name in Frigate (`http://IP:5000`). Anti-spam cooldow
 | `/providers` | Active AI providers |
 | `/lingua it` / `/lingua en` | Change language |
 | `/comandi` | This list |
-
+| `/task → list of all tasks in the queue |
+| `/cancella task → delete a specific one |
 ---
 
 ## Voice Interface
@@ -1285,7 +1346,7 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 ## Changelog
 
-**v6.0.0** — Power Guard (protezione soglia contrattuale con 3 modalità: warn/ask/auto), Gestione Automazioni da Telegram (crea/modifica/elimina in linguaggio naturale), Analisi Log HA con AI e anti-spam integrato, Generatore Dashboard Lovelace AI, supporto DeepSeek come provider AI (~gratuito), Anomaly Tracker persistente su disco con cooldown 4h, Patch Writer su `/config/packages/homemind_fixes.yaml` (non tocca mai configuration.yaml), backup automatico prima di ogni modifica ad automazioni e configurazione
+**v1.3.7** — Power Guard (protezione soglia contrattuale con 3 modalità: warn/ask/auto), - fix: person.xxxxx, 🧠 Memoria persistente Impara le tue preferenze nel tempo, Task Scheduling (pianificazione attività). È diversa dalle automazioni HA perché le crei parlando in modo naturale e sono temporanee.
 
 **v1.3.6** — Calendario spazzatura builtin 2026 (Lanciano), copia automatica al primo avvio se non presente
 
