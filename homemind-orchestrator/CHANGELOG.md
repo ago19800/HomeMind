@@ -3,7 +3,7 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
-## [1.3.7] — 2026-03-23
+## [1.3.8] — 2026-03-23
 - FIX
 ## [1.3.7] — 2026-03-23
   — ⚡Power Guard (protezione soglia contrattuale con 3 modalità: warn/ask/auto), - fix: person.xxxxx, 🧠 Memoria persistente Impara le tue preferenze nel tempo, Task Scheduling (pianificazione attività). È diversa dalle automazioni HA perché le crei parlando in modo naturale e sono temporanee.
