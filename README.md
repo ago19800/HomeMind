@@ -7,7 +7,7 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.4.1-brightgreen)](https://github.com/ago19800/HomeMind/releases)
+[![Version](https://img.shields.io/badge/versione-1.4.2-brightgreen)](https://github.com/ago19800/HomeMind/releases)
 
 ☕ **Se questo addon ti è utile, offrimi un caffè! / If this addon is useful, buy me a coffee!**
 
