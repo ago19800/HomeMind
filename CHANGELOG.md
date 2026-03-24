@@ -3,6 +3,273 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
+
+# HomeMind Orchestrator — CHANGELOG
+
+## v1.4.1 Marzo 2026
+
+---
+
+## 🆕 Nuove Feature
+
+---
+
+### ⚙️ Config Editor — Modifica configurazione via chat
+
+Modifica `person_config.json` scrivendo in linguaggio naturale su Telegram, senza toccare file e senza riavviare HomeMind.
+
+**Comando:**
+```
+/config
+```
+Mostra la configurazione attuale in formato leggibile.
+
+**Come si usa — scrivi in modo naturale:**
+```
+"Aggiungi person.mario alla whitelist"
+"Escludi person.awtrix dalla lista persone"
+"Cambia soglia Enel a 3500W"
+"Power Guard modalità auto"
+"Notifica spazzatura alle 21"
+"Cambia lingua inglese"
+"Soglia proximity 50 metri"
+"Temperatura massima clima 28 gradi"
+```
+
+HomeMind mostra l'anteprima e chiede conferma:
+```
+⚙️ Modifica config rilevata:
+Aggiungo person.mario alla whitelist persone
+
+Applico questa modifica? (sì/no)
+```
+
+Backup automatico in `/config/homemind_patches/person_config.backup.json`.
+
+**Modifiche supportate:**
+| Cosa | Esempio |
+|------|---------|
+| Aggiungere persona | `Aggiungi person.mario alla whitelist` |
+| Escludere persona | `Escludi person.awtrix` |
+| Rimuovere dalla whitelist | `Rimuovi person.mario dalla whitelist` |
+| Soglia Power Guard | `Cambia soglia Enel a 3500W` |
+| Modalità Power Guard | `Power Guard modalità auto` |
+| Orario spazzatura | `Notifica spazzatura alle 21` |
+| Lingua | `Cambia lingua inglese` |
+| Soglia proximity | `Soglia proximity 50 metri` |
+| Temperatura max clima | `Temperatura massima clima 28 gradi` |
+
+---
+
+### ⏰ Task Scheduler — Parser date esteso
+
+Supporto completo per date in italiano e inglese.
+
+**Nuovi pattern supportati:**
+```
+"Accendi luci tra 3 giorni"
+"Spegni caldaia venerdì alle 20"
+"Accendi faretti sabato alle 18"
+"Avvia lavatrice il 28 marzo alle 9"
+"Turn on lights in 3 days"
+"Turn off heating friday at 8pm"
+"Start washer march 28 at 9am"
+```
+
+**Tutti i pattern supportati:**
+```
+alle 19:00 / alle ore 19:30      → oggi o domani
+tra 30 minuti / in 30 minutes    → timer rapido
+tra 2 ore / in 2 hours           → timer ore
+tra 3 giorni / in 3 days         → tra N giorni
+domani alle 7 / tomorrow at 7    → domani
+venerdì alle 19 / friday at 7pm  → giorno settimana
+il 25 marzo alle 9 / march 25    → data specifica
+```
+
+**Comandi:**
+```
+/task              → lista task in coda
+/cancella_task 1   → cancella il task numero 1
+```
+
+---
+
+### 🤖 SmartIR — Supporto climatizzatori IR
+
+Gestione automatica dei climatizzatori SmartIR senza errori 400.
+
+**Rilevamento automatico** — nessuna configurazione necessaria se il clima ha `controller_data` negli attributi HA.
+
+**Override manuale** se il rilevamento automatico non funziona:
+```json
+"climate": {
+  "climate.clima_sala": {
+    "name": "Clima Sala",
+    "type": "smartir"
+  }
+}
+```
+
+**Servizi usati automaticamente:**
+| Tipo | Accendi | Spegni |
+|------|---------|--------|
+| SmartIR | `climate.turn_on` | `climate.turn_off` |
+| Standard | `climate.set_hvac_mode heat` | `climate.set_hvac_mode off` |
+| Caldaia + switch | `switch.turn_on` | `switch.turn_off` |
+
+---
+
+## 🔧 Miglioramenti
+
+---
+
+### ⚡ Fallback AI più veloce
+
+**Prima:** Gemini giù → 30 secondi di attesa → passa a Groq
+
+**Dopo:** Gemini giù → 12 secondi → passa a Groq automaticamente
+
+```
+Provider 1 (Gemini) giù → 12s → Provider 2 (Groq) ✅
+Provider 1 e 2 giù       → 24s → Provider 3 (Cerebras) ✅
+```
+
+---
+
+### 📊 Storico sensori — Formato migliorato
+
+**Sensori numerici** → grafico ASCII + min/max/media + trend
+
+**Sensori movimento:**
+```
+🚶 Movimento rilevato 7 volte
+
+📅 Orari attivazioni:
+    1. 🟠 09:15
+    2. 🟠 09:47
+    ...
+⏱ Prima: 09:15  Ultima: 11:21
+📊 Intervallo medio: ~18 min
+```
+
+**Sensori luce:**
+```
+💡 Accesa 4 volte
+  1. 🟡 08:30
+  2. 🟡 12:15
+  ...
+```
+
+**Presenza persona:**
+```
+🏠 Rientri: 2   🚗 Uscite: 2
+  🏠 Rientro: 08:15
+  🚗 Uscita:  09:30
+  ...
+```
+
+---
+
+### 🏠 Rilevamento posizione Casa
+
+Le soste a casa vengono mostrate come `🏠 Casa` invece delle coordinate o nome del quartiere. Funziona leggendo `zone.home` da HA automaticamente.
+
+---
+
+### 👤 Benvenuto — Fix GPS con proximity stale
+
+La partenza viene registrata dal GPS puro indipendentemente dalla proximity. In più: se sei stato via più di **30 minuti** il cooldown di 1 ora viene ignorato.
+
+---
+
+### ⚡ Power Guard — Compatibilità config migliorata
+
+Accetta sia `sensor` che `power_sensor`, sia `appliances` che `appliances_priority`.
+
+---
+
+### 🎛️ Dashboard — Protezione azioni accidentali
+
+I pulsanti informativi (Luci ON, Stato casa, ecc.) non eseguono più azioni accidentali.
+
+---
+
+### 👥 /stato — Whitelist e blacklist applicate
+
+Le persone in blacklist non appaiono più né in "In casa" né in "Fuori".
+
+---
+
+## 🐛 Bug Risolti
+
+| # | Problema | Soluzione |
+|---|---------|-----------|
+| 103 | Gemini 503 → HomeMind non risponde per 30s | Timeout 12s + max_retries=0 |
+| 102 | Storico binario mostrava grafico inutile | Formato conteggio + orari |
+| 101 | Power Guard `app=0` con `appliances_priority` | Supporto alias chiave |
+| 100 | Benvenuto non arriva con proximity stale | `_left_ts` da GPS puro |
+| 99 | Persone blacklist in `/stato` | Filtro whitelist/blacklist |
+| 98 | Dashboard accende luci accidentalmente | Protezione query-only |
+| 97 | SmartIR errori 400 con `set_hvac_mode` | `climate.turn_on` automatico |
+| 96 | Task "alle ore 21:38" non riconosciuto | Pattern `alle ore` aggiunto |
+| 95 | Grafico storico non appariva | Messaggio separato |
+
+---
+
+## 📋 Comandi aggiornati
+
+```
+⚙️ Config:
+  /config                     → configurazione attuale
+  "Aggiungi person.X..."      → modifica via chat
+
+⏰ Task:
+  /task                       → lista task in coda
+  /cancella_task N            → cancella task
+  "Accendi X alle 19"         → schedula oggi/domani
+  "Spegni Y tra 3 giorni"     → schedula tra N giorni
+  "Accendi Z venerdì alle 20" → schedula con giorno
+
+⚡ Power Guard:
+  /powerguard o /pg           → stato e consumo attuale
+
+🧠 Memoria:
+  /memoria                    → cosa HomeMind sa su di te
+  /dimentica <testo>          → rimuovi un fatto
+  /memoria reset              → cancella tutto
+
+📅 Routine:
+  /routine                    → routine appresa
+
+📊 Storico:
+  "Temperatura primopiano 24h"
+  "Quante volte sensore cucina oggi?"
+  "Presenza Agostino ieri"
+
+📍 Posizioni:
+  "Dove ha sostato Rosa oggi"
+  "Dove è stata Rosa questa settimana"
+```
+
+---
+
+## 📁 File modificati
+
+| File | Tipo | Modifica |
+|------|------|---------|
+| `agent/config_editor.py` | **NUOVO** | Editor config via chat |
+| `agent/ai_provider.py` | Modifica | Timeout 12s + fallback veloce |
+| `agent/task_scheduler.py` | Modifica | Parser date IT+EN esteso |
+| `agent/ha_tools.py` | Modifica | SmartIR detection |
+| `agent/security_manager.py` | Modifica | Fix benvenuto GPS |
+| `agent/location_tracker.py` | Modifica | 🏠 Casa da zone.home |
+| `agent/power_guard.py` | Modifica | Alias config |
+| `main.py` | Modifica | Config editor + protezioni |
+| `telegram_bot.py` | Modifica | /config + grafici separati |
+| `translations.py` | Modifica | /config IT e EN |
+| `notifier.py` | Modifica | `send_html_to()` multi-chat |
+
 # ✅ Fix SmartIR — HomeMind v1.4.0
 - Fix switch luci
 
