@@ -3,6 +3,124 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
+
+
+# ✅ Fix SmartIR — HomeMind v1.3.9
+
+Ciao! Il problema con `set_hvac_mode` e gli errori 400 è stato risolto.
+
+## Cosa è cambiato
+
+HomeMind ora rileva automaticamente i climate SmartIR leggendo gli attributi HA (`controller_data`, `controller_model`) e usa i servizi corretti:
+
+| Tipo | Accendi | Spegni |
+|------|---------|--------|
+| **SmartIR** | `climate.turn_on` | `climate.turn_off` |
+| **Standard** | `climate.set_hvac_mode heat` | `climate.set_hvac_mode off` |
+| **Caldaia + switch** | `switch.turn_on` | `switch.turn_off` |
+
+---
+
+## Come aggiornare
+
+1. Aggiorna HomeMind dall'addon store di HA
+2. Riavvia l'addon
+3. Testa i comandi qui sotto
+
+---
+
+## Configurazione necessaria
+
+### Caso A — Rilevamento automatico (prova prima questo)
+
+Se i tuoi climate SmartIR hanno `controller_data` negli attributi HA, **non serve nessuna configurazione aggiuntiva**. HomeMind li riconosce da solo.
+
+Verifica in HA → Strumenti Sviluppatori → Stati → cerca `climate.clima_sala` → controlla se negli attributi c'è `controller_data`.
+
+### Caso B — Override manuale (solo se il caso A non funziona)
+
+Aggiungi `"type": "smartir"` nel tuo `person_config.json`:
+
+```json
+"climate": {
+  "climate.clima_sala": {
+    "name": "Clima Sala",
+    "type": "smartir"
+  },
+  "climate.clima_mansarda": {
+    "name": "Clima Mansarda",
+    "type": "smartir"
+  },
+  "climate.clima_camera": {
+    "name": "Clima Camera",
+    "type": "smartir"
+  }
+}
+```
+
+> Il campo `type` è opzionale — usalo solo se continui a ricevere errori 400.
+
+---
+
+## Test da eseguire
+
+Dopo l'aggiornamento prova questi comandi su Telegram **nell'ordine indicato** e riporta cosa succede:
+
+### Test 1 — Accensione base
+```
+Accendi il clima sala
+```
+✅ Atteso: HomeMind usa `climate.turn_on` senza errori 400
+
+### Test 2 — Spegnimento
+```
+Spegni il clima sala
+```
+✅ Atteso: HomeMind usa `climate.turn_off`
+
+### Test 3 — Temperatura
+```
+Metti il clima sala a 22 gradi
+```
+✅ Atteso: HomeMind usa `climate.set_temperature` con `{"temperature": 22}`
+
+### Test 4 — Accensione + temperatura insieme
+```
+Accendi il clima mansarda a 21 gradi
+```
+✅ Atteso: prima `climate.turn_on`, poi `climate.set_temperature`
+
+### Test 5 — Più climate insieme
+```
+Accendi tutti i climatizzatori
+```
+✅ Atteso: `climate.turn_on` su tutti i climate configurati
+
+### Test 6 — Spegnimento multiplo
+```
+Spegni tutti i clima
+```
+✅ Atteso: `climate.turn_off` su tutti
+
+---
+
+## Come verificare dai log
+
+Nei log di HomeMind cerca queste righe — confermano che il servizio corretto viene usato:
+
+```
+SVC OK climate.turn_on → climate.clima_sala
+SVC OK climate.turn_off → climate.clima_mansarda
+SVC OK climate.set_temperature → climate.clima_camera
+```
+
+Se vedi ancora `SVC FAIL 400` con `set_hvac_mode`, significa che il rilevamento automatico non ha funzionato — in quel caso usa la configurazione manuale del **Caso B**.
+
+---
+
+
+
+Grazie per la segnalazione dettagliata — è stata molto utile per migliorare il supporto per tutti gli utenti SmartIR! 🙏
 ## [1.3.8] — 2026-03-23
   - FIX
 ## [1.3.7] — 2026-03-23
