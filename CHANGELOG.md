@@ -3,7 +3,8 @@
 Tutte le modifiche significative al progetto sono documentate in questo file.
 
 ---
-
+# ✅ Fix SmartIR — HomeMind v1.4.0
+- Fix switch luci
 
 # ✅ Fix SmartIR — HomeMind v1.3.9
 
