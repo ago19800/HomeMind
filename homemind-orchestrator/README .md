@@ -7,7 +7,7 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
 [![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.4.3-brightgreen)](https://github.com/ago19800/HomeMind/releases)
+[![Version](https://img.shields.io/badge/versione-1.4.1-brightgreen)](https://github.com/ago19800/HomeMind/releases)
 
 ☕ **Se questo addon ti è utile, offrimi un caffè! / If this addon is useful, buy me a coffee!**
 
@@ -1237,9 +1237,9 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 ## Changelog
 
-**v1.4.3** — Task Scheduler parser esteso (giorni settimana, mesi, N giorni IT+EN), Config Editor via chat (/config), SmartIR auto-detect + override, fallback AI veloce 12s, storico binario leggibile (movimento/luce/persona), rilevamento 🏠 Casa da zone.home, fix benvenuto GPS stale, Power Guard alias config, protezione dashboard azioni accidentali, /stato applica whitelist/blacklist
+**v1.4.1** — Task Scheduler parser esteso (giorni settimana, mesi, N giorni IT+EN), Config Editor via chat (/config), SmartIR auto-detect + override, fallback AI veloce 12s, storico binario leggibile (movimento/luce/persona), rilevamento 🏠 Casa da zone.home, fix benvenuto GPS stale, Power Guard alias config, protezione dashboard azioni accidentali, /stato applica whitelist/blacklist
 
-**v1.4.2** — Smart Routine Manager, Task Scheduler base, Memoria persistente, Config Allarme personalizzato (stringa e oggetto), Clima con switch fisico, Switch visibili all'AI, Solar optimizer batteria piena + elevazione solare, fix benvenuto proximity+GPS
+**v1.4.0** — Smart Routine Manager, Task Scheduler base, Memoria persistente, Config Allarme personalizzato (stringa e oggetto), Clima con switch fisico, Switch visibili all'AI, Solar optimizer batteria piena + elevazione solare, fix benvenuto proximity+GPS
 
 **v1.3.7** — Power Guard (3 modalità: warn/ask/auto), fix persone blacklist, Task Scheduling base
 
