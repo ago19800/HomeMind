@@ -6,8 +6,8 @@
 
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
 [![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
-[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek-orange)]()
-[![Version](https://img.shields.io/badge/versione-1.4.2-brightgreen)](https://github.com/ago19800/HomeMind/releases)
+[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek%20%7C%20Mistral%20%7C%20Claude%20%7C%20OpenAI-orange)]()
+[![Version](https://img.shields.io/badge/versione-1.4.3-brightgreen)](https://github.com/ago19800/HomeMind/releases)
 
 ☕ **Se questo addon ti è utile, offrimi un caffè! / If this addon is useful, buy me a coffee!**
 
@@ -26,13 +26,8 @@
   <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_103806_Telegram.jpg" width="260">
   <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260316_110137_Telegram.jpg" width="260">
   <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123749_Home Assistant.jpg" width="260">
-  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123738_Home Assistant.jpg" width="260">
   <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/Screenshot_20260319_123729_Home Assistant.jpg" width="260">
-  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/567129635-8dbdb604-953d-48ca-b20c-481fe74f8934.jpg" width="260">
-  <img src="https://raw.githubusercontent.com/ago19800/HomeMind/main/images/567129636-e5f57e9e-e6fd-4957-8745-43771da01269.jpg" width="260">
 </p>
-
----
 
 ---
 
@@ -43,7 +38,8 @@
 ## 📋 Indice
 
 - [Cos'è HomeMind](#cosè-homemind)
-- [Installazione](#installazione)
+- [Installazione Addon HAOS](#installazione-addon-haos)
+- [🐳 Installazione Docker (HA Core / Container / Unraid)](#-installazione-docker-ha-core--container--unraid)
 - [Configurazione Addon](#configurazione-addon-it)
 - [Pagina Impostazioni Web](#pagina-impostazioni-web-it)
 - [Configurazione BASE](#configurazione-base)
@@ -56,6 +52,8 @@
 - [Power Guard](#power-guard-it)
 - [Clima e Riscaldamento](#clima-e-riscaldamento)
 - [Climatizzatori SmartIR](#climatizzatori-smartir-it)
+- [Briefing Mattutino Personalizzabile](#briefing-mattutino-personalizzabile-it)
+- [Meteo Esterno](#meteo-esterno-it)
 - [Task Programmati](#task-programmati-it)
 - [Configurazione via Chat](#configurazione-via-chat-it)
 - [Memoria Persistente](#memoria-persistente)
@@ -81,9 +79,8 @@ HomeMind è un **add-on per Home Assistant** che aggiunge un cervello AI alla tu
 > *"Quanta energia ho prodotto oggi?"*
 > *"Arma l'allarme"*
 > *"Accendi la caldaia a 22 gradi"*
-> *"Spegni scaldabagno alle ore 7:40"*
-> *"Crea un'automazione che spenga le luci alle 23"*
-> *"Analizza i log di HA e dimmi se ci sono errori"*
+> *"Aggiungi temperatura cucina al briefing"*
+> *"Escludi meteo dal briefing"*
 
 Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la tratta come un comando normale.
 
@@ -98,20 +95,24 @@ Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la 
 | ☀️ **Ottimizzatore solare** | Ti avvisa quando usare il surplus FV |
 | 🔋 **Batteria piena** | Notifica quando la batteria è al 100% e il sole produce |
 | 📊 **Analisi energia** | Ogni mattina confronta i consumi con la media storica |
-| 🌅 **Briefing mattutino** | Alle 7:00 — meteo, energia, spazzatura, consiglio AI |
+| 🌅 **Briefing mattutino** | Personalizzabile: aggiungi sensori, escludi sezioni, cambio orario |
+| 🌤️ **Meteo esterno** | Previsioni 3 giorni via open-meteo.com — nessuna API key |
 | 🗑️ **Spazzatura** | La sera prima ricorda cosa mettere fuori |
 | 🧠 **Memoria persistente** | Impara le tue preferenze nel tempo |
 | 📅 **Routine intelligente** | Anticipa i tuoi bisogni in base alle abitudini reali |
 | ⚠️ **Power Guard** | Protegge dalla soglia contrattuale Enel |
 | ⏰ **Task programmati** | Schedula azioni future in linguaggio naturale |
 | ⚙️ **Config via chat** | Modifica la configurazione scrivendo su Telegram |
+| 🤖 **Multi-AI con fallback** | 7 provider AI con cambio automatico se uno è offline |
 | 🔧 **Automazioni da Telegram** | Crea, modifica ed elimina automazioni HA via chat |
 | 🩺 **Analisi Log AI** | Legge i log HA, trova errori e propone fix |
 | 🎨 **Dashboard Lovelace AI** | Genera dashboard Lovelace su misura |
 
 ---
 
-## Installazione
+## Installazione Addon HAOS
+
+> Per chi usa **Home Assistant OS** o **Home Assistant Supervised**
 
 ```
 1. HA → Impostazioni → Add-on Store → ⋮ → Repositories
@@ -124,36 +125,167 @@ Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la 
 
 ---
 
+## 🐳 Installazione Docker (HA Core / Container / Unraid)
+
+> Per chi usa **Home Assistant Core**, **HA Container**, **Unraid**, **NAS Synology/QNAP** o qualsiasi sistema con Docker.
+
+### Cosa ti serve prima di iniziare
+
+- ✅ Docker e Docker Compose installati sul tuo sistema
+- ✅ Home Assistant raggiungibile via rete (es. `http://192.168.1.100:8123`)
+- ✅ Un bot Telegram (creato con @BotFather)
+- ✅ Almeno una chiave AI gratuita (Gemini o Groq — vedi tabella sotto)
+
+---
+
+### Passo 1 — Crea la cartella e scarica i file
+
+```bash
+mkdir ~/homemind
+cd ~/homemind
+
+# Scarica i due file necessari
+curl -O https://raw.githubusercontent.com/ago19800/HomeMind/main/homemind-orchestrator/docker-compose.yml
+curl -O https://raw.githubusercontent.com/ago19800/HomeMind/main/homemind-orchestrator/.env.example
+```
+
+---
+
+### Passo 2 — Crea il file di configurazione
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Compila i campi obbligatori nel file `.env`:
+
+```env
+# ── Home Assistant ──────────────────────────
+HA_URL=http://192.168.1.100:8123        ← IP del tuo HA
+HA_TOKEN=eyJhbGciOiJ...                 ← Token (vedi sotto come ottenerlo)
+
+# ── Telegram ────────────────────────────────
+TELEGRAM_TOKEN=1234567890:AABBCCDDee... ← da @BotFather
+TELEGRAM_CHAT_ID=123456789              ← da @userinfobot
+
+# ── AI — inserisci almeno uno ───────────────
+GEMINI_API_KEY=AIzaSy...    # GRATIS → aistudio.google.com
+GROQ_API_KEY=gsk_...        # GRATIS → console.groq.com
+```
+
+> 💡 **Come ottenere il Token HA:**
+> HA → clicca sul tuo nome (in basso a sinistra) → **Sicurezza** → **Token di lunga durata** → **Crea token** → dai un nome (es. "HomeMind") → copia il token
+
+---
+
+### Passo 3 — Avvia HomeMind
+
+```bash
+docker-compose up -d
+```
+
+Controlla che funzioni:
+
+```bash
+docker-compose logs -f
+# Dovresti vedere: "HomeMind pronto ✅"
+```
+
+---
+
+### Passo 4 — Configura persone e sensori
+
+Dopo il primo avvio, HomeMind crea automaticamente la cartella con i file di configurazione:
+
+```
+~/homemind_data/
+  homemind_patches/
+    person_config.json   ← modifica questo file con le tue entità HA
+```
+
+Apri `person_config.json` e aggiungi le tue entità — la sintassi è identica all'addon:
+
+```json
+{
+  "person_whitelist": ["person.mario", "person.lucia"],
+  "motion_whitelist": ["binary_sensor.sensore_ingresso_occupancy"]
+}
+```
+
+Poi riavvia il container per applicare:
+
+```bash
+docker-compose restart
+```
+
+---
+
+### Aggiornamento Docker
+
+```bash
+docker-compose pull
+docker-compose up -d
+```
+
+---
+
+### Installazione su Unraid
+
+1. **Community Applications** → cerca "HomeMind" (se disponibile)
+   oppure usa **Add Container** manualmente:
+   - Repository: `ghcr.io/ago19800/homemind:latest`
+   - Aggiungi volume: `/mnt/user/appdata/homemind:/data/homemind`
+   - Aggiungi tutte le variabili dal file `.env.example`
+
+---
+
+### Differenze Addon vs Docker
+
+| Funzione | Addon HAOS | Docker Standalone |
+|----------|-----------|-------------------|
+| Installazione | Add-on Store | docker-compose |
+| Configurazione | UI grafica | file `.env` |
+| person_config.json | `/config/homemind_patches/` | volume `/data/homemind/homemind_patches/` |
+| Tutte le funzioni AI | ✅ | ✅ |
+| Dashboard web | ✅ | ✅ (porta 8099) |
+| Aggiornamenti | Add-on Store | `docker-compose pull` |
+
+---
+
 ## Configurazione Addon IT
 
 ### Telegram (obbligatorio)
 ```yaml
-telegram_bot_token: "TOKEN_DA_BOTFATHER"   # @BotFather → /newbot
-telegram_chat_id:   "IL_TUO_CHAT_ID"       # @userinfobot → /start → copia numero
-alarm_code:         "1234"                 # PIN reale del tuo antifurto
+telegram_bot_token: "TOKEN_DA_BOTFATHER"
+telegram_chat_id:   "IL_TUO_CHAT_ID"
+alarm_code:         "1234"
 ```
 
 ### Provider AI (inserisci almeno Gemini + Groq — gratuiti)
 ```yaml
-gemini_api_key:   "AIzaSy..."   # Gratis 1.500 req/giorno → aistudio.google.com
+gemini_api_key:   "AIzaSy..."
 gemini_model:     "gemini-2.0-flash"
 
-groq_api_key:     "gsk_..."     # Gratis 100k token/giorno → console.groq.com
+groq_api_key:     "gsk_..."
 groq_model:       "llama-3.3-70b-versatile"
 
-cerebras_api_key: "csk_..."     # Gratis 1M token/min     → cloud.cerebras.ai
+cerebras_api_key: "csk_..."
 cerebras_model:   "llama3.1-8b"
 
-deepseek_api_key: "sk-..."      # ~Gratis $0.014/1M token → platform.deepseek.com
+deepseek_api_key: "sk-..."
 deepseek_model:   "deepseek-chat"
 
-claude_api_key:   "sk-ant-..."  # A pagamento → console.anthropic.com
+mistral_api_key:  "..."
+mistral_model:    "mistral-small-latest"
+
+claude_api_key:   "sk-ant-..."
 claude_model:     "claude-3-5-haiku-20241022"
 
-openai_api_key:   "sk-..."      # Solo per messaggi vocali → platform.openai.com
+openai_api_key:   "sk-..."   # Solo per messaggi vocali
 openai_model:     "gpt-4o-mini"
 
-ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
+ai_provider_order: "gemini,groq,cerebras,deepseek,mistral,claude,openai"
 ```
 
 | Provider | Costo | Limite | Link |
@@ -162,6 +294,7 @@ ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
 | ⚡ **Groq** | Gratis | 100k token/giorno | [console.groq.com](https://console.groq.com) |
 | 🧠 **Cerebras** | Gratis | 1M token/min | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
 | 🔵 **DeepSeek** | ~Gratis | $0.014/1M token | [platform.deepseek.com](https://platform.deepseek.com) |
+| 🟣 **Mistral** | Gratis (tier) | — | [console.mistral.ai](https://console.mistral.ai) |
 | 🟠 **Claude** | A pagamento | — | [console.anthropic.com](https://console.anthropic.com) |
 | 🟢 **OpenAI** | A pagamento | $0.006/min audio | [platform.openai.com](https://platform.openai.com) |
 
@@ -171,15 +304,7 @@ ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
 
 ## Pagina Impostazioni Web IT
 
-Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
-
-- **👤 Persone** — chi monitorare, chi escludere
-- **🚶 Sensori** — movimento e porte/finestre
-- **🗑️ Spazzatura** — toggle e orario notifica
-- **⚡ Energia** — sensori FV, consumo, rete
-- **📹 Frigate** — telecamere per snapshot allarme
-
-> I campi avanzati vengono sempre preservati quando salvi dalla pagina web.
+Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file.
 
 ---
 
@@ -206,7 +331,6 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
   "person_whitelist": ["person.mario", "person.lucia"],
   "person_blacklist": ["person.mqtt_finto"],
   "motion_whitelist": ["binary_sensor.sensore_ingresso_occupancy"],
-  "motion_blacklist": ["binary_sensor.telefono_mario_motion"],
   "contact_blacklist": ["binary_sensor.porta_garage_contact"],
   "proximity_sensors": {
     "person.mario": {
@@ -241,8 +365,6 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
   "person_whitelist": ["person.mario", "person.lucia"],
   "person_blacklist": ["person.mqtt_finto"],
   "motion_whitelist": ["binary_sensor.sensore_ingresso_occupancy"],
-  "motion_blacklist": ["binary_sensor.telefono_mario_motion"],
-  "contact_blacklist": ["binary_sensor.porta_garage_contact"],
   "alarm_panel": "alarm_control_panel.risco_casa",
   "proximity_sensors": {
     "person.mario": {
@@ -252,8 +374,7 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
   },
   "energy_sensors": {
     "produzione_fv": "sensor.fv_tot", "consumo_casa": "sensor.consumi_giornalieri",
-    "rete_enel": "sensor.enel_giornaliero", "produzione_fv_w": "sensor.fotovoltaica_w",
-    "consumo_casa_w": "sensor.inverter_ac_output", "rete_enel_w": "sensor.shelly_power"
+    "rete_enel": "sensor.enel_giornaliero"
   },
   "appliances": {
     "lavatrice": {
@@ -286,13 +407,10 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
   "power_guard": {
     "enabled": true,
     "power_sensor": "sensor.consumo_casa_w",
-    "threshold_w": 3000,
-    "warning_pct": 90,
-    "mode": "ask",
+    "threshold_w": 3000, "warning_pct": 90, "mode": "ask",
     "appliances_priority": [
       {"name": "Lavatrice",     "switch": "switch.presa_lavatrice"},
-      {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie"},
-      {"name": "Scaldabagno",   "switch": "switch.scaldabagno"}
+      {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie"}
     ]
   },
   "frigate": {
@@ -306,19 +424,15 @@ Apri HomeMind → clicca **⚙️** in alto. Configura senza toccare file:
 
 ## Allarme Personalizzato
 
-HomeMind funziona con **qualsiasi antifurto** integrato in HA — Risco, Paradox, Ajax, DSC, Verisure, Bentel e altri.
-
-### Trova il nome del tuo allarme
 ```
 HA → Strumenti Sviluppatori → Stati → cerca "alarm"
 ```
 
-### Formato semplice (la maggior parte dei casi)
 ```json
 "alarm_panel": "alarm_control_panel.risco_casa"
 ```
 
-### Formato avanzato (Verisure, Ajax con modalità specifica)
+Formato avanzato (Verisure, Ajax):
 ```json
 "alarm_panel": {
   "entity": "alarm_control_panel.verisure_casa",
@@ -329,23 +443,12 @@ HA → Strumenti Sviluppatori → Stati → cerca "alarm"
 | `arm_mode` | Quando usarlo |
 |------------|---------------|
 | `armed_away` | Tutti fuori casa **(default)** |
-| `armed_home` | Qualcuno in casa — perimetrale (es. Verisure) |
+| `armed_home` | Qualcuno in casa — perimetrale |
 | `armed_night` | Modalità notte |
-
-| Marca | Configurazione |
-|-------|---------------|
-| **Risco** | `"alarm_panel": "alarm_control_panel.risco_casa"` |
-| **Paradox** | `"alarm_panel": "alarm_control_panel.paradox_mg5050"` |
-| **Ajax** | `"alarm_panel": "alarm_control_panel.ajax_hub"` |
-| **DSC** | `"alarm_panel": "alarm_control_panel.dsc_alarmo"` |
-| **Verisure** | `"alarm_panel": {"entity": "...", "arm_mode": "armed_home"}` |
-| **HA default** | Non serve configurare nulla |
 
 ---
 
 ## Sensore Prossimità GPS
-
-Evita falsi allarmi quando il GPS "salta". Se il **benvenuto non arriva**, abbassa la soglia a 50m.
 
 ```json
 "proximity_sensors": {
@@ -357,7 +460,7 @@ Evita falsi allarmi quando il GPS "salta". Se il **benvenuto non arriva**, abbas
 }
 ```
 
-> Il benvenuto arriva sempre se sei stato via più di 30 minuti, anche se il sensore proximity ha dati vecchi.
+> Se il benvenuto non arriva, abbassa `threshold_m` a 50.
 
 ---
 
@@ -369,17 +472,22 @@ Evita falsi allarmi quando il GPS "salta". Se il **benvenuto non arriva**, abbas
 "power_on_threshold": 50, "power_off_threshold": 10
 ```
 
-**Modalità SMART** (elettrodomestici connessi — Bosch, Siemens):
+**Modalità SMART** (elettrodomestici connessi):
 ```json
 "mode": "smart", "state_sensor": "sensor.lavastoviglie_operation_state",
 "running_states": ["Run"], "done_states": ["Finished", "Ready"]
 ```
 
+**Chiedere lo stato di un singolo elettrodomestico:**
+```
+"stato lavatrice"     → risposta solo sulla lavatrice
+"stato lavastoviglie" → risposta solo sulla lavastoviglie
+"elettrodomestici"    → tutti insieme
+```
+
 ---
 
 ## Ottimizzatore Solare
-
-Monitora il surplus ogni 2 minuti. Rispondi **"sì"** su Telegram per avviare l'elettrodomestico.
 
 ```json
 "solar_optimizer": {
@@ -393,33 +501,23 @@ Monitora il surplus ogni 2 minuti. Rispondi **"sì"** su Telegram per avviare l'
 
 ## Power Guard IT
 
-Protegge la tua utenza dalla soglia contrattuale Enel. Quando il consumo si avvicina al limite, HomeMind notifica o spegne automaticamente gli elettrodomestici meno prioritari.
-
 ```json
 "power_guard": {
   "enabled": true,
   "power_sensor": "sensor.consumo_casa_w",
-  "threshold_w": 3000,
-  "warning_pct": 90,
-  "mode": "ask",
+  "threshold_w": 3000, "warning_pct": 90, "mode": "ask",
   "appliances_priority": [
     {"name": "Lavatrice",     "switch": "switch.presa_lavatrice"},
-    {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie"},
-    {"name": "Scaldabagno",   "switch": "switch.scaldabagno"}
+    {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie"}
   ]
 }
 ```
 
 | `mode` | Comportamento |
 |--------|---------------|
-| `warn_only` | Solo notifica, non spegne nulla |
-| `ask` | Chiede conferma prima di spegnere **(consigliato)** |
-| `auto` | Spegne automaticamente senza chiedere |
-
-```
-/powerguard   → stato attuale + barra consumo + elettrodomestici
-/pg           → alias breve
-```
+| `warn_only` | Solo notifica |
+| `ask` | Chiede conferma **(consigliato)** |
+| `auto` | Spegne automaticamente |
 
 ---
 
@@ -428,81 +526,126 @@ Protegge la tua utenza dalla soglia contrattuale Enel. Quando il consumo si avvi
 ```json
 "climate": {
   "climate.termostato": {
-    "name": "Termostato casa",
-    "switch": "switch.caldaia",
+    "name": "Termostato casa", "switch": "switch.caldaia",
     "min_temp": 15, "max_temp": 30
   }
 }
-```
-
-```
-"Accendi la caldaia a 22 gradi"  → accende switch + imposta 22°
-"Spegni il riscaldamento"        → spegne switch
-"Abbassa a 19 gradi"             → imposta 19°
 ```
 
 ---
 
 ## Climatizzatori SmartIR IT
 
-HomeMind gestisce automaticamente i climatizzatori SmartIR senza errori 400.
+**Rilevamento automatico** — funziona subito se il clima ha `controller_data` negli attributi.
 
-**Rilevamento automatico** — se il clima ha `controller_data` negli attributi HA, funziona subito senza configurazione.
-
-**Override manuale** — se ricevi ancora errori 400:
+**Override manuale** se ricevi errori 400:
 ```json
 "climate": {
-  "climate.clima_sala": {
-    "name": "Clima Sala",
-    "type": "smartir"
-  },
-  "climate.clima_mansarda": {
-    "name": "Clima Mansarda",
-    "type": "smartir"
-  }
+  "climate.clima_sala": { "name": "Clima Sala", "type": "smartir" }
 }
 ```
 
-| Tipo | Accendi | Spegni |
-|------|---------|--------|
-| **SmartIR** | `climate.turn_on` | `climate.turn_off` |
-| **Standard** | `climate.set_hvac_mode heat` | `climate.set_hvac_mode off` |
-| **Caldaia + switch** | `switch.turn_on` | `switch.turn_off` |
+---
+
+## Briefing Mattutino Personalizzabile IT
+
+Il briefing mattutino è completamente personalizzabile via Telegram — nessun file da toccare.
+
+### Aggiungere sezioni extra
+
+Aggiungi qualsiasi testo fisso o il valore di un sensore HA:
+
+```
+"Aggiungi al briefing temperatura cucina sensor.temp_cucina"
+"Aggiungi al briefing temperatura esterna {sensor.temp_ext}"
+"Aggiungi al briefing Ricorda di annaffiare le piante"
+"Aggiungi sensori energia al briefing"
+```
+
+### Rimuovere sezioni extra
+
+```
+"Rimuovi dal briefing temperatura cucina"
+"Rimuovi sezioni extra briefing"     ← rimuove tutte le sezioni extra
+```
+
+### Nascondere sezioni standard
+
+```
+"Escludi meteo dal briefing"
+"Escludi energia dal briefing"
+"Escludi stato casa dal briefing"
+"Escludi spazzatura dal briefing"
+```
+
+### Ripristinare sezioni nascoste
+
+```
+"Mostra meteo nel briefing"
+"Mostra energia nel briefing"
+```
+
+### Saluto personalizzato
+
+```
+"Saluto briefing Buongiorno Mario! ☀️"
+"Saluto briefing Agostino"   ← auto-completato in "Buongiorno Agostino! ☀️"
+```
+
+### Orario e reset
+
+```
+"Briefing alle 8"           → cambia orario a 08:00
+"Ripristina briefing"       → rimuove tutto e torna ai default
+```
+
+### Riepilogo comandi briefing
+
+| Comando | Effetto |
+|---------|---------|
+| `Aggiungi al briefing X {sensor.id}` | Aggiunge sezione con valore sensore |
+| `Aggiungi al briefing Testo fisso` | Aggiunge nota fissa |
+| `Rimuovi dal briefing X` | Rimuove sezione extra specifica |
+| `Rimuovi sezioni extra briefing` | Rimuove TUTTE le sezioni extra |
+| `Escludi meteo dal briefing` | Nasconde sezione meteo |
+| `Mostra energia nel briefing` | Ripristina sezione energia |
+| `Saluto briefing Testo` | Imposta saluto personalizzato |
+| `Briefing alle 8` | Cambia orario |
+| `Ripristina briefing` | Reset completo ai default |
+
+---
+
+## Meteo Esterno IT
+
+HomeMind recupera automaticamente le previsioni meteo per qualsiasi città — **senza API key**, usando open-meteo.com.
+
+```
+"Meteo Roma"
+"Che tempo fa a Milano domani?"
+"Previsioni Napoli"
+```
+
+- Mostra temperatura, umidità, vento, pioggia
+- Previsioni per i prossimi 3 giorni
+- Funziona anche senza sensori meteo in HA
+
+Per impostare la città predefinita nel briefing:
+```
+"Imposta meteo briefing Roma"
+```
 
 ---
 
 ## Task Programmati IT
 
-Schedula qualsiasi azione futura parlando in modo naturale su Telegram. I task sono temporanei (diversi dalle automazioni) e sopravvivono al riavvio.
-
-**Come funziona:**
 ```
-Tu: "Accendi faretti alle ore 21:00"
-HomeMind: "⏰ Schedulato! Eseguirò alle 21:00"
-
-Alle 21:00:
-HomeMind: "⏰ Task eseguito! Accendi faretti alle ore 21:00"
-→ faretti accesi ✅
+"alle 19:00" / "alle ore 21:38"
+"tra 30 minuti"
+"domani alle 7"
+"venerdì alle 20"
+"il 28 marzo alle 9"
 ```
 
-**Pattern supportati IT e EN:**
-```
-"alle 19:00" / "alle ore 21:38"    → oggi o domani
-"tra 30 minuti"                    → timer rapido
-"tra 2 ore"                        → timer ore
-"tra 3 giorni alle 19"             → tra N giorni
-"domani alle 7"                    → domani
-"venerdì alle 20"                  → giorno della settimana
-"sabato mattina alle 8"            → sabato
-"il 28 marzo alle 9"               → data specifica
-
-"in 30 minutes" / "at 7pm"         → EN equivalents
-"in 3 days at 7pm"                 → EN
-"friday at 20:00"                  → EN
-"march 28 at 9am"                  → EN
-```
-
-**Comandi:**
 ```
 /task              → lista task in coda
 /cancella_task 1   → cancella il task numero 1
@@ -512,75 +655,30 @@ HomeMind: "⏰ Task eseguito! Accendi faretti alle ore 21:00"
 
 ## Configurazione via Chat IT
 
-Modifica `person_config.json` scrivendo in linguaggio naturale su Telegram — senza aprire file, senza riavviare HomeMind.
-
-**Comando:**
 ```
 /config   → mostra configurazione attuale
 ```
 
-**Esempi di modifica:**
 ```
 "Aggiungi person.mario alla whitelist"
-"Escludi person.awtrix"
 "Cambia soglia Enel a 3500W"
 "Power Guard modalità auto"
-"Notifica spazzatura alle 21"
-"Cambia lingua inglese"
-"Soglia proximity 50 metri"
-"Temperatura massima clima 28 gradi"
+"Aggiungi proximity per person.mario"     ← wizard interattivo
+"Aggiungi elettrodomestico asciugatrice"  ← wizard interattivo
+"Rimuovi proximity per person.mario"
 ```
 
-HomeMind mostra l'anteprima e chiede conferma:
-```
-⚙️ Modifica config rilevata:
-Aggiungo person.mario alla whitelist persone
-
-Applico questa modifica? (sì/no)
-```
-
-Backup automatico in `/config/homemind_patches/person_config.backup.json`.
-
-**Modifiche supportate:**
-| Cosa | Esempio |
-|------|---------|
-| Aggiungere persona | `Aggiungi person.mario alla whitelist` |
-| Escludere persona | `Escludi person.awtrix` |
-| Soglia Power Guard | `Cambia soglia Enel a 3500W` |
-| Modalità Power Guard | `Power Guard modalità auto` |
-| Orario spazzatura | `Notifica spazzatura alle 21` |
-| Lingua | `Cambia lingua inglese` |
-| Soglia proximity | `Soglia proximity 50 metri` |
-| Temperatura max clima | `Temperatura massima clima 28 gradi` |
+> Tutte le modifiche chiedono conferma prima di essere applicate e vengono salvate immediatamente su disco.
 
 ---
 
 ## Memoria Persistente
 
-HomeMind impara le tue preferenze nel tempo.
-
-**Automaticamente:**
-```
-Dici: "fa freddo, metti 22 gradi"
-→ Salva: "Preferisce 22°C quando fa freddo"
-→ La volta dopo imposta 22° senza che tu lo chieda
-```
-
-**Esplicitamente:**
-```
-"Ricordati che il cane si chiama Rex"
-"Rosa lavora fuori il martedì e giovedì"
-"Preferiamo luci calde la sera"
-```
-
-**Comandi:**
 ```
 /memoria              → tutto ciò che HomeMind sa su di te
 /dimentica caldaia    → rimuove i fatti contenenti "caldaia"
 /memoria reset        → cancella tutto
 ```
-
-> La memoria cambia le risposte in chat, non i comportamenti automatici.
 
 ---
 
@@ -589,20 +687,12 @@ Dici: "fa freddo, metti 22 gradi"
 Dopo **3 giorni** di osservazione, HomeMind inizia ad anticipare i tuoi bisogni.
 
 ```
-HomeMind: "🏃 Di solito esci alle 08:30 — mancano 20 minuti.
-           Vuoi che preparo la casa?"
-"sì" → abbassa riscaldamento + spegne luci ✅
-```
-
-```
 /routine → mostra orari tipici appresi
 ```
 
 ---
 
 ## Gestione Automazioni IT
-
-Crea, modifica ed elimina automazioni HA direttamente da Telegram in linguaggio naturale.
 
 ```
 "crea automazione che spenga tutte le luci a mezzanotte"
@@ -619,15 +709,7 @@ Crea, modifica ed elimina automazioni HA direttamente da Telegram in linguaggio 
 
 ## Analisi Log e Auto-Fix IT
 
-HomeMind legge i log HA ogni 5 minuti e ti informa di errori critici con soluzione AI.
-
-```
-HomeMind: "⚠️ Errore critico in HA:
-  [mqtt] Cannot connect to MQTT broker
-  💡 Soluzione: Verifica che Mosquitto sia in esecuzione..."
-```
-
-Attivata di default — nessuna configurazione necessaria.
+Legge i log HA ogni 5 minuti e notifica errori critici con soluzione AI. Attivata di default.
 
 ---
 
@@ -636,7 +718,6 @@ Attivata di default — nessuna configurazione necessaria.
 ```
 "genera la mia dashboard"
 "crea una dashboard lovelace per le mie entità"
-"genera dashboard e caricala su HA"
 ```
 
 ---
@@ -648,8 +729,7 @@ Attivata di default — nessuna configurazione necessaria.
   "enabled": true, "host": "192.168.1.100", "port": 5000,
   "snapshot_on_alarm": true,
   "cameras": {
-    "ingresso": "binary_sensor.sensore_ingresso_occupancy",
-    "garage":   "binary_sensor.sensore_garage_occupancy"
+    "ingresso": "binary_sensor.sensore_ingresso_occupancy"
   }
 }
 ```
@@ -665,7 +745,7 @@ Attivata di default — nessuna configurazione necessaria.
 | `/energia` | Produzione FV e consumi oggi |
 | `/ieri` | Energia di ieri |
 | `/solare` | Surplus FV e ottimizzatore |
-| `/elettrodomestici` | Stato elettrodomestici |
+| `/elettrodomestici` | Stato tutti gli elettrodomestici |
 | `/routine` | Routine appresa |
 | `/automazioni` | Lista automazioni HA |
 | `/powerguard` / `/pg` | Stato Power Guard e consumo |
@@ -676,10 +756,7 @@ Attivata di default — nessuna configurazione necessaria.
 | `/dimentica <testo>` | Rimuovi un fatto |
 | `/memoria reset` | Cancella memoria |
 | `/spazzatura` | Raccolta prossimi 7 giorni |
-| `/ricarica_spazzatura` | Rileggi PDF calendario |
-| `/aggiornamenti` | Aggiornamenti HA |
-| `/riparazioni` | Problemi HA |
-| `/providers` | Provider AI attivi |
+| `/providers` | Provider AI attivi e fallback |
 | `/lingua it` / `/lingua en` | Cambia lingua |
 | `/comandi` | Questa lista |
 
@@ -698,21 +775,19 @@ Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta 
 
 **HomeMind non controlla il mio Risco/Verisure** → Aggiungi `"alarm_panel"` nel config.
 
-**Il benvenuto non arriva** → Abbassa `threshold_m` a 50. Con la v1.6 funziona anche con proximity stale.
+**Il benvenuto non arriva** → Abbassa `threshold_m` a 50.
 
 **Errore FAIL 500 sulla temperatura** → Controlla `max_temp` nel `configuration.yaml` di HA.
 
 **SmartIR — errori 400** → Aggiungi `"type": "smartir"` nel blocco climate del config.
 
-**Il task non esegue l'azione** → Verifica che il nome del dispositivo sia presente in HA. HomeMind usa la lista completa degli switch.
+**Power Guard mostra app=0** → Usa `appliances_priority` e `power_sensor` (non `sensor`).
 
-**Power Guard mostra app=0** → Usa `appliances_priority` invece di `appliances` e `power_sensor` invece di `sensor`.
+**Docker — HomeMind non si connette a HA** → Verifica `HA_URL` nel `.env`. Se HA gira su Docker sulla stessa macchina, usa `http://host.docker.internal:8123` al posto dell'IP.
 
-**La routine non si attiva** → Servono 3 giorni di dati. Controlla con `/routine`.
+**Docker — dove trovo i log?** → `docker-compose logs -f` dalla cartella `~/homemind`.
 
-**HomeMind non risponde per 30 secondi** → Con la v1.6 il fallback avviene in 12s. Aggiorna.
-
-**Non ricevo notifiche Telegram** → Verifica `telegram_chat_id` con @userinfobot.
+**Docker — dove si trova person_config.json?** → Nel volume Docker, di solito `~/homemind_data/homemind_patches/person_config.json`.
 
 ---
 
@@ -725,7 +800,8 @@ Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta 
 ## 📋 Table of Contents
 
 - [What is HomeMind](#what-is-homemind)
-- [Installation](#installation)
+- [HAOS Addon Installation](#haos-addon-installation)
+- [🐳 Docker Installation (HA Core / Container / Unraid)](#-docker-installation-ha-core--container--unraid)
 - [Addon Configuration](#addon-configuration)
 - [Web Settings Page](#web-settings-page)
 - [BASE Configuration](#base-configuration)
@@ -738,6 +814,8 @@ Manda un **messaggio vocale** — HomeMind lo trascrive con Whisper e lo tratta 
 - [Power Guard](#power-guard-en)
 - [Climate and Heating](#climate-and-heating)
 - [SmartIR Climatizers](#smartir-climatizers-en)
+- [Customizable Morning Briefing](#customizable-morning-briefing-en)
+- [External Weather](#external-weather-en)
 - [Scheduled Tasks](#scheduled-tasks-en)
 - [Config via Chat](#config-via-chat-en)
 - [Persistent Memory](#persistent-memory)
@@ -762,8 +840,8 @@ HomeMind is a **Home Assistant add-on** that adds an AI brain to your home. It's
 > *"Turn on the living room light"*
 > *"How much energy did I produce today?"*
 > *"Arm the alarm"*
-> *"Turn on the boiler at 22 degrees"*
-> *"Turn off water heater in 2 hours"*
+> *"Add outside temperature to the briefing"*
+> *"Hide weather from briefing"*
 
 You can also send **voice messages** 🎙️ — it transcribes the voice and treats it as a normal command.
 
@@ -776,22 +854,19 @@ You can also send **voice messages** 🎙️ — it transcribes the voice and tr
 | 📷 **Camera snapshots** | Automatic photo on Telegram when alarm triggers |
 | ⚡ **Appliance monitor** | Notifies when washer/dishwasher finish |
 | ☀️ **Solar optimizer** | Tells you when to use FV surplus |
-| 🔋 **Full battery** | Notifies when battery is 100% and sun still produces |
-| 📊 **Energy analysis** | Every morning compares consumption with historical average |
-| 🌅 **Morning briefing** | At 7:00 — weather, energy, trash, AI tip |
-| 🗑️ **Trash reminder** | The evening before reminds what to put out |
+| 🌅 **Morning briefing** | Fully customizable: add sensors, hide sections, change time |
+| 🌤️ **External weather** | 3-day forecast via open-meteo.com — no API key needed |
 | 🧠 **Persistent memory** | Learns your preferences over time |
-| 📅 **Smart routine** | Anticipates your needs based on real habits |
 | ⚠️ **Power Guard** | Protects against contract power threshold |
+| 🤖 **Multi-AI with fallback** | 7 AI providers with automatic switching if one goes offline |
 | ⏰ **Scheduled tasks** | Schedule future actions in natural language |
 | ⚙️ **Config via chat** | Edit configuration by writing on Telegram |
-| 🔧 **Automations from Telegram** | Create, edit and delete HA automations via chat |
-| 🩺 **AI Log Analysis** | Reads HA logs, finds errors and proposes fixes |
-| 🎨 **Lovelace AI Dashboard** | Generates a custom Lovelace dashboard |
 
 ---
 
-## Installation
+## HAOS Addon Installation
+
+> For **Home Assistant OS** or **Home Assistant Supervised**
 
 ```
 1. HA → Settings → Add-on Store → ⋮ → Repositories
@@ -801,6 +876,118 @@ You can also send **voice messages** 🎙️ — it transcribes the voice and tr
 
 3. Configuration tab → enter data → Save → Start
 ```
+
+---
+
+## 🐳 Docker Installation (HA Core / Container / Unraid)
+
+> For **Home Assistant Core**, **HA Container**, **Unraid**, **Synology/QNAP NAS** or any Docker system.
+
+### What you need
+
+- ✅ Docker and Docker Compose installed
+- ✅ Home Assistant accessible over the network (e.g. `http://192.168.1.100:8123`)
+- ✅ A Telegram bot (created with @BotFather)
+- ✅ At least one free AI key (Gemini or Groq)
+
+---
+
+### Step 1 — Create folder and download files
+
+```bash
+mkdir ~/homemind
+cd ~/homemind
+
+curl -O https://raw.githubusercontent.com/ago19800/HomeMind/main/homemind-orchestrator/docker-compose.yml
+curl -O https://raw.githubusercontent.com/ago19800/HomeMind/main/homemind-orchestrator/.env.example
+```
+
+---
+
+### Step 2 — Create your config file
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Fill in the required fields:
+
+```env
+# ── Home Assistant ───────────────────────────
+HA_URL=http://192.168.1.100:8123     ← your HA IP
+HA_TOKEN=eyJhbGciOiJ...              ← token (see below)
+
+# ── Telegram ─────────────────────────────────
+TELEGRAM_TOKEN=1234567890:AABBCCDDee...
+TELEGRAM_CHAT_ID=123456789
+
+# ── AI — at least one required ───────────────
+GEMINI_API_KEY=AIzaSy...    # FREE → aistudio.google.com
+GROQ_API_KEY=gsk_...        # FREE → console.groq.com
+```
+
+> 💡 **How to get the HA Token:**
+> HA → click your name (bottom left) → **Security** → **Long-Lived Access Tokens** → **Create Token** → copy it
+
+---
+
+### Step 3 — Start HomeMind
+
+```bash
+docker-compose up -d
+
+# Check logs
+docker-compose logs -f
+```
+
+---
+
+### Step 4 — Configure people and sensors
+
+After first start, HomeMind creates:
+```
+~/homemind_data/
+  homemind_patches/
+    person_config.json   ← edit this with your HA entities
+```
+
+Then restart to apply:
+```bash
+docker-compose restart
+```
+
+---
+
+### Update Docker
+
+```bash
+docker-compose pull
+docker-compose up -d
+```
+
+---
+
+### Unraid
+
+1. **Community Applications** → search "HomeMind"
+   or use **Add Container** manually:
+   - Repository: `ghcr.io/ago19800/homemind:latest`
+   - Volume: `/mnt/user/appdata/homemind:/data/homemind`
+   - Add all env variables from `.env.example`
+
+---
+
+### Addon vs Docker comparison
+
+| Feature | HAOS Addon | Docker Standalone |
+|---------|-----------|-------------------|
+| Install | Add-on Store | docker-compose |
+| Config | Graphical UI | `.env` file |
+| person_config.json | `/config/homemind_patches/` | volume `/data/homemind/homemind_patches/` |
+| All AI features | ✅ | ✅ |
+| Web dashboard | ✅ | ✅ (port 8099) |
+| Updates | Add-on Store | `docker-compose pull` |
 
 ---
 
@@ -816,13 +1003,13 @@ alarm_code:         "1234"
 ### AI Providers (add at least Gemini + Groq — both free)
 ```yaml
 gemini_api_key:   "AIzaSy..."
-gemini_model:     "gemini-2.0-flash"
 groq_api_key:     "gsk_..."
-groq_model:       "llama-3.3-70b-versatile"
 cerebras_api_key: "csk_..."
-cerebras_model:   "llama3.1-8b"
+deepseek_api_key: "sk-..."
+mistral_api_key:  "..."
+claude_api_key:   "sk-ant-..."
 openai_api_key:   "sk-..."   # Only for voice messages
-ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
+ai_provider_order: "gemini,groq,cerebras,deepseek,mistral,claude,openai"
 ```
 
 > **Automatic fallback:** if Gemini is offline, HomeMind switches to Groq in 12 seconds, then Cerebras, etc.
@@ -833,6 +1020,9 @@ ai_provider_order: "gemini,groq,cerebras,deepseek,claude,openai"
 | ⚡ **Groq** | Free | 100k token/day |
 | 🧠 **Cerebras** | Free | 1M token/min |
 | 🔵 **DeepSeek** | ~Free | $0.014/1M token |
+| 🟣 **Mistral** | Free tier | — |
+| 🟠 **Claude** | Paid | — |
+| 🟢 **OpenAI** | Paid | $0.006/min audio |
 
 ---
 
@@ -860,7 +1050,6 @@ Open HomeMind → click **⚙️** at the top. Configure without editing files.
 {
   "language": "en",
   "person_whitelist": ["person.mario", "person.lucia"],
-  "person_blacklist": ["person.fake_mqtt"],
   "proximity_sensors": {
     "person.mario": {
       "sensor": "sensor.home_mario_distance",
@@ -886,29 +1075,17 @@ Open HomeMind → click **⚙️** at the top. Configure without editing files.
 {
   "language": "en",
   "person_whitelist": ["person.mario", "person.lucia"],
-  "person_blacklist": ["person.fake_mqtt"],
   "alarm_panel": "alarm_control_panel.risco_home",
   "proximity_sensors": {
     "person.mario": {"sensor": "sensor.home_mario_distance", "threshold_m": 100, "stale_check": false}
   },
-  "climate": {
-    "climate.thermostat": {"name": "Home thermostat", "switch": "switch.boiler", "min_temp": 15, "max_temp": 30}
-  },
   "power_guard": {
-    "enabled": true,
-    "power_sensor": "sensor.home_power_w",
-    "threshold_w": 3000,
-    "warning_pct": 90,
-    "mode": "ask",
+    "enabled": true, "power_sensor": "sensor.home_power_w",
+    "threshold_w": 3000, "warning_pct": 90, "mode": "ask",
     "appliances_priority": [
-      {"name": "Washer",       "switch": "switch.washer_plug"},
-      {"name": "Dishwasher",   "switch": "switch.dishwasher_plug"},
-      {"name": "Water heater", "switch": "switch.water_heater"}
+      {"name": "Washer",     "switch": "switch.washer_plug"},
+      {"name": "Dishwasher", "switch": "switch.dishwasher_plug"}
     ]
-  },
-  "frigate": {
-    "enabled": true, "host": "192.168.1.100", "port": 5000, "snapshot_on_alarm": true,
-    "cameras": {"entrance": "binary_sensor.entrance_sensor_occupancy"}
   }
 }
 ```
@@ -921,22 +1098,14 @@ Open HomeMind → click **⚙️** at the top. Configure without editing files.
 "alarm_panel": "alarm_control_panel.risco_home"
 ```
 
-Advanced format for Verisure/Ajax:
+Advanced (Verisure/Ajax):
 ```json
 "alarm_panel": {"entity": "alarm_control_panel.verisure_home", "arm_mode": "armed_home"}
 ```
 
-| `arm_mode` | When to use |
-|------------|-------------|
-| `armed_away` | Everyone away **(default)** |
-| `armed_home` | Someone home — perimeter only |
-| `armed_night` | Night mode |
-
 ---
 
 ## GPS Proximity Sensor
-
-Prevents false alarms. Lower to 50m if welcome message doesn't arrive.
 
 ```json
 "proximity_sensors": {
@@ -944,15 +1113,20 @@ Prevents false alarms. Lower to 50m if welcome message doesn't arrive.
 }
 ```
 
-> Welcome always arrives if you've been away more than 30 minutes, even with stale proximity data.
-
 ---
 
 ## Appliance Monitor
 
-**POWER mode** (smart plug): `"mode": "power", "power_sensor": "sensor.washer_plug_power"`
+**POWER mode:** `"mode": "power", "power_sensor": "sensor.washer_plug_power"`
 
-**SMART mode** (connected appliances): `"mode": "smart", "state_sensor": "sensor.dishwasher_operation_state"`
+**SMART mode:** `"mode": "smart", "state_sensor": "sensor.dishwasher_operation_state"`
+
+**Ask for a single appliance status:**
+```
+"washer status"      → reply only about washer
+"dishwasher status"  → reply only about dishwasher
+"appliances"         → all together
+```
 
 ---
 
@@ -970,32 +1144,15 @@ Prevents false alarms. Lower to 50m if welcome message doesn't arrive.
 
 ## Power Guard EN
 
-Protects your home from exceeding the contract power threshold.
-
 ```json
 "power_guard": {
-  "enabled": true,
-  "power_sensor": "sensor.home_power_w",
-  "threshold_w": 3000,
-  "warning_pct": 90,
-  "mode": "ask",
+  "enabled": true, "power_sensor": "sensor.home_power_w",
+  "threshold_w": 3000, "warning_pct": 90, "mode": "ask",
   "appliances_priority": [
-    {"name": "Washer",       "switch": "switch.washer_plug"},
-    {"name": "Dishwasher",   "switch": "switch.dishwasher_plug"},
-    {"name": "Water heater", "switch": "switch.water_heater"}
+    {"name": "Washer",     "switch": "switch.washer_plug"},
+    {"name": "Dishwasher", "switch": "switch.dishwasher_plug"}
   ]
 }
-```
-
-| `mode` | Behavior |
-|--------|----------|
-| `warn_only` | Notify only |
-| `ask` | Asks confirmation **(recommended)** |
-| `auto` | Shuts off automatically |
-
-```
-/powerguard   → status + power bar + appliances
-/pg           → short alias
 ```
 
 ---
@@ -1004,9 +1161,7 @@ Protects your home from exceeding the contract power threshold.
 
 ```json
 "climate": {
-  "climate.thermostat": {
-    "name": "Home thermostat", "switch": "switch.boiler", "min_temp": 15, "max_temp": 30
-  }
+  "climate.thermostat": {"name": "Home thermostat", "switch": "switch.boiler", "min_temp": 15, "max_temp": 30}
 }
 ```
 
@@ -1014,56 +1169,101 @@ Protects your home from exceeding the contract power threshold.
 
 ## SmartIR Climatizers EN
 
-HomeMind automatically handles SmartIR climatizers without 400 errors.
+Auto-detection works if the entity has `controller_data` in attributes.
 
-**Auto-detection** — works immediately if the climate entity has `controller_data` attributes.
-
-**Manual override** if you still get 400 errors:
+Manual override if you get 400 errors:
 ```json
 "climate": {
-  "climate.living_room_ac": {
-    "name": "Living Room AC",
-    "type": "smartir"
-  }
+  "climate.living_room_ac": {"name": "Living Room AC", "type": "smartir"}
 }
 ```
 
-| Type | Turn On | Turn Off |
-|------|---------|----------|
-| **SmartIR** | `climate.turn_on` | `climate.turn_off` |
-| **Standard** | `climate.set_hvac_mode heat` | `climate.set_hvac_mode off` |
-| **Boiler + switch** | `switch.turn_on` | `switch.turn_off` |
+---
+
+## Customizable Morning Briefing EN
+
+The morning briefing is fully customizable via Telegram chat.
+
+### Add extra sections
+
+```
+"Add kitchen temperature to briefing sensor.temp_kitchen"
+"Add outside temperature to briefing {sensor.temp_ext}"
+"Add to briefing Remember to water the plants"
+```
+
+### Remove extra sections
+
+```
+"Remove kitchen temperature from briefing"
+"Remove all extra sections from briefing"
+```
+
+### Hide standard sections
+
+```
+"Hide weather from briefing"
+"Exclude energy from briefing"
+"Hide home status from briefing"
+```
+
+### Restore hidden sections
+
+```
+"Show weather in briefing"
+"Show energy in briefing"
+```
+
+### Custom greeting and time
+
+```
+"Briefing greeting Good morning family! ☀️"
+"Briefing at 8"
+"Reset briefing"     ← removes all customizations
+```
+
+### Briefing command summary
+
+| Command | Effect |
+|---------|--------|
+| `Add to briefing X {sensor.id}` | Add section with sensor value |
+| `Add to briefing Fixed text` | Add fixed note |
+| `Remove from briefing X` | Remove specific extra section |
+| `Remove all extra sections from briefing` | Remove ALL extra sections |
+| `Hide weather from briefing` | Hide weather section |
+| `Show energy in briefing` | Restore energy section |
+| `Briefing greeting Text` | Set custom greeting |
+| `Briefing at 8` | Change time |
+| `Reset briefing` | Full reset to defaults |
+
+---
+
+## External Weather EN
+
+HomeMind fetches weather forecasts for any city — **no API key**, using open-meteo.com.
+
+```
+"Weather Rome"
+"What's the weather in London tomorrow?"
+"Forecast Paris"
+```
+
+- Shows temperature, humidity, wind, rain
+- 3-day forecast
+- Works without any weather sensors in HA
 
 ---
 
 ## Scheduled Tasks EN
 
-Schedule any future action in natural language. Tasks survive restarts and are different from permanent automations.
-
-**How it works:**
 ```
-You: "Turn on lights at 7pm"
-HomeMind: "⏰ Scheduled! Will execute at 19:00"
-
-At 7pm:
-HomeMind: "⏰ Task executed! Lights on ✅"
+"at 7pm" / "at 19:30"
+"in 30 minutes"
+"tomorrow at 7"
+"friday at 8pm"
+"march 28 at 9am"
 ```
 
-**Supported patterns:**
-```
-"at 7pm" / "at 19:30"            → today or tomorrow
-"in 30 minutes"                   → quick timer
-"in 2 hours"                      → hour timer
-"in 3 days at 7pm"                → in N days
-"tomorrow at 7"                   → tomorrow
-"friday at 8pm"                   → day of week
-"saturday morning at 8"           → saturday
-"march 28 at 9am"                 → specific date
-
-Italian equivalents also supported.
-```
-
-**Commands:**
 ```
 /task              → list scheduled tasks
 /cancella_task 1   → cancel task number 1
@@ -1073,46 +1273,27 @@ Italian equivalents also supported.
 
 ## Config via Chat EN
 
-Edit `person_config.json` by writing in natural language on Telegram — no file editing, no restart needed.
-
-**Command:**
 ```
 /config   → show current configuration
 ```
 
-**Examples:**
 ```
 "Add person.mario to whitelist"
-"Exclude person.awtrix"
 "Change Enel threshold to 3500W"
 "Power Guard mode auto"
-"Trash notification at 9pm"
-"Change language to Italian"
-"Proximity threshold 50 meters"
-"Max climate temperature 28 degrees"
+"Add proximity for person.mario"       ← interactive wizard
+"Add appliance dryer"                  ← interactive wizard
+"Remove proximity for person.mario"
 ```
-
-HomeMind shows a preview and asks for confirmation:
-```
-⚙️ Config change detected:
-Adding person.mario to whitelist
-
-Apply this change? (yes/no)
-```
-
-Automatic backup at `/config/homemind_patches/person_config.backup.json`.
 
 ---
 
 ## Persistent Memory
 
-HomeMind learns your preferences over time.
-
-**Commands:**
 ```
 /memory              → everything HomeMind knows about you
 /forget boiler       → remove facts containing "boiler"
-/memory reset        → clear everything
+/memory reset        → clear all
 ```
 
 ---
@@ -1120,12 +1301,6 @@ HomeMind learns your preferences over time.
 ## Smart Routine
 
 After **3 days** of observation, HomeMind starts anticipating your needs.
-
-```
-HomeMind: "🏃 You usually leave at 08:30 — 20 minutes to go.
-           Shall I prepare the house?"
-"yes" → lower heating + turn off lights ✅
-```
 
 ```
 /routine → shows learned typical times
@@ -1141,16 +1316,11 @@ HomeMind: "🏃 You usually leave at 08:30 — 20 minutes to go.
 "delete automation night lights"
 ```
 
-```
-/automations       → full list
-/automations_help  → guide with examples
-```
-
 ---
 
 ## Log Analysis and Auto-Fix EN
 
-HomeMind reads HA logs every 5 minutes and notifies you of critical errors with AI solutions. Enabled by default, no configuration needed.
+Reads HA logs every 5 minutes, notifies of critical errors with AI solutions. Enabled by default.
 
 ---
 
@@ -1159,7 +1329,6 @@ HomeMind reads HA logs every 5 minutes and notifies you of critical errors with 
 ```
 "generate my dashboard"
 "create a lovelace dashboard for my entities"
-"generate dashboard and push to HA"
 ```
 
 ---
@@ -1185,7 +1354,7 @@ HomeMind reads HA logs every 5 minutes and notifies you of critical errors with 
 | `/energia` | FV production and today's consumption |
 | `/ieri` | Yesterday's energy |
 | `/solare` | FV surplus and optimizer |
-| `/elettrodomestici` | Appliance status |
+| `/elettrodomestici` | All appliance status |
 | `/routine` | Learned routine |
 | `/automazioni` | List HA automations |
 | `/powerguard` / `/pg` | Power Guard status |
@@ -1196,9 +1365,7 @@ HomeMind reads HA logs every 5 minutes and notifies you of critical errors with 
 | `/forget <text>` | Remove a fact |
 | `/memory reset` | Clear all memory |
 | `/spazzatura` | Trash collection next 7 days |
-| `/aggiornamenti` | HA updates |
-| `/riparazioni` | HA issues |
-| `/providers` | Active AI providers |
+| `/providers` | Active AI providers and fallback status |
 | `/lingua it` / `/lingua en` | Change language |
 | `/comandi` | This list |
 
@@ -1215,51 +1382,37 @@ Send a **voice message** — HomeMind transcribes it with Whisper and treats it 
 
 **Alarm arms while I'm still home** → Configure `proximity_sensors`.
 
-**Welcome message doesn't arrive** → Lower `threshold_m` to 50. With v1.6, works even with stale proximity.
+**Welcome message doesn't arrive** → Lower `threshold_m` to 50.
 
-**SmartIR — 400 errors** → Add `"type": "smartir"` to the climate block in config.
+**SmartIR — 400 errors** → Add `"type": "smartir"` to the climate block.
 
-**Task executed but action not performed** → Check that the device name exists in HA.
+**Power Guard shows app=0** → Use `appliances_priority` and `power_sensor` (not `sensor`).
 
-**Power Guard shows app=0** → Use `appliances_priority` instead of `appliances`, and `power_sensor` instead of `sensor`.
+**Docker — can't connect to HA** → Check `HA_URL` in `.env`. If HA runs on Docker on the same machine, use `http://host.docker.internal:8123` instead of the IP.
 
-**HomeMind doesn't respond for 30 seconds** → Update to v1.6 — fallback now happens in 12s.
+**Docker — where are the logs?** → `docker-compose logs -f` from the `~/homemind` folder.
 
-**Routine doesn't trigger** → Needs 3 days of data. Check with `/routine`.
-
-**Not receiving Telegram notifications** → Verify `telegram_chat_id` with @userinfobot.
-
-**Frigate not connecting** → Test in browser: `http://IP:5000`.
-
----
+**Docker — where is person_config.json?** → In the Docker volume, usually `~/homemind_data/homemind_patches/person_config.json`.
 
 ---
 
 ## Changelog
 
-**v1.4.1** — Task Scheduler parser esteso (giorni settimana, mesi, N giorni IT+EN), Config Editor via chat (/config), SmartIR auto-detect + override, fallback AI veloce 12s, storico binario leggibile (movimento/luce/persona), rilevamento 🏠 Casa da zone.home, fix benvenuto GPS stale, Power Guard alias config, protezione dashboard azioni accidentali, /stato applica whitelist/blacklist
+**v1.4.3** — Briefing mattutino personalizzabile via chat (aggiungi/rimuovi sezioni, escludi/mostra standard, saluto, orario, reset), Meteo esterno open-meteo.com (no API key, previsioni 3 giorni), Docker Standalone (HA Core/Container/Unraid), Multi-AI con fallback automatico a cascata (7 provider: Gemini/Groq/Cerebras/DeepSeek/Mistral/Claude/OpenAI), stato singolo elettrodomestico
 
-**v1.4.0** — Smart Routine Manager, Task Scheduler base, Memoria persistente, Config Allarme personalizzato (stringa e oggetto), Clima con switch fisico, Switch visibili all'AI, Solar optimizer batteria piena + elevazione solare, fix benvenuto proximity+GPS
+**v1.4.1** — Task Scheduler parser esteso, Config Editor via chat (/config), SmartIR auto-detect, fallback AI 12s, storico binario leggibile, fix benvenuto GPS stale, Power Guard alias config
 
-**v1.3.7** — Power Guard (3 modalità: warn/ask/auto), fix persone blacklist, Task Scheduling base
+**v1.4.0** — Smart Routine Manager, Task Scheduler, Memoria persistente, Clima con switch fisico, Solar optimizer batteria piena + elevazione solare
 
-**v1.3.6** — Calendario spazzatura builtin 2026, copia automatica al primo avvio
+**v1.3.7** — Power Guard (3 modalità: warn/ask/auto)
 
-**v1.3.5** — Smart Routine Manager: impara orari uscita/rientro, anticipa le partenze
+**v1.3.6** — Calendario spazzatura builtin 2026
 
-**v1.3.4** — Memoria persistente, pannello allarme personalizzato, clima personalizzato, switch visibili all'AI, solar optimizer migliorato
+**v1.2.x** — Integrazione Frigate NVR, snapshot automatici, tab web UI
 
-**v1.3.0** — Fix Telegram notify_entity, foto Frigate duplicate, cooldown anti-spam 60s
-
-**v1.2.x** — Integrazione Frigate NVR, snapshot automatici allarme, tab Frigate web UI
-
-**v1.2.0** — Pagina impostazioni web completa (5 tab)
-
-**v1.1.x** — Fix navigazione, fix UTF-8 BOM, dashboard live
+**v1.2.0** — Pagina impostazioni web completa
 
 **v1.0.4** — Interfaccia vocale via Whisper
-
-**v1.0.2** — Fix sicurezza: codice allarme, autenticazione web, log senza PII
 
 **v1.0.0** — Release iniziale
 
