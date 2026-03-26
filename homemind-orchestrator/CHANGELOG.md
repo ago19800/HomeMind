@@ -1,7 +1,8 @@
 # 📋 Changelog — HomeMind Orchestrator
 
 ---
-
+## v1.4.4
+- FIX: cover
 ## v1.4.3
 
 ### 🌅 Briefing Mattutino Personalizzabile
