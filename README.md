@@ -361,6 +361,66 @@ Per trovare i nomi esatti vai in:
 
 > ⚠️ **Problema comune:** il messaggio di benvenuto non arriva → abbassa `threshold_m` a 50 o verifica che la Companion App aggiorni il sensore distanza in background.
 
+## Location Tracker — Dove è stato? 📍🗺️
+
+Il **Location Tracker** è una funzione opzionale che permette di chiedere a HomeMind **dove si è trovata una persona durante le ultime ore**, con indirizzi reali via GPS (OpenStreetMap, gratuito — nessuna API key).
+
+### Differenza rispetto a `proximity_sensors`
+
+| | `proximity_sensors` | `location_tracker` |
+|---|---|---|
+| **Scopo** | Sapere se la persona è vicino a casa | Sapere dove è stata durante il giorno |
+| **Entità usata** | `sensor.nome_distance` | `device_tracker.nome_telefono` |
+| **Risposta** | Casa vuota / benvenuto / allarme | Lista soste con indirizzo e durata |
+| **Obbligatorio** | Sì (per allarme automatico) | No (opzionale) |
+
+### Come trovare il tuo device_tracker
+
+HA → **Strumenti Sviluppo → Stati** → cerca `device_tracker.`
+
+La Companion App crea automaticamente un `device_tracker` per ogni telefono registrato, solitamente con il nome del modello (es. `device_tracker.sm_s931b`, `device_tracker.iphone_mario`).
+
+### Configurazione in person_config.json
+
+```json
+"location_tracker": {
+  "agostino": "device_tracker.sm_s931b",
+  "rosa":     "device_tracker.sm_a166b"
+}
+```
+
+Il **nome** (es. `"agostino"`) deve corrispondere a come lo chiami su Telegram. Non serve che coincida esattamente con l'entity_id `person.` — HomeMind fa una ricerca parziale sul nome.
+
+### Come usarlo su Telegram
+
+```
+dove è stato Agostino oggi?
+dove è stata Rosa nelle ultime 8 ore?
+soste di Agostino
+percorso di Rosa
+dove ha girato Agostino ieri?
+```
+
+**Risposta HomeMind:**
+```
+📍 Soste di Agostino — ultime 24h
+
+🏠 Casa — 7h 23min (partenza 08:15)
+🏢 Via Roma 42, Milano — 4h 11min
+🛒 Supermercato Esselunga, Viale Brianza — 38min
+⛽ Distributore ENI, SP12 — 12min
+🏠 Casa — rientro 19:44
+```
+
+### Requisiti
+
+- ✅ Companion App installata con permessi di localizzazione su **Sempre**
+- ✅ `location_tracker` configurato nel `person_config.json`
+- ✅ Il telefono deve aver registrato GPS durante il giorno
+
+> 💡 Se HomeMind risponde "Nessun device_tracker configurato per Agostino", verifica che il nome nel config corrisponda e che l'entity_id del device_tracker sia corretto.
+
+
 ---
 
 ## Configurazione BASE
@@ -678,7 +738,12 @@ Tutte le opzioni disponibili. Rimuovi o commenta le sezioni che non usi.
   },
 
   "spazzatura_notify_enabled": true,
-  "spazzatura_notify_hour": 20
+  "spazzatura_notify_hour": 20,
+
+  "location_tracker": {
+    "mario":    "device_tracker.sm_s931b",
+    "lucia":    "device_tracker.sm_a166b"
+  }
 }
 ```
 
@@ -1330,7 +1395,7 @@ You can also send **voice messages** 🎙️ — it transcribes them with Whispe
 
 ---
 
-## 🆕 What's new in v1.5.0
+## 🆕 What's new in v1.4.5
 
 | Feature | Description |
 |---------|-------------|
@@ -1535,6 +1600,55 @@ Go to **HA → Developer Tools → States** and search for `person.` and `sensor
 | `stale_check` | `false` = always use GPS data even if old (recommended) |
 
 > ⚠️ **Common issue:** welcome message doesn't arrive → lower `threshold_m` to 50 and make sure the Companion App updates the distance sensor in the background.
+
+## Location Tracker — Where have they been? 📍🗺️
+
+The **Location Tracker** is an optional feature that lets you ask HomeMind **where a person has been during the last few hours**, with real addresses via GPS (OpenStreetMap, free — no API key needed).
+
+### Difference from `proximity_sensors`
+
+| | `proximity_sensors` | `location_tracker` |
+|---|---|---|
+| **Purpose** | Know if person is near home | Know where they've been during the day |
+| **Entity used** | `sensor.name_distance` | `device_tracker.phone_name` |
+| **Response** | Home empty / welcome / alarm | List of stops with address and duration |
+| **Required** | Yes (for automatic alarm) | No (optional) |
+
+### How to find your device_tracker
+
+HA → **Developer Tools → States** → search `device_tracker.`
+
+### Configuration in person_config.json
+
+```json
+"location_tracker": {
+  "mario": "device_tracker.pixel_7",
+  "lucia": "device_tracker.iphone_lucia"
+}
+```
+
+### How to use it on Telegram
+
+```
+where was Mario today?
+stops of Mario
+Mario's route today
+where did Lucia go yesterday?
+```
+
+**HomeMind response:**
+```
+📍 Mario's stops — last 24h
+
+🏠 Home — 7h 23min (left at 08:15)
+🏢 42 Main Street, London — 4h 11min
+🛒 Tesco, High Street — 38min
+⛽ BP Station, A40 — 12min
+🏠 Home — arrived 19:44
+```
+
+> 💡 If HomeMind replies "No device_tracker configured for Mario", check the name in config matches how you refer to them on Telegram.
+
 
 ---
 
@@ -1750,7 +1864,12 @@ Go to **HA → Developer Tools → States** and search for `person.` and `sensor
   },
 
   "spazzatura_notify_enabled": true,
-  "spazzatura_notify_hour": 20
+  "spazzatura_notify_hour": 20,
+
+  "location_tracker": {
+    "mario": "device_tracker.pixel_7",
+    "lucia": "device_tracker.iphone_lucia"
+  }
 }
 ```
 
@@ -2168,7 +2287,7 @@ Send a **voice message** on Telegram — HomeMind transcribes it with OpenAI Whi
 
 ## Changelog
 
-### v1.5.0 — 🆕 Ultima versione / Latest version
+### v1.4.5 — 🆕 Ultima versione / Latest version
 
 ---
 
