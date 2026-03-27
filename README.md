@@ -38,7 +38,7 @@
 ## 📋 Indice
 
 - [Cos'è HomeMind](#cosè-homemind)
-- [🆕 Novità v145](#-novità-v145)
+- [🆕 Novità v1.4.5](#-novità-v145)
 - [Installazione Addon HAOS](#installazione-addon-haos)
 - [🐳 Installazione Docker](#-installazione-docker)
 - [Configurazione Addon](#configurazione-addon-it)
@@ -1325,7 +1325,7 @@ Manda un **messaggio vocale** su Telegram — HomeMind lo trascrive con Whisper 
 ## 📋 Table of Contents
 
 - [What is HomeMind](#what-is-homemind)
-- [🆕 What's new in v1.5.0](#-whats-new-in-v145)
+- [🆕 What's new in v1.4.5](#-whats-new-in-v145)
 - [HAOS Addon Installation](#haos-addon-installation-1)
 - [🐳 Docker Installation](#-docker-installation-1)
 - [Addon Configuration](#addon-configuration)
