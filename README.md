@@ -117,7 +117,7 @@ Puoi anche mandargli un **messaggio vocale** 🎙️ — trascrive la voce e la 
 
 ---
 
-## 🆕 Novità v1.5.0
+## 🆕 Novità v1.4.5
 
 | Funzione | Descrizione |
 |----------|-------------|
