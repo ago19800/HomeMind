@@ -1,6 +1,32 @@
 # 📋 Changelog — HomeMind Orchestrator
 
 ---
+# Changelog
+
+### v1.4.5 — 🆕 Ultima versione / Latest version
+
+**🇮🇹 Italiano**
+
+**Nuove funzionalità**
+
+- 🔕 **Do Not Disturb (DND)**: ore di silenzio configurabili nel `person_config.json` (`quiet_hours`) oppure direttamente da Telegram (`attiva silenzio notturno 23 7`, `disattiva silenzio`). Le notifiche non critiche vengono bloccate; allarmi e sicurezza passano sempre
+- 🔗 **Alias / Comandi Rapidi**: sistema di parole chiave personalizzate che eseguono azioni **garantite** senza passare dall'AI — anche in modalità offline. Supporta sensori, comandi HomeMind, stati entità
+- 📊 **Alias multi-sensore**: un alias può leggere più sensori contemporaneamente separandoli con virgola (`memorizza info batteria = sensor.a, sensor.b, sensor.c`) — mostra tutti i valori in una risposta unica
+- 🔌 **Modalità Offline**: quando tutti i provider AI falliscono, HomeMind gestisce autonomamente i comandi base (luci, tapparelle, switch, allarme, stato casa) tramite un parser locale deterministico — nessun errore, risposta con `⚠️ Modalità offline`
+- 🪟 **Fix tapparelle/cover**: HomeMind legge ora sempre `current_position` (valore reale 0–100%) invece dello `state` HA che può essere "open"/"closed" indipendentemente dalla posizione reale
+- 🧠 **Memoria senza conflitti**: se dici "preferisco 21°C" e poi "preferisco 22°C", HomeMind aggiorna il fatto esistente invece di tenerli entrambi — la memoria rimane accurata
+- 🕐 **Briefing dinamico**: cambiare orario del briefing via Telegram prende effetto entro 5 minuti senza riavviare l'addon
+- ❄️ **Clima auto-off configurabile**: nuova opzione `"climate_auto_off": false` per disabilitare lo spegnimento automatico dei termostati quando la casa si svuota. Nuova opzione `"climate_exclude": [...]` per escludere entità specifiche (es. valvole Netatmo/TRV che restituiscono errore 500 con `turn_off`)
+- 🔒 **Multi-partizione allarme**: nuova opzione `alarm_extra_panels` per antifurti con più partizioni (Paradox, DSC, ecc.) — HomeMind arma tutte le partizioni insieme quando tutti escono
+
+**Correzioni bug**
+
+- 🐛 Fix: `dimentica alias N` (rimozione per numero) ora funziona correttamente — era intercettato dal modulo memoria invece che dal gestore alias
+- 🐛 Fix: la frase di memorizzazione (`memorizza che X = sensor.yyy`) non triggerava più l'alias appena creato — risolto con exclusion list nel match
+- 🐛 Fix: `memorizza quando chiedo X = Y` non veniva parsata correttamente — aggiunto supporto a tutte le varianti ("quando chiedo", "quando dico", "se chiedo")
+- 🐛 Fix: `cancella tuti alias` (con typo) ora funziona — rilevamento basato su parola per parola invece di lista fissa
+- 🐛 Fix: alias che puntano a comandi (`/energia`, `/solare`) ora funzionano correttamente — corretto `AttributeError: '_handle_message'` → `_handle_update`
+
 ## v1.4.4
 - FIX: cover
 ## v1.4.3
