@@ -38,7 +38,7 @@
 ## 📋 Indice
 
 - [Cos'è HomeMind](#cosè-homemind)
-- [🆕 Novità v1.5.0](#-novità-v145)
+- [🆕 Novità v1.4.5](#-novità-v145)
 - [Installazione Addon HAOS](#installazione-addon-haos)
 - [🐳 Installazione Docker](#-installazione-docker)
 - [Configurazione Addon](#configurazione-addon-it)
