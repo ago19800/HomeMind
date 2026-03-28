@@ -2,11 +2,12 @@
 
 ---
 # Changelog
-### v1.4.6— 🆕 Ultima versione / Latest version
+### v1.4.6— 🆕 Ultima versione / Latest versi```
+
 - FIX proximity 
 - Aggiunto climante Power guard
-In pratica per questo utente:
-Guardando le temperature che mostra, quelle "utili" sono le Temp Reale * e la Temperatura Esterna. Basterebbe quindi aggiungere nel person_config.json:
+- Filtrotemperatura Basterebbe quindi aggiungere nel person_config.json:
+```
 "temperature_sensors": [
   "sensor.temp_reale_sala",
   "sensor.temp_reale_camera",
@@ -16,7 +17,12 @@ Guardando le temperature che mostra, quelle "utili" sono le Temp Reale * e la Te
   "sensor.temp_reale_camera_mansarda",
   "sensor.temperatura_esterna"
 ]
-
+```
+"Meteo Roma"
+"Che tempo fa a Milano?"
+"Previsioni Napoli domani"
+"Meteo Londra"
+```
 ### v1.4.5 — 🆕 Ultima versione / Latest version
 
 **🇮🇹 Italiano**
