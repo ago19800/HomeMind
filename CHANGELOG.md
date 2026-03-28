@@ -2,6 +2,20 @@
 
 ---
 # Changelog
+### v1.4.6— 🆕 Ultima versione / Latest version
+- FIX proximity 
+- Aggiunto climante Power guard
+In pratica per questo utente:
+Guardando le temperature che mostra, quelle "utili" sono le Temp Reale * e la Temperatura Esterna. Basterebbe quindi aggiungere nel person_config.json:
+"temperature_sensors": [
+  "sensor.temp_reale_sala",
+  "sensor.temp_reale_camera",
+  "sensor.temp_reale_cameretta",
+  "sensor.temp_reale_studio",
+  "sensor.temp_reale_openspace",
+  "sensor.temp_reale_camera_mansarda",
+  "sensor.temperatura_esterna"
+]
 
 ### v1.4.5 — 🆕 Ultima versione / Latest version
 
