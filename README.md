@@ -494,11 +494,22 @@ Aggiunge GPS, elettrodomestici, energia e DND.
 Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
 
 ```json
+```json
 {
   "language": "it",
   "person_whitelist": ["person.mario", "person.lucia"],
   "person_blacklist": ["person.tablet_finto"],
   "motion_whitelist": ["binary_sensor.sensore_ingresso_occupancy"],
+
+  "temperature_sensors": [
+    "sensor.temp_reale_sala",
+    "sensor.temp_reale_camera",
+    "sensor.temp_reale_cameretta",
+    "sensor.temp_reale_studio",
+    "sensor.temp_reale_openspace",
+    "sensor.temp_reale_camera_mansarda",
+    "sensor.temperatura_esterna"
+  ],
 
   "alarm_panel": {
     "entity": "alarm_control_panel.risco_casa",
@@ -515,8 +526,8 @@ Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
 
   "energy_sensors": {
     "produzione_fv": "sensor.fv_tot",
-    "consumo_casa":  "sensor.consumi_giornalieri",
-    "rete_enel":     "sensor.enel_giornaliero"
+    "consumo_casa": "sensor.consumi_giornalieri",
+    "rete_enel": "sensor.enel_giornaliero"
   },
 
   "climate": {
@@ -532,15 +543,21 @@ Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
 
   "appliances": {
     "lavatrice": {
-      "enabled": true, "name": "Lavatrice", "icon": "🫧",
+      "enabled": true,
+      "name": "Lavatrice",
+      "icon": "🫧",
       "mode": "power",
       "power_sensor": "sensor.presa_lavatrice_power",
-      "power_on_threshold": 50, "power_off_threshold": 10,
-      "min_cycle_minutes": 20, "max_idle_minutes": 5,
+      "power_on_threshold": 50,
+      "power_off_threshold": 10,
+      "min_cycle_minutes": 20,
+      "max_idle_minutes": 5,
       "notify_on_start": false
     },
     "lavastoviglie": {
-      "enabled": true, "name": "Lavastoviglie", "icon": "🍽️",
+      "enabled": true,
+      "name": "Lavastoviglie",
+      "icon": "🍽️",
       "mode": "smart",
       "state_sensor": "sensor.lavastoviglie_operation_state",
       "running_states": ["Run"],
@@ -575,8 +592,14 @@ Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
     "mode": "ask",
     "delay_minutes": 1,
     "appliances_priority": [
-      {"name": "Lavatrice",     "switch": "switch.presa_lavatrice"},
-      {"name": "Lavastoviglie", "switch": "switch.presa_lavastoviglie"}
+      {
+        "name": "Lavatrice",
+        "switch": "switch.presa_lavatrice"
+      },
+      {
+        "name": "Lavastoviglie",
+        "switch": "switch.presa_lavastoviglie"
+      }
     ]
   },
 
@@ -586,6 +609,8 @@ Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
     "end": 7
   }
 }
+```
+
 ```
 
 ---
