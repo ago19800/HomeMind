@@ -2,6 +2,20 @@
 
 ---
 # Changelog
+### v1.4.7— 🆕 Ultima versione / Latest versi```
+### Promemoria puro — manda solo la notifica:
+```
+Ricordami alle 9:45 appuntamento medico
+Avvisami alle 19 di chiamare Mario
+Remind me at 8pm dentist appointment
+```
+
+### Azione domotica — esegue il comando:
+```
+Accendi le luci alle 19
+Imposta temperatura 21 gradi alle 8:30
+```
+# Changelog
 ### v1.4.6— 🆕 Ultima versione / Latest versi```
 
 - FIX proximity 
