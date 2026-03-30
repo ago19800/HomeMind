@@ -494,7 +494,6 @@ Aggiunge GPS, elettrodomestici, energia e DND.
 Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
 
 ```json
-```json
 {
   "language": "it",
   "person_whitelist": ["person.mario", "person.lucia"],
@@ -611,7 +610,7 @@ Aggiunge allarme personalizzato, clima, power guard e ottimizzatore solare.
 }
 ```
 
-```
+
 
 ---
 
