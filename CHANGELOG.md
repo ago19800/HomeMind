@@ -3,6 +3,8 @@
 ---
 
 # Changelog — HomeMind Orchestrator
+## 1.5.0
+## FIX
 
 ---
 
