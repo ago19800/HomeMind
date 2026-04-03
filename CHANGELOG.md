@@ -1,7 +1,28 @@
 # 📋 Changelog — HomeMind Orchestrator
 
+<div align="center">
+
+# 🧠 HomeMind Orchestrator
+
+[![HA Version](https://img.shields.io/badge/Home%20Assistant-2024%2B-blue)](https://www.home-assistant.io/)
+[![Language](https://img.shields.io/badge/Lingua-Italiano%20%2F%20English-green)]()
+[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20Groq%20%7C%20Cerebras%20%7C%20DeepSeek%20%7C%20Mistral%20%7C%20Claude%20%7C%20OpenAI-orange)]()
+
+☕ **Se questo addon ti è utile, offrimi un caffè! / If this addon is useful, buy me a coffee!**
+
+[![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
+
+<br><br>
+
+📱 **Seguimi anche su TikTok e GitHub! / Follow me on TikTok and GitHub!**
+
+[![TikTok](https://img.shields.io/badge/TikTok-@marioago3-000000?logo=tiktok&style=for-the-badge)](https://www.tiktok.com/@marioago3)
+[![GitHub](https://img.shields.io/badge/GitHub-ago19800-181717?logo=github&style=for-the-badge)](https://github.com/ago19800)
+
+</div>
 ---
-# Changelog — HomeMind Orchestrator
+
+## Changelog — HomeMind Orchestrator
 ## 1.5.1
 ## solar_optimizer web
 
