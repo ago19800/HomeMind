@@ -1,6 +1,9 @@
 # 📋 Changelog — HomeMind Orchestrator
 
 ---
+# Changelog — HomeMind Orchestrator
+## 1.5.1
+## solar_optimizer web
 
 # Changelog — HomeMind Orchestrator
 ## 1.5.0
