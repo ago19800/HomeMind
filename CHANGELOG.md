@@ -2,7 +2,99 @@
 
 ---
 
+# Changelog — HomeMind Orchestrator
 
+---
+
+## 1.4.9
+
+### ✨ Nuove funzionalità
+
+#### 🔔 Allarme — modalità `alarm_auto_arm`
+Controlla cosa fa HomeMind quando tutti escono di casa.
+- `"auto"` *(default)* — arma l'antifurto automaticamente
+- `"notify"` — manda un messaggio Telegram con bottoni **✅ Sì / ❌ No** prima di armare. Se non rispondi entro 5 min, non arma
+- `"disabled"` — non tocca mai l'allarme, spegne solo luci e clima
+
+#### 🏠 Entità da spegnere all'uscita (`alarm_on_leave`)
+Nella web UI ⚙️ → tab **🔔 Allarme**, nuova sezione con 4 liste checkbox:
+- 💡 Luci — 🔌 Switch/Prese — 🪟 Tapparelle/Cover — 🌡️ Clima/Termostati
+
+Se non selezioni nulla: HomeMind usa il comportamento classico (spegne tutte le luci accese + clima).  
+Se selezioni almeno un'entità: gestisce **solo** quelle, ignorando il resto.  
+In JSON: `"alarm_on_leave": ["light.soggiorno", "switch.caldaia", "cover.tapparella"]`
+
+#### 🚨 Notifica antifurto con sirena
+Quando l'antifurto si attiva, il messaggio Telegram ora include:
+```
+🚨 ANTIFURTO IN ATTIVAZIONE!
+⏰ 19:32 — Trigger: GPS Rosa
+🚶 Fuori: Mario, Rosa
+
+✅ 💡 Luce ufficio spenta
+✅ Allarme armato (armed_away)
+```
+Con `alarm_auto_arm: disabled` il messaggio è invece `🏠 Casa vuota — allarme non gestito`.
+
+#### ⚡ Power Guard — Appliances Priority nella web UI
+Nel tab **⚡ Guard** c'è ora la sezione **Entità da spegnere** con righe editabili:
+- Colonne: **Nome** · **Entity ID** (switch/climate/light) · **Priorità** (1 = primo a spegnersi)
+- Bottone **+ Aggiungi entità** per nuove righe, **✕** per rimuovere
+- Funziona con `switch.*`, `climate.*`, `light.*` e qualsiasi dominio HA
+- Al rientro sotto soglia HomeMind notifica e puoi riaccendere manualmente
+
+#### 📱 Location Tracker nella web UI
+Nuovo tab **📱 Tracker** nella pagina ⚙️ Impostazioni.  
+Associa ogni persona al proprio `device_tracker.*` per la cronologia spostamenti.  
+Comandi Telegram: `dove è stato Agostino oggi?` · `percorso di Rosa` · `soste di Mario`  
+In JSON: `"location_tracker": {"agostino": "device_tracker.sm_s931b"}`
+
+#### 🌡️ Sensori temperatura e umidità nella web UI
+Nuovi tab **🌡️ Temp/Umid** con liste checkbox e ricerca per selezionare esattamente quali sensori HomeMind usa nel briefing e nelle risposte AI.  
+In JSON: `"temperature_sensors": [...]`, `"humidity_sensors": [...]`
+
+#### 🔔 Pannello Allarme nella web UI
+Nuovo tab **🔔 Allarme** con configurazione completa da interfaccia grafica:
+- Entity ID pannello principale + partizioni extra (una per riga)
+- Select `alarm_auto_arm`: Auto / Notify / Disabled
+- Select `alarm_arm_mode`: armed_away / armed_home / armed_night / armed_vacation
+
+#### 📍 Location Tracker — tracciamento spostamenti
+Interroga HomeMind su dove si è trovata una persona durante le ultime ore.  
+Risposta con indirizzi reali via OpenStreetMap (gratuito, nessuna API key).
+
+#### 💧 Sensori umidità nel contesto AI
+I sensori umidità ora vengono inclusi nel prompt inviato all'AI.  
+Scrivendo "dimmi umidità esterna" l'AI risponde direttamente dal sensore, senza bisogno di creare un alias.
+
+#### ⏱️ Power Guard — ritardo notifica
+Campo `delay_minutes`: HomeMind attende N minuti sopra soglia prima di intervenire, evitando falsi positivi da picchi momentanei.
+
+---
+
+### 🐛 Bug risolti
+
+- **Temperature non salvate dalla web UI** — `save()` sovrascriveva `getSel('etmp')` con `getSel('tw')` (vuoto) cancellando la selezione. Rimossa la doppia scrittura.
+- **Sensori umidità non visibili nella web UI** — condizione `unit == "%"` catturava batterie, CO2, PM2.5. Corretta con `device_class == "humidity"` come filtro primario.
+- **Sensori umidità assenti dal contesto AI** — `_humi_wl` veniva letta ma mai usata. Aggiunto metodo `_humidities()` e blocco `--- UMIDITÀ ---` nel context builder di `ha_tools.py`.
+- **Tab web UI rotti dopo aggiunta nuovo tab** — `split("\n")` nella f-string Python produceva un newline letterale nel JS → SyntaxError → tutti i tab morti. Fix: `String.fromCharCode(10)`.
+- **Messaggio di avvio con "Nuovi comandi disponibili" hardcoded** — rimosso. Ora mostra solo `Scrivi /comandi per vedere tutti i comandi.`
+- **Power Guard app=0 nel log** — la web UI non raccoglieva le appliances. Aggiunta sezione dedicata nel pannello e aggiornata `getPowerGuardCfg()`.
+
+---
+
+### 🗂️ Campi `person_config.json` aggiunti/modificati
+
+| Campo | Tipo | Descrizione |
+|-------|------|-------------|
+| `alarm_auto_arm` | `"auto"` \| `"notify"` \| `"disabled"` | Comportamento antifurto all'uscita |
+| `alarm_arm_mode` | stringa | Modalità di armamento (`armed_away` ecc.) |
+| `alarm_on_leave` | lista entity_id | Entità da spegnere/chiudere all'uscita |
+| `temperature_sensors` | lista entity_id | Sensori temperatura per AI e briefing |
+| `humidity_sensors` | lista entity_id | Sensori umidità per AI e briefing |
+| `location_tracker` | `{"nome": "device_tracker.xxx"}` | Tracker per cronologia spostamenti |
+| `power_guard.delay_minutes` | intero | Minuti sopra soglia prima di intervenire |
+| `power_guard.appliances_priority` | lista `{name, switch, priority}` | Entità da spegnere per priorità |
 # Changelog
 ### v1.4.8— 🆕 Ultima versione
 
