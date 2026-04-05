@@ -23,13 +23,15 @@
 ---
 
 ## Changelog — HomeMind Orchestrator
-## 1.5.1
-## solar_optimizer web
+# Changelog — HomeMind Orchestrator
+## 1.5.2
+## FIX ALLARME
 
 # Changelog — HomeMind Orchestrator
-## 1.5.0
+## 1.5.1
 ## FIX
-
+## 1.5.0
+## solar_optimizer web
 ---
 
 ## 1.4.9
