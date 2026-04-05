@@ -12,10 +12,14 @@
 
 [![PayPal](https://img.shields.io/badge/PayPal-Dona%20Ora-00457C?logo=paypal&style=for-the-badge)](https://paypal.me/ago19800)
 
+<br><br>
+
+📱 **Seguimi anche su TikTok e GitHub! / Follow me on TikTok and GitHub!**
+
+[![TikTok](https://img.shields.io/badge/TikTok-@marioago3?logo=tiktok&style=for-the-badge)](https://www.tiktok.com/@marioago3)
+[![GitHub](https://img.shields.io/badge/GitHub-ago19800-181717?logo=github&style=for-the-badge)](https://github.com/ago19800)
+
 </div>
-
----
-
 # 🇮🇹 Italiano
 
 ## Cos'è HomeMind
