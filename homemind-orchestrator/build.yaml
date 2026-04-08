@@ -1,0 +1,8 @@
+---
+# HomeMind Orchestrator — build config per HA Supervisor
+build_from:
+  aarch64: "python:3.12-slim"
+  amd64: "python:3.12-slim"
+  armhf: "python:3.12-slim"
+  armv7: "python:3.12-slim"
+  i386: "python:3.12-slim"
