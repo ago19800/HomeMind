@@ -1,149 +1,156 @@
-# Changelog
+# HomeMind Orchestrator — Changelog v1.5.3
 
-All notable changes to HomeMind Orchestrator are documented here.
+## 🔒 Sicurezza & Antifurto
 
----
+### Fix: doppio messaggio di benvenuto al rientro
+**Causa:** quando il sensore proximity e il GPS si aggiornano quasi contemporaneamente, `_someone_arrived()` veniva chiamata due volte in rapida successione, schedulando due task di benvenuto separati → due messaggi Telegram.
 
-## [Unreleased]
-
-### 🆕 Added
-
-#### 🔔 Alarm Auto-Arm Modes (`alarm_auto_arm`)
-New field in `person_config.json` that controls how HomeMind handles the alarm when everyone leaves home:
-
-- **`"auto"`** *(default, backward compatible)* — arms automatically without asking, same as before
-- **`"notify"`** — sends a Telegram message with inline buttons **✅ Sì, attiva antifurto / ❌ No, lascia disarmato** before arming. If no response within 5 minutes, does not arm and notifies timeout
-- **`"disabled"`** — HomeMind never touches the alarm system; only turns off lights and climate on departure
-
-```json
-"alarm_auto_arm": "notify",
-"alarm_arm_mode": "armed_away"
-```
-
-Backward compatible: existing configs with `alarm_enabled: false` automatically map to `"disabled"`.
-
-#### 🌡️ Temperature and Humidity Sensor Filters
-New fields `temperature_sensors` and `humidity_sensors` to explicitly select which sensors HomeMind uses for briefing, AI responses and home status. Without configuration, HomeMind auto-detects all sensors from HA (excluding CPU, battery, weather sensors).
-
-```json
-"temperature_sensors": ["sensor.temp_soggiorno", "sensor.temp_camera"],
-"humidity_sensors": ["sensor.umidita_soggiorno"]
-```
-
-Configurable from the web UI (⚙️ Settings → 🌡️ Temp/Umid tab).
-
-#### ⚙️ Web Settings — New tabs
-The web settings page (⚙️ icon) now includes:
-
-- **🌡️ Temp/Umid** — select temperature and humidity sensors with search and checkboxes
-- **📍 Proximity** — configure proximity sensors with + Add button and device list
-- **🏠 Elettrod.** — add and configure appliances (power/smart mode) with sensor dropdown
-- **🔔 Allarme** — configure alarm panel, extra partitions, `alarm_auto_arm` mode selector and `alarm_arm_mode`
-
-All tabs save with **safe merge**: fields not managed by the UI (fascia_sensors, solar_optimizer, climate, etc.) are always preserved from the existing config file.
-
-#### 📖 Interactive Manual (`/readme`)
-New command available directly on Telegram:
-
-```
-/readme                    → index of all topics
-/readme proximity          → explains proximity_sensors with JSON examples
-/readme antifurto          → explains alarm modes
-/readme fascia oraria      → explains F1/F2/F3 setup
-/readme errori             → common errors and solutions
-```
-
-AI-powered search through the embedded manual. Falls back to text search if AI is unavailable.
-Documented in `/comandi` list.
-
-#### 🚀 Startup message simplified
-The startup Telegram notification no longer shows "Nuovi comandi disponibili" with a hardcoded list. It now shows:
-
-```
-🎩 HomeMind attivo
-Entita: 1551
-Persone: Agostino, Rosa
-Movimento: 4 sensori PIR
-Allarme: alarm_control_panel.home_alarm
-Casa: occupata
-
-Scrivi /comandi per vedere tutti i comandi.
-```
-
-### 🐛 Fixed
-
-- **`split("\n")` in f-string JS** — `getAlarmCfg()` textarea split for extra alarm panels now uses `String.fromCharCode(10)` instead of `"\n"` to avoid Python f-string interpreting it as a literal newline, which caused JS SyntaxError and broke all tab switching in the settings page
-- **`removeAppRow` quadruple braces** — `{{{{` in source produced `{{` in generated JS → SyntaxError → all JS died. Fixed to `{{` producing `{`
-- **`distances` NameError** — proximity tab referenced `distances` list that was not initialized in `settings_page()`. Added to sensor loop with distance/m/km detection
-- **Duplicate `await notifier.send(` line** — startup notify block had a duplicated `await` call after refactoring; removed
+**Fix:** aggiunto `MIN_REPEAT_COOLDOWN = 300s` come limite assoluto tra due benvenuti per la stessa persona. Non bypassabile dal `cooldown_override`.
 
 ---
 
-## Previous releases
+### Fix: spam messaggi di conferma armamento (modalità `notify`)
+**Causa:** in `alarm_auto_arm: notify`, ogni aggiornamento proximity triggerava una nuova richiesta di conferma Telegram anche mentre si aspettava la risposta della precedente.
 
-### Do Not Disturb (DND)
-- Configurable quiet hours in `person_config.json` (`quiet_hours`) or via Telegram
-- Non-critical notifications blocked during quiet hours; security alerts always pass through
-
-### Aliases / Quick Commands
-- Custom keyword system for guaranteed actions without AI, even offline
-- Multi-sensor aliases: one keyword reads multiple sensors at once
-
-### Offline Mode
-- When all AI providers fail, basic commands (lights, blinds, alarm, status) handled by local deterministic parser
-
-### Cover / Shutter fix
-- HomeMind now reads `current_position` (real 0–100%) instead of HA state string
-
-### Conflict-free memory
-- Updating an existing preference updates the fact instead of duplicating it
-
-### Climate auto-off configurable
-- `climate_auto_off: false` disables automatic thermostat shutdown
-- `climate_exclude` excludes specific entities (Netatmo TRV compatibility)
-
-### Multi-partition alarm
-- `alarm_extra_panels` arms multiple alarm partitions together (Paradox, DSC, etc.)
-
-### Multi-AI cascade fallback
-- 7 providers with automatic switching: gemini → groq → cerebras → deepseek → mistral → claude → openai
-- Configurable in `ai_providers` array in `person_config.json`
-
-### Solar Optimizer
-- Notifies when solar surplus is available
-- Optional auto-start of appliances when surplus confirmed for `confirm_minutes`
-
-### Power Guard
-- Monitors instantaneous consumption
-- Three modes: `warn_only`, `ask` (confirm before switching off), `auto`
-
-### Location Tracker
-- Ask HomeMind where a person has been during the last N hours
-- Real addresses via OpenStreetMap (no API key)
-
-### Morning Briefing
-- Fully customizable via Telegram without editing files
-- Supports external weather city, custom greeting, tip_mode, exclude_sections
-
-### Frigate NVR Integration
-- Automatic snapshot on alarm trigger
-- Per-camera sensor association
-
-### Routine Manager
-- Learns daily patterns after 3 days of observation
-- Anticipates needs based on real habits
-
-### Task Scheduler
-- Schedule future actions in natural language
-- `/task` to list, `/cancella_task N` to cancel
-
-### Automations Manager
-- Create, edit and delete HA automations via Telegram chat
-
-### Log Analyzer
-- Reads HA logs every 5 minutes
-- Sends Telegram notification with AI analysis and fix proposals on critical errors
+**Fix:**
+- Flag `_arm_notify_in_progress`: blocca `_all_left()` mentre HomeMind aspetta la risposta
+- Al termine (risposta o timeout), aggiorna `_last_arm_ts` per impedire richieste immediate
+- `ARM_COOLDOWN`: 60s → **180s**
+- `NOTIFY_CONFIRM_COOLDOWN = 120s`: ulteriore protezione anti-spam modalità notify
 
 ---
 
-[Unreleased]: https://github.com/ago19800/HomeMind/compare/HEAD...HEAD
+### Fix: GPS oscillante con proximity stale genera falsi arm/disarm
+**Causa:** con proximity stale (`stale_check: false`), HomeMind cedeva al GPS. Se il GPS oscillava ogni 1-2 minuti, venivano generati continui cicli arm/disarm.
+
+**Fix:** debounce **5 minuti** in `_handle_presence()` — se il proximity è stale, due cambi GPS consecutivi devono distare almeno 5 minuti per essere considerati validi.
+
+---
+
+### Fix: disarmo solo partizione primaria al rientro
+**Causa:** `_fast_disarm()` disarmava solo il pannello principale, lasciando le partizioni extra armate.
+
+**Fix:** `_fast_disarm()` ora cicla su tutte le `alarm_extra_panels` e le disarma al rientro.
+
+---
+
+### Fix: disarmo emergenza al riavvio con proximity stale
+**Causa:** al riavvio con proximity stale (es. 2494 min fa) e `stale_check: false`, HomeMind impostava lo sticky "vicino" → persona risultava a casa → se l'allarme era `armed_away` scattava disarmo emergenza.
+
+**Fix (doppio):**
+1. `home_model.py`: con dati più vecchi di `max_age_min × 2`, `last_near_ts` non viene impostato
+2. `startup_check()`: verifica il GPS direttamente prima del disarmo — se il GPS dice "fuori", non disarma
+
+---
+
+### Fix: errore 400 Bad Request nelle notifiche HA (`notify.telegram_bot_*`)
+**Causa:** `notifier.send()` passava `title` al servizio HA `telegram_bot`, che non lo accetta.
+
+**Fix:** `send()` salta `_ha_notify()` quando `ha_entity` inizia con `telegram_bot`. La notifica viene inviata direttamente via API Telegram.
+
+---
+
+## ⚡ Energia & Fotovoltaico
+
+### Fix: briefing mostra valore cumulativo FV invece del delta giornaliero
+**Causa:** per sensori cumulativi come `sensor.fv_tot1` (totale kWh da installazione), lo snapshot delle 23:30 salvava il valore grezzo (es. 11551 kWh) invece della produzione del giorno.
+
+**Fix:** `_take_snapshot()` rileva sensori cumulativi (valore > 1000 kWh) e salva il **delta rispetto allo snapshot di ieri**.
+
+> **Nota:** il primo giorno dopo l'aggiornamento lo snapshot salverà ancora il raw (nessuno snapshot ieri disponibile). Il giorno successivo funzionerà.
+
+---
+
+### Fix: `/energia` mostra valore grezzo FV di notte
+**Causa:** di notte (0–6), nessun campione history con data odierna → `today_vals` vuoto → `fv_oggi_delta = None` → veniva mostrato il totale cumulativo.
+
+**Fix:**
+- `hours=20` → **`hours=26`** per coprire sempre mezzanotte + margine DST
+- Se `today_vals` è vuoto, usa `max(ieri_vals)` come baseline (= fine giornata ieri = inizio di oggi)
+- Delta sempre ≥ 0
+
+---
+
+### Fix: batteria mostrata con unità errata (V invece di % o kWh)
+**Causa:** se configurato un sensore tensione come `batteria_wh`, veniva mostrato come "1003.09 kWh".
+
+**Fix:** rilevamento automatico dell'unità:
+- `V` → "1003.1 V ⚠️ (tensione, non SOC%)"
+- `%` → "85% ████████░░" con barra
+- `kWh` → comportamento normale
+
+---
+
+### Fix: `sensor.fv_tot` non appare nella web UI (selezione energia)
+**Causa:** il filtro cercava solo unità `kWh/Wh` o nomi con `energy`/`kwh`.
+
+**Fix:** aggiunto riconoscimento per keyword `fv`, `solar`, `produz`, `consumo`, `enel`, `batteria` nell'entity_id.
+
+---
+
+## 🧠 Memoria
+
+### Fix: fatti di automazioni rimosse presenti in memoria
+**Causa:** la memoria poteva contenere fatti estratti da conversazioni precedenti che menzionavano comandi ora inesistenti, causando risposte incoerenti.
+
+**Fix:** `MemoryManager._load()` filtra automaticamente all'avvio i fatti con keyword di feature rimosse (`automazioni_hm`, `automazioni intelligenti`, `se allora`, ecc.).
+
+---
+
+## 🗑️ Rimosso: Automazioni Intelligenti HomeMind
+
+Feature completamente rimossa:
+
+- `/automazioni_hm`, `/auto_hm`, `/cancella_automazione N`, `/pausa_automazione N`, `/riprendi_automazione N`, `/dettaglio_automazione N`
+- Rimozione dal manuale `/readme` e dalla lista `/comandi` (IT e EN)
+- `automation_engine.py` non viene più caricato
+
+**I Task Ripetuti (`/task_ripetuti`) rimangono invariati e funzionanti.**
+
+---
+
+## 🌅 Briefing
+
+### Fix: energia ieri sbagliata nel briefing (sensori daily)
+**Causa:** la History API restituiva delta errato per sensori che si resettano a mezzanotte.
+
+**Fix:** il briefing legge lo snapshot di `EnergyAnalyzer` da `/data/homemind_energy_history.json` (salvato alle 23:30). La History API è usata solo come fallback.
+
+---
+
+### Nuovo: elettrodomestici attivi nel briefing
+Se almeno un elettrodomestico risulta in funzione al momento del briefing, appare la sezione "⚡ Elettrodomestici attivi".
+
+---
+
+## 📱 Web UI — Nuovi Tab
+
+### ☀️ Solare
+Configurazione `solar_optimizer` da interfaccia grafica:
+- Parametri generali (surplus minimo, minuti conferma, cooldown, elevazione solare minima)
+- Sezione **Batteria**: campo testo libero per `battery_soc_sensor` — qualsiasi entity_id, anche se non in lista
+- Sezione **Elettrodomestici**: Nome · Switch (opz.) · Surplus min W · Auto (avvio automatico) · Attivo
+
+### 📱 Tracker
+Associa ogni persona a un `device_tracker.*` per la cronologia spostamenti.
+- `dove è stato Agostino oggi?` · `percorso di Rosa` · `soste di Mario`
+
+### ⚡ Guard — Appliances Priority
+Sezione con righe editabili per le entità da spegnere al superamento soglia: Nome · Entity ID · Priorità.
+
+---
+
+### Fix: web UI non caricava (UnboundLocalError: INP)
+Variabili pre-calcolate riordinate per garantire che `INP` sia sempre definita prima di qualsiasi sezione che la utilizza.
+
+---
+
+## ⚙️ Costanti modificate
+
+| Costante | Prima | Dopo |
+|---|---|---|
+| `ARM_COOLDOWN` | 60s | 180s |
+| `MIN_REPEAT_COOLDOWN` (welcome) | — | 300s (nuovo) |
+| `GPS_DEBOUNCE_SEC` (proximity stale) | — | 300s (nuovo) |
+| `NOTIFY_CONFIRM_COOLDOWN` (notify mode) | — | 120s (nuovo) |
+| History FV `hours` | 20 | 26 |
