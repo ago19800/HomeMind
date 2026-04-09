@@ -1,156 +1,210 @@
-# HomeMind Orchestrator — Changelog v1.5.3
+# 📍 HomeMind — Nuovo sistema Proximity avanzato
 
-## 🔒 Sicurezza & Antifurto
+## Rilevamento presenza più intelligente: zone progressive + multi-fonte
 
-### Fix: doppio messaggio di benvenuto al rientro
-**Causa:** quando il sensore proximity e il GPS si aggiornano quasi contemporaneamente, `_someone_arrived()` veniva chiamata due volte in rapida successione, schedulando due task di benvenuto separati → due messaggi Telegram.
+Questa versione introduce un sistema di rilevamento presenza completamente ridisegnato per eliminare i falsi armamenti causati da GPS instabile, sensori fermi o telefoni che escono e rientrano rapidamente dalla zona casa.
 
-**Fix:** aggiunto `MIN_REPEAT_COOLDOWN = 300s` come limite assoluto tra due benvenuti per la stessa persona. Non bypassabile dal `cooldown_override`.
-
----
-
-### Fix: spam messaggi di conferma armamento (modalità `notify`)
-**Causa:** in `alarm_auto_arm: notify`, ogni aggiornamento proximity triggerava una nuova richiesta di conferma Telegram anche mentre si aspettava la risposta della precedente.
-
-**Fix:**
-- Flag `_arm_notify_in_progress`: blocca `_all_left()` mentre HomeMind aspetta la risposta
-- Al termine (risposta o timeout), aggiorna `_last_arm_ts` per impedire richieste immediate
-- `ARM_COOLDOWN`: 60s → **180s**
-- `NOTIFY_CONFIRM_COOLDOWN = 120s`: ulteriore protezione anti-spam modalità notify
+**Tutto configurabile dalla pagina web ⚙️ → tab 📍 Proximity — senza toccare JSON.**
 
 ---
 
-### Fix: GPS oscillante con proximity stale genera falsi arm/disarm
-**Causa:** con proximity stale (`stale_check: false`), HomeMind cedeva al GPS. Se il GPS oscillava ogni 1-2 minuti, venivano generati continui cicli arm/disarm.
+## Il problema che risolve
 
-**Fix:** debounce **5 minuti** in `_handle_presence()` — se il proximity è stale, due cambi GPS consecutivi devono distare almeno 5 minuti per essere considerati validi.
+Con il vecchio sistema basato su una soglia singola (es. 100m), bastava che il GPS oscillasse di 10 metri per triggerare un ciclo uscita/rientro. Risultato: messaggi spam, falsi armamenti, benvenuti doppi.
 
----
-
-### Fix: disarmo solo partizione primaria al rientro
-**Causa:** `_fast_disarm()` disarmava solo il pannello principale, lasciando le partizioni extra armate.
-
-**Fix:** `_fast_disarm()` ora cicla su tutte le `alarm_extra_panels` e le disarma al rientro.
+Con il nuovo sistema puoi dire a HomeMind: *"aspetta 5 minuti prima di armare, e fallo solo se anche il WiFi conferma che sono uscito"*.
 
 ---
 
-### Fix: disarmo emergenza al riavvio con proximity stale
-**Causa:** al riavvio con proximity stale (es. 2494 min fa) e `stale_check: false`, HomeMind impostava lo sticky "vicino" → persona risultava a casa → se l'allarme era `armed_away` scattava disarmo emergenza.
+## Come funziona — tutti i casi
 
-**Fix (doppio):**
-1. `home_model.py`: con dati più vecchi di `max_age_min × 2`, `last_near_ts` non viene impostato
-2. `startup_check()`: verifica il GPS direttamente prima del disarmo — se il GPS dice "fuori", non disarma
+### Caso 1 — Solo GPS (comportamento predefinito, nessuna modifica richiesta)
 
----
+Se non cambi nulla, HomeMind funziona esattamente come prima.
 
-### Fix: errore 400 Bad Request nelle notifiche HA (`notify.telegram_bot_*`)
-**Causa:** `notifier.send()` passava `title` al servizio HA `telegram_bot`, che non lo accetta.
+```json
+"proximity_sensors": {
+  "person.mario": {
+    "sensor": "sensor.casa_mario_distance",
+    "threshold_m": 100
+  }
+}
+```
 
-**Fix:** `send()` salta `_ha_notify()` quando `ha_entity` inizia con `telegram_bot`. La notifica viene inviata direttamente via API Telegram.
-
----
-
-## ⚡ Energia & Fotovoltaico
-
-### Fix: briefing mostra valore cumulativo FV invece del delta giornaliero
-**Causa:** per sensori cumulativi come `sensor.fv_tot1` (totale kWh da installazione), lo snapshot delle 23:30 salvava il valore grezzo (es. 11551 kWh) invece della produzione del giorno.
-
-**Fix:** `_take_snapshot()` rileva sensori cumulativi (valore > 1000 kWh) e salva il **delta rispetto allo snapshot di ieri**.
-
-> **Nota:** il primo giorno dopo l'aggiornamento lo snapshot salverà ancora il raw (nessuno snapshot ieri disponibile). Il giorno successivo funzionerà.
+Uscito oltre 100m → HomeMind arma.  
+Rientrato entro 100m → HomeMind disarma.
 
 ---
 
-### Fix: `/energia` mostra valore grezzo FV di notte
-**Causa:** di notte (0–6), nessun campione history con data odierna → `today_vals` vuoto → `fv_oggi_delta = None` → veniva mostrato il totale cumulativo.
+### Caso 2 — Zona gialla (anti falsi armamenti da GPS ballerino)
 
-**Fix:**
-- `hours=20` → **`hours=26`** per coprire sempre mezzanotte + margine DST
-- Se `today_vals` è vuoto, usa `max(ieri_vals)` come baseline (= fine giornata ieri = inizio di oggi)
-- Delta sempre ≥ 0
+Aggiunge una **zona intermedia** dove HomeMind aspetta N minuti prima di armare. Se torni nella zona verde nel frattempo, annulla tutto silenziosamente.
 
----
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "zone_yellow_m": 500,
+  "zone_yellow_wait_min": 5
+}
+```
 
-### Fix: batteria mostrata con unità errata (V invece di % o kWh)
-**Causa:** se configurato un sensore tensione come `batteria_wh`, veniva mostrato come "1003.09 kWh".
+**Come funziona:**
 
-**Fix:** rilevamento automatico dell'unità:
-- `V` → "1003.1 V ⚠️ (tensione, non SOC%)"
-- `%` → "85% ████████░░" con barra
-- `kWh` → comportamento normale
+```
+Casa ●
+  ──── 100m ────  🟢 ZONA VERDE   → in casa, HomeMind non fa nulla
+  ──── 500m ────  🟡 ZONA GIALLA  → fuori ma vicino, aspetta 5 minuti
+  ────  ∞   ────  🔴 ZONA ROSSA   → definitivamente fuori, arma subito
+```
 
----
+**Esempio pratico:**
+- Esci a portare il cane a 200m (zona gialla) → HomeMind avvia timer 5 min
+- Torni a casa dopo 3 min → timer annullato, nessun armamento ✅
+- Vai al lavoro a 5km (zona rossa) → HomeMind arma subito ✅
+- Sei in zona gialla per 5 min senza rientrare → HomeMind arma ✅
 
-### Fix: `sensor.fv_tot` non appare nella web UI (selezione energia)
-**Causa:** il filtro cercava solo unità `kWh/Wh` o nomi con `energy`/`kwh`.
-
-**Fix:** aggiunto riconoscimento per keyword `fv`, `solar`, `produz`, `consumo`, `enel`, `batteria` nell'entity_id.
-
----
-
-## 🧠 Memoria
-
-### Fix: fatti di automazioni rimosse presenti in memoria
-**Causa:** la memoria poteva contenere fatti estratti da conversazioni precedenti che menzionavano comandi ora inesistenti, causando risposte incoerenti.
-
-**Fix:** `MemoryManager._load()` filtra automaticamente all'avvio i fatti con keyword di feature rimosse (`automazioni_hm`, `automazioni intelligenti`, `se allora`, ecc.).
-
----
-
-## 🗑️ Rimosso: Automazioni Intelligenti HomeMind
-
-Feature completamente rimossa:
-
-- `/automazioni_hm`, `/auto_hm`, `/cancella_automazione N`, `/pausa_automazione N`, `/riprendi_automazione N`, `/dettaglio_automazione N`
-- Rimozione dal manuale `/readme` e dalla lista `/comandi` (IT e EN)
-- `automation_engine.py` non viene più caricato
-
-**I Task Ripetuti (`/task_ripetuti`) rimangono invariati e funzionanti.**
+**Campi:**
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `zone_yellow_m` | numero | vuoto (disattivato) | Distanza in metri dove inizia la zona gialla |
+| `zone_yellow_wait_min` | numero | 5 | Minuti di attesa in zona gialla prima di armare |
 
 ---
 
-## 🌅 Briefing
+### Caso 3 — WiFi tracker (seconda fonte di conferma)
 
-### Fix: energia ieri sbagliata nel briefing (sensori daily)
-**Causa:** la History API restituiva delta errato per sensori che si resettano a mezzanotte.
+Aggiunge il WiFi del telefono come seconda fonte. HomeMind arma solo se anche il WiFi conferma che sei fuori.
 
-**Fix:** il briefing legge lo snapshot di `EnergyAnalyzer` da `/data/homemind_energy_history.json` (salvato alle 23:30). La History API è usata solo come fallback.
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
+  "require": 2
+}
+```
+
+HomeMind supporta due tipi di entità WiFi:
+
+- **`binary_sensor.xxx_wi_fi_state`** → `on` = connesso (in casa), `off` = disconnesso (fuori)  
+  *(creato dall'app Home Assistant Companion per Android/iOS)*
+- **`device_tracker.xxx`** → `home` = in casa, `not_home` = fuori  
+  *(creato dall'integrazione router o companion app)*
+
+**Come funziona con `require: 2`:**
+
+| GPS | WiFi | Risultato |
+|-----|------|-----------|
+| fuori | disconnesso | ✅ Arma — entrambe le fonti concordano |
+| fuori | connesso | ⏸️ Non arma — WiFi dice ancora in casa |
+| fuori | non disponibile | ⚠️ Scala a require:1, usa solo GPS |
+
+**Campi:**
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `wifi_tracker` | entity_id | vuoto (disattivato) | Entità WiFi del telefono |
+| `require` | 1 / 2 / 3 | 1 | Quante fonti devono concordare per armare |
 
 ---
 
-### Nuovo: elettrodomestici attivi nel briefing
-Se almeno un elettrodomestico risulta in funzione al momento del briefing, appare la sezione "⚡ Elettrodomestici attivi".
+### Caso 4 — Zona gialla + WiFi (massima protezione)
+
+Combina entrambe le funzionalità. Il timer della zona gialla scatta, e al termine ricontrolla anche il multi-fonte. Due filtri in cascata.
+
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "zone_yellow_m": 500,
+  "zone_yellow_wait_min": 5,
+  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
+  "require": 2
+}
+```
+
+**Flusso completo:**
+1. Esci a 200m → zona gialla → timer 5 min
+2. Timer scaduto → ricontrolla: ancora fuori? WiFi disconnesso?
+3. Se sì a entrambe → arma
+4. Se WiFi ancora connesso → non arma nonostante il timer
 
 ---
 
-## 📱 Web UI — Nuovi Tab
+### Caso 5 — require: 3 (GPS + WiFi + Proximity tutti e tre)
 
-### ☀️ Solare
-Configurazione `solar_optimizer` da interfaccia grafica:
-- Parametri generali (surplus minimo, minuti conferma, cooldown, elevazione solare minima)
-- Sezione **Batteria**: campo testo libero per `battery_soc_sensor` — qualsiasi entity_id, anche se non in lista
-- Sezione **Elettrodomestici**: Nome · Switch (opz.) · Surplus min W · Auto (avvio automatico) · Attivo
+Massima certezza. Tutte e tre le fonti devono dire "fuori" per armare.
 
-### 📱 Tracker
-Associa ogni persona a un `device_tracker.*` per la cronologia spostamenti.
-- `dove è stato Agostino oggi?` · `percorso di Rosa` · `soste di Mario`
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "wifi_tracker": "device_tracker.sm_s931b",
+  "require": 3
+}
+```
 
-### ⚡ Guard — Appliances Priority
-Sezione con righe editabili per le entità da spegnere al superamento soglia: Nome · Entity ID · Priorità.
-
----
-
-### Fix: web UI non caricava (UnboundLocalError: INP)
-Variabili pre-calcolate riordinate per garantire che `INP` sia sempre definita prima di qualsiasi sezione che la utilizza.
+> ⚠️ Usare `require: 3` solo se tutti e tre i sensori sono affidabili e aggiornati regolarmente. Se uno è spesso offline, usa `require: 2`.
 
 ---
 
-## ⚙️ Costanti modificate
+### Fallback automatico se una fonte è offline
 
-| Costante | Prima | Dopo |
-|---|---|---|
-| `ARM_COOLDOWN` | 60s | 180s |
-| `MIN_REPEAT_COOLDOWN` (welcome) | — | 300s (nuovo) |
-| `GPS_DEBOUNCE_SEC` (proximity stale) | — | 300s (nuovo) |
-| `NOTIFY_CONFIRM_COOLDOWN` (notify mode) | — | 120s (nuovo) |
-| History FV `hours` | 20 | 26 |
+HomeMind non si blocca mai se una fonte non è disponibile.
+
+```
+require: 2, WiFi non disponibile → HomeMind usa require: 1 (solo GPS)
+require: 3, Proximity stale     → HomeMind usa require: 2 (GPS + WiFi)
+```
+
+Il fallback viene loggato e non richiede alcuna azione dall'utente.
+
+---
+
+## Configurazione dalla pagina web
+
+Vai in ⚙️ Impostazioni → tab **📍 Proximity**.
+
+Per ogni persona vedrai ora:
+
+```
+👤 person.mario                                          [✕]
+[sensor.casa_mario_distance ▼]  [100] m
+
+🟡 Zona gialla  [500] m  attesa  [5] min
+
+📶 WiFi  [binary_sensor.sm_s931b_wi_fi_state]  Fonti [2 fonti ▼]
+```
+
+- **Lascia zona gialla vuota** → funziona come prima
+- **Lascia WiFi vuoto** → funziona come prima  
+- **Fonti: 1-GPS** → funziona come prima
+
+Clicca **💾 Salva impostazioni** — nessun JSON da toccare.
+
+---
+
+## Trovare i tuoi sensori WiFi in HA
+
+1. Vai in **Home Assistant → Strumenti Sviluppo → Stati**
+2. Cerca il nome del tuo telefono
+3. Cerca entità che contengono `wi_fi`, `wifi`, `wlan`, `network`
+
+Esempi comuni:
+- `binary_sensor.sm_s931b_wi_fi_state` ← app companion Android
+- `binary_sensor.iphone_di_mario_wifi_connection` ← app companion iOS
+- `device_tracker.mario_telefono` ← integrazione router
+
+---
+
+## Riepilogo campi `person_config.json`
+
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `sensor` | entity_id | — | Sensore distanza GPS (obbligatorio) |
+| `threshold_m` | numero | 100 | Soglia zona verde/gialla in metri |
+| `zone_yellow_m` | numero | vuoto | Limite zona gialla in metri (vuoto = disattivata) |
+| `zone_yellow_wait_min` | numero | 5 | Minuti attesa in zona gialla |
+| `wifi_tracker` | entity_id | vuoto | Entità WiFi (`binary_sensor.*` o `device_tracker.*`) |
+| `require` | 1 / 2 / 3 | 1 | Fonti minime concordi per armare |
+| `stale_check` | bool | true | `false` = mantieni proximity attivo anche con dati vecchi |
