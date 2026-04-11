@@ -1,149 +1,210 @@
-# Changelog
+# 📍 HomeMind — Nuovo sistema Proximity avanzato
+## FIX : VARI
+## Rilevamento presenza più intelligente: zone progressive + multi-fonte
 
-All notable changes to HomeMind Orchestrator are documented here.
+Questa versione introduce un sistema di rilevamento presenza completamente ridisegnato per eliminare i falsi armamenti causati da GPS instabile, sensori fermi o telefoni che escono e rientrano rapidamente dalla zona casa.
+
+**Tutto configurabile dalla pagina web ⚙️ → tab 📍 Proximity — senza toccare JSON.**
 
 ---
 
-## [Unreleased]
+## Il problema che risolve
 
-### 🆕 Added
+Con il vecchio sistema basato su una soglia singola (es. 100m), bastava che il GPS oscillasse di 10 metri per triggerare un ciclo uscita/rientro. Risultato: messaggi spam, falsi armamenti, benvenuti doppi.
 
-#### 🔔 Alarm Auto-Arm Modes (`alarm_auto_arm`)
-New field in `person_config.json` that controls how HomeMind handles the alarm when everyone leaves home:
+Con il nuovo sistema puoi dire a HomeMind: *"aspetta 5 minuti prima di armare, e fallo solo se anche il WiFi conferma che sono uscito"*.
 
-- **`"auto"`** *(default, backward compatible)* — arms automatically without asking, same as before
-- **`"notify"`** — sends a Telegram message with inline buttons **✅ Sì, attiva antifurto / ❌ No, lascia disarmato** before arming. If no response within 5 minutes, does not arm and notifies timeout
-- **`"disabled"`** — HomeMind never touches the alarm system; only turns off lights and climate on departure
+---
+
+## Come funziona — tutti i casi
+
+### Caso 1 — Solo GPS (comportamento predefinito, nessuna modifica richiesta)
+
+Se non cambi nulla, HomeMind funziona esattamente come prima.
 
 ```json
-"alarm_auto_arm": "notify",
-"alarm_arm_mode": "armed_away"
+"proximity_sensors": {
+  "person.mario": {
+    "sensor": "sensor.casa_mario_distance",
+    "threshold_m": 100
+  }
+}
 ```
 
-Backward compatible: existing configs with `alarm_enabled: false` automatically map to `"disabled"`.
+Uscito oltre 100m → HomeMind arma.  
+Rientrato entro 100m → HomeMind disarma.
 
-#### 🌡️ Temperature and Humidity Sensor Filters
-New fields `temperature_sensors` and `humidity_sensors` to explicitly select which sensors HomeMind uses for briefing, AI responses and home status. Without configuration, HomeMind auto-detects all sensors from HA (excluding CPU, battery, weather sensors).
+---
+
+### Caso 2 — Zona gialla (anti falsi armamenti da GPS ballerino)
+
+Aggiunge una **zona intermedia** dove HomeMind aspetta N minuti prima di armare. Se torni nella zona verde nel frattempo, annulla tutto silenziosamente.
 
 ```json
-"temperature_sensors": ["sensor.temp_soggiorno", "sensor.temp_camera"],
-"humidity_sensors": ["sensor.umidita_soggiorno"]
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "zone_yellow_m": 500,
+  "zone_yellow_wait_min": 5
+}
 ```
 
-Configurable from the web UI (⚙️ Settings → 🌡️ Temp/Umid tab).
-
-#### ⚙️ Web Settings — New tabs
-The web settings page (⚙️ icon) now includes:
-
-- **🌡️ Temp/Umid** — select temperature and humidity sensors with search and checkboxes
-- **📍 Proximity** — configure proximity sensors with + Add button and device list
-- **🏠 Elettrod.** — add and configure appliances (power/smart mode) with sensor dropdown
-- **🔔 Allarme** — configure alarm panel, extra partitions, `alarm_auto_arm` mode selector and `alarm_arm_mode`
-
-All tabs save with **safe merge**: fields not managed by the UI (fascia_sensors, solar_optimizer, climate, etc.) are always preserved from the existing config file.
-
-#### 📖 Interactive Manual (`/readme`)
-New command available directly on Telegram:
+**Come funziona:**
 
 ```
-/readme                    → index of all topics
-/readme proximity          → explains proximity_sensors with JSON examples
-/readme antifurto          → explains alarm modes
-/readme fascia oraria      → explains F1/F2/F3 setup
-/readme errori             → common errors and solutions
+Casa ●
+  ──── 100m ────  🟢 ZONA VERDE   → in casa, HomeMind non fa nulla
+  ──── 500m ────  🟡 ZONA GIALLA  → fuori ma vicino, aspetta 5 minuti
+  ────  ∞   ────  🔴 ZONA ROSSA   → definitivamente fuori, arma subito
 ```
 
-AI-powered search through the embedded manual. Falls back to text search if AI is unavailable.
-Documented in `/comandi` list.
+**Esempio pratico:**
+- Esci a portare il cane a 200m (zona gialla) → HomeMind avvia timer 5 min
+- Torni a casa dopo 3 min → timer annullato, nessun armamento ✅
+- Vai al lavoro a 5km (zona rossa) → HomeMind arma subito ✅
+- Sei in zona gialla per 5 min senza rientrare → HomeMind arma ✅
 
-#### 🚀 Startup message simplified
-The startup Telegram notification no longer shows "Nuovi comandi disponibili" with a hardcoded list. It now shows:
-
-```
-🎩 HomeMind attivo
-Entita: 1551
-Persone: Agostino, Rosa
-Movimento: 4 sensori PIR
-Allarme: alarm_control_panel.home_alarm
-Casa: occupata
-
-Scrivi /comandi per vedere tutti i comandi.
-```
-
-### 🐛 Fixed
-
-- **`split("\n")` in f-string JS** — `getAlarmCfg()` textarea split for extra alarm panels now uses `String.fromCharCode(10)` instead of `"\n"` to avoid Python f-string interpreting it as a literal newline, which caused JS SyntaxError and broke all tab switching in the settings page
-- **`removeAppRow` quadruple braces** — `{{{{` in source produced `{{` in generated JS → SyntaxError → all JS died. Fixed to `{{` producing `{`
-- **`distances` NameError** — proximity tab referenced `distances` list that was not initialized in `settings_page()`. Added to sensor loop with distance/m/km detection
-- **Duplicate `await notifier.send(` line** — startup notify block had a duplicated `await` call after refactoring; removed
+**Campi:**
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `zone_yellow_m` | numero | vuoto (disattivato) | Distanza in metri dove inizia la zona gialla |
+| `zone_yellow_wait_min` | numero | 5 | Minuti di attesa in zona gialla prima di armare |
 
 ---
 
-## Previous releases
+### Caso 3 — WiFi tracker (seconda fonte di conferma)
 
-### Do Not Disturb (DND)
-- Configurable quiet hours in `person_config.json` (`quiet_hours`) or via Telegram
-- Non-critical notifications blocked during quiet hours; security alerts always pass through
+Aggiunge il WiFi del telefono come seconda fonte. HomeMind arma solo se anche il WiFi conferma che sei fuori.
 
-### Aliases / Quick Commands
-- Custom keyword system for guaranteed actions without AI, even offline
-- Multi-sensor aliases: one keyword reads multiple sensors at once
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
+  "require": 2
+}
+```
 
-### Offline Mode
-- When all AI providers fail, basic commands (lights, blinds, alarm, status) handled by local deterministic parser
+HomeMind supporta due tipi di entità WiFi:
 
-### Cover / Shutter fix
-- HomeMind now reads `current_position` (real 0–100%) instead of HA state string
+- **`binary_sensor.xxx_wi_fi_state`** → `on` = connesso (in casa), `off` = disconnesso (fuori)  
+  *(creato dall'app Home Assistant Companion per Android/iOS)*
+- **`device_tracker.xxx`** → `home` = in casa, `not_home` = fuori  
+  *(creato dall'integrazione router o companion app)*
 
-### Conflict-free memory
-- Updating an existing preference updates the fact instead of duplicating it
+**Come funziona con `require: 2`:**
 
-### Climate auto-off configurable
-- `climate_auto_off: false` disables automatic thermostat shutdown
-- `climate_exclude` excludes specific entities (Netatmo TRV compatibility)
+| GPS | WiFi | Risultato |
+|-----|------|-----------|
+| fuori | disconnesso | ✅ Arma — entrambe le fonti concordano |
+| fuori | connesso | ⏸️ Non arma — WiFi dice ancora in casa |
+| fuori | non disponibile | ⚠️ Scala a require:1, usa solo GPS |
 
-### Multi-partition alarm
-- `alarm_extra_panels` arms multiple alarm partitions together (Paradox, DSC, etc.)
-
-### Multi-AI cascade fallback
-- 7 providers with automatic switching: gemini → groq → cerebras → deepseek → mistral → claude → openai
-- Configurable in `ai_providers` array in `person_config.json`
-
-### Solar Optimizer
-- Notifies when solar surplus is available
-- Optional auto-start of appliances when surplus confirmed for `confirm_minutes`
-
-### Power Guard
-- Monitors instantaneous consumption
-- Three modes: `warn_only`, `ask` (confirm before switching off), `auto`
-
-### Location Tracker
-- Ask HomeMind where a person has been during the last N hours
-- Real addresses via OpenStreetMap (no API key)
-
-### Morning Briefing
-- Fully customizable via Telegram without editing files
-- Supports external weather city, custom greeting, tip_mode, exclude_sections
-
-### Frigate NVR Integration
-- Automatic snapshot on alarm trigger
-- Per-camera sensor association
-
-### Routine Manager
-- Learns daily patterns after 3 days of observation
-- Anticipates needs based on real habits
-
-### Task Scheduler
-- Schedule future actions in natural language
-- `/task` to list, `/cancella_task N` to cancel
-
-### Automations Manager
-- Create, edit and delete HA automations via Telegram chat
-
-### Log Analyzer
-- Reads HA logs every 5 minutes
-- Sends Telegram notification with AI analysis and fix proposals on critical errors
+**Campi:**
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `wifi_tracker` | entity_id | vuoto (disattivato) | Entità WiFi del telefono |
+| `require` | 1 / 2 / 3 | 1 | Quante fonti devono concordare per armare |
 
 ---
 
-[Unreleased]: https://github.com/ago19800/HomeMind/compare/HEAD...HEAD
+### Caso 4 — Zona gialla + WiFi (massima protezione)
+
+Combina entrambe le funzionalità. Il timer della zona gialla scatta, e al termine ricontrolla anche il multi-fonte. Due filtri in cascata.
+
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "zone_yellow_m": 500,
+  "zone_yellow_wait_min": 5,
+  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
+  "require": 2
+}
+```
+
+**Flusso completo:**
+1. Esci a 200m → zona gialla → timer 5 min
+2. Timer scaduto → ricontrolla: ancora fuori? WiFi disconnesso?
+3. Se sì a entrambe → arma
+4. Se WiFi ancora connesso → non arma nonostante il timer
+
+---
+
+### Caso 5 — require: 3 (GPS + WiFi + Proximity tutti e tre)
+
+Massima certezza. Tutte e tre le fonti devono dire "fuori" per armare.
+
+```json
+"person.mario": {
+  "sensor": "sensor.casa_mario_distance",
+  "threshold_m": 100,
+  "wifi_tracker": "device_tracker.sm_s931b",
+  "require": 3
+}
+```
+
+> ⚠️ Usare `require: 3` solo se tutti e tre i sensori sono affidabili e aggiornati regolarmente. Se uno è spesso offline, usa `require: 2`.
+
+---
+
+### Fallback automatico se una fonte è offline
+
+HomeMind non si blocca mai se una fonte non è disponibile.
+
+```
+require: 2, WiFi non disponibile → HomeMind usa require: 1 (solo GPS)
+require: 3, Proximity stale     → HomeMind usa require: 2 (GPS + WiFi)
+```
+
+Il fallback viene loggato e non richiede alcuna azione dall'utente.
+
+---
+
+## Configurazione dalla pagina web
+
+Vai in ⚙️ Impostazioni → tab **📍 Proximity**.
+
+Per ogni persona vedrai ora:
+
+```
+👤 person.mario                                          [✕]
+[sensor.casa_mario_distance ▼]  [100] m
+
+🟡 Zona gialla  [500] m  attesa  [5] min
+
+📶 WiFi  [binary_sensor.sm_s931b_wi_fi_state]  Fonti [2 fonti ▼]
+```
+
+- **Lascia zona gialla vuota** → funziona come prima
+- **Lascia WiFi vuoto** → funziona come prima  
+- **Fonti: 1-GPS** → funziona come prima
+
+Clicca **💾 Salva impostazioni** — nessun JSON da toccare.
+
+---
+
+## Trovare i tuoi sensori WiFi in HA
+
+1. Vai in **Home Assistant → Strumenti Sviluppo → Stati**
+2. Cerca il nome del tuo telefono
+3. Cerca entità che contengono `wi_fi`, `wifi`, `wlan`, `network`
+
+Esempi comuni:
+- `binary_sensor.sm_s931b_wi_fi_state` ← app companion Android
+- `binary_sensor.iphone_di_mario_wifi_connection` ← app companion iOS
+- `device_tracker.mario_telefono` ← integrazione router
+
+---
+
+## Riepilogo campi `person_config.json`
+
+| Campo | Tipo | Default | Descrizione |
+|-------|------|---------|-------------|
+| `sensor` | entity_id | — | Sensore distanza GPS (obbligatorio) |
+| `threshold_m` | numero | 100 | Soglia zona verde/gialla in metri |
+| `zone_yellow_m` | numero | vuoto | Limite zona gialla in metri (vuoto = disattivata) |
+| `zone_yellow_wait_min` | numero | 5 | Minuti attesa in zona gialla |
+| `wifi_tracker` | entity_id | vuoto | Entità WiFi (`binary_sensor.*` o `device_tracker.*`) |
+| `require` | 1 / 2 / 3 | 1 | Fonti minime concordi per armare |
+| `stale_check` | bool | true | `false` = mantieni proximity attivo anche con dati vecchi |
