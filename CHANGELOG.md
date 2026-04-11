@@ -1,5 +1,5 @@
 # 📍 HomeMind — Nuovo sistema Proximity avanzato
-
+## FIX : VARI
 ## Rilevamento presenza più intelligente: zone progressive + multi-fonte
 
 Questa versione introduce un sistema di rilevamento presenza completamente ridisegnato per eliminare i falsi armamenti causati da GPS instabile, sensori fermi o telefoni che escono e rientrano rapidamente dalla zona casa.
