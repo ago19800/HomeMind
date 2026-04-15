@@ -1,210 +1,72 @@
-# 📍 HomeMind — Nuovo sistema Proximity avanzato
-## FIX : VARI
-## Rilevamento presenza più intelligente: zone progressive + multi-fonte
 
-Questa versione introduce un sistema di rilevamento presenza completamente ridisegnato per eliminare i falsi armamenti causati da GPS instabile, sensori fermi o telefoni che escono e rientrano rapidamente dalla zona casa.
+```markdown
+# 🛡️ HomeMind Orchestrator - Changelog
 
-**Tutto configurabile dalla pagina web ⚙️ → tab 📍 Proximity — senza toccare JSON.**
+<!-- All notable changes to HomeMind Orchestrator are documented here. -->
 
----
+## [1.5.8] — 📅 2026-04-15
 
-## Il problema che risolve
+### ✨ Aggiunto (Added)
 
-Con il vecchio sistema basato su una soglia singola (es. 100m), bastava che il GPS oscillasse di 10 metri per triggerare un ciclo uscita/rientro. Risultato: messaggi spam, falsi armamenti, benvenuti doppi.
+#### 🔓 Notifica di Benvenuto con stato dell'allarme
+Quando si rientra in casa e l'allarme era armato, il messaggio Telegram di benvenuto include ora lo stato preciso dello sblocco dell'allarme:
 
-Con il nuovo sistema puoi dire a HomeMind: *"aspetta 5 minuti prima di armare, e fallo solo se anche il WiFi conferma che sono uscito"*.
 
----
+🏠 HomeMind: Bentornato!
+Agostino rientrato/a
+In casa: Agostino, Rosa
+Ora: 18:32
+🔓 Antifurto disarmato (era: 🏃 via da casa)
+```
 
-## Come funziona — tutti i casi
+#### 🤖 Automazioni IA in linguaggio naturale
+È possibile creare automazioni Home Assistant direttamente tramite Telegram usando un semplice linguaggio naturale.
 
-### Caso 1 — Solo GPS (comportamento predefinito, nessuna modifica richiesta)
+**Esempio di utilizzo:**
+> *"Crea automazione: quando sensore scala rileva movimento alle 23, accendi luce esterna e mandami notifica Telegram"*
 
-Se non cambi nulla, HomeMind funziona esattamente come prima.
+HomeMind genera YAML valido per HA, utilizzando ID di entità reali dal **Registry delle Entità** (`EntityRegistry`), e salva l'automazione in `automations.yaml` con ricaricamento automatico.
+
+*   **Funzionamento:**
+    *   Il `Registry delle Entità` scansiona tutte le entità HA ogni 15 minuti, costruendo un catalogo locale aggiornato.
+    *   I sensori di movimento vengono arricchiti anche con la loro zona (es. `[zona:cucina]`, `[zona:scala]`), permettendo all'IA di abbinare il linguaggio naturale all'`entity_id` corretto.
+    *   Le notifiche Telegram utilizzano `telegram_bot.send_message` con lo `chat_id` configurato (il servizio legacy `notify.telegram` è deprecato in HA 2026+).
+    *   Se un'automazione con lo stesso `id` esiste già, viene **sostituita** (`upsert`) invece di duplicata — prevenendo errori di ricaricamento.
+
+#### ⏱️ Ritardo configurabile tra le partizioni d'allarme (`alarm_extra_delay`)
+Per i sistemi multiparticellari (EvoHD, Paradox, DSC) che rifiutano comandi inviati troppo rapidamente, è stato applicato un ritardo configurabile tra ogni partizione, sia durante l'armamento che lo smarramento:
 
 ```json
-"proximity_sensors": {
-  "person.mario": {
-    "sensor": "sensor.casa_mario_distance",
-    "threshold_m": 100
-  }
-}
+"alarm_extra_panels": [
+ "alarm_control_panel.evohd_partition_esterno",
+ "alarm_control_panel.evohd_partition_riv_est_1_piano"
+],
+"alarm_extra_delay": 2
 ```
+*(Default: 1 secondo. Può essere impostato dall'interfaccia web sotto **Antifurto → ⏱️ Ritardo tra partizioni extra**).*
 
-Uscito oltre 100m → HomeMind arma.  
-Rientrato entro 100m → HomeMind disarma.
+### 🐛 Corretti (Fixed)
+
+#### 🚫 `alarm_auto_arm: disabled` ora blocca anche lo smarramento
+Precedentemente, la modalità `disabled` impediva solo a HomeMind di *armare* l'allarme. Al rientro, invece, poteva ancora **disattivarlo** automaticamente. Ora `disabled` è una modalità completamente passiva: HomeMind non tocca l'allarme in nessuna direzione.
+
+#### 👋 Notifica di benvenuto dopo il riavvio di HomeMind
+Il flag `_was_away` (che controlla le notifiche di benvenuto) veniva reimpostato su `False` ad ogni riavvio. Se HomeMind si era riavviato mentre eri assente, non veniva inviato nessun benvenuto al tuo rientro. **Corretto:** lo `startup_check` e il ciclo di ricreazione dei 2 minuti re-inizializzano `_was_away = True` per chiunque la posizione GPS mostri come assente.
+
+#### 🔁 Transizione vicinanza/lontananza — trigger benvenuto
+La logica "passaggio da vicino a lontano $\rightarrow$ attiva il benvenuto" si attivava ad ogni aggiornamento del sensore di prossimità (anche quando fermi allo 0m). **Corretto:** ora il trigger scatta solo su una genuina transizione **da lontano $\rightarrow$ vicino** (valore precedente > soglia, nuovo valore $\le$ soglia), evitando notifiche duplicate in caso di arrivo simultaneo.
+
+#### 📍 ID Entità nelle automazioni IA
+In precedenza, l'IA poteva inventare ID entità (es. `light.luce_mario`) anziché usare quelli reali e corretti. **Corretto:** il `Registry delle Entità` fornisce ora all'IA un catalogo strutturato:
+
+```markdown
+[light] Luce Mario → light.yeelight_ct_bulb_0x536fe64 (off)
+[binary_sensor] Sensore occupazione [zona:scala] → binary_sensor.0x00158d000224fa71_occupancy (off)
+```
 
 ---
 
-### Caso 2 — Zona gialla (anti falsi armamenti da GPS ballerino)
+## [1.5.7] — 🚀 Rilascio precedente
 
-Aggiunge una **zona intermedia** dove HomeMind aspetta N minuti prima di armare. Se torni nella zona verde nel frattempo, annulla tutto silenziosamente.
-
-```json
-"person.mario": {
-  "sensor": "sensor.casa_mario_distance",
-  "threshold_m": 100,
-  "zone_yellow_m": 500,
-  "zone_yellow_wait_min": 5
-}
+*Consulta la cronologia Git per i dettagli.*
 ```
-
-**Come funziona:**
-
-```
-Casa ●
-  ──── 100m ────  🟢 ZONA VERDE   → in casa, HomeMind non fa nulla
-  ──── 500m ────  🟡 ZONA GIALLA  → fuori ma vicino, aspetta 5 minuti
-  ────  ∞   ────  🔴 ZONA ROSSA   → definitivamente fuori, arma subito
-```
-
-**Esempio pratico:**
-- Esci a portare il cane a 200m (zona gialla) → HomeMind avvia timer 5 min
-- Torni a casa dopo 3 min → timer annullato, nessun armamento ✅
-- Vai al lavoro a 5km (zona rossa) → HomeMind arma subito ✅
-- Sei in zona gialla per 5 min senza rientrare → HomeMind arma ✅
-
-**Campi:**
-| Campo | Tipo | Default | Descrizione |
-|-------|------|---------|-------------|
-| `zone_yellow_m` | numero | vuoto (disattivato) | Distanza in metri dove inizia la zona gialla |
-| `zone_yellow_wait_min` | numero | 5 | Minuti di attesa in zona gialla prima di armare |
-
----
-
-### Caso 3 — WiFi tracker (seconda fonte di conferma)
-
-Aggiunge il WiFi del telefono come seconda fonte. HomeMind arma solo se anche il WiFi conferma che sei fuori.
-
-```json
-"person.mario": {
-  "sensor": "sensor.casa_mario_distance",
-  "threshold_m": 100,
-  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
-  "require": 2
-}
-```
-
-HomeMind supporta due tipi di entità WiFi:
-
-- **`binary_sensor.xxx_wi_fi_state`** → `on` = connesso (in casa), `off` = disconnesso (fuori)  
-  *(creato dall'app Home Assistant Companion per Android/iOS)*
-- **`device_tracker.xxx`** → `home` = in casa, `not_home` = fuori  
-  *(creato dall'integrazione router o companion app)*
-
-**Come funziona con `require: 2`:**
-
-| GPS | WiFi | Risultato |
-|-----|------|-----------|
-| fuori | disconnesso | ✅ Arma — entrambe le fonti concordano |
-| fuori | connesso | ⏸️ Non arma — WiFi dice ancora in casa |
-| fuori | non disponibile | ⚠️ Scala a require:1, usa solo GPS |
-
-**Campi:**
-| Campo | Tipo | Default | Descrizione |
-|-------|------|---------|-------------|
-| `wifi_tracker` | entity_id | vuoto (disattivato) | Entità WiFi del telefono |
-| `require` | 1 / 2 / 3 | 1 | Quante fonti devono concordare per armare |
-
----
-
-### Caso 4 — Zona gialla + WiFi (massima protezione)
-
-Combina entrambe le funzionalità. Il timer della zona gialla scatta, e al termine ricontrolla anche il multi-fonte. Due filtri in cascata.
-
-```json
-"person.mario": {
-  "sensor": "sensor.casa_mario_distance",
-  "threshold_m": 100,
-  "zone_yellow_m": 500,
-  "zone_yellow_wait_min": 5,
-  "wifi_tracker": "binary_sensor.sm_s931b_wi_fi_state",
-  "require": 2
-}
-```
-
-**Flusso completo:**
-1. Esci a 200m → zona gialla → timer 5 min
-2. Timer scaduto → ricontrolla: ancora fuori? WiFi disconnesso?
-3. Se sì a entrambe → arma
-4. Se WiFi ancora connesso → non arma nonostante il timer
-
----
-
-### Caso 5 — require: 3 (GPS + WiFi + Proximity tutti e tre)
-
-Massima certezza. Tutte e tre le fonti devono dire "fuori" per armare.
-
-```json
-"person.mario": {
-  "sensor": "sensor.casa_mario_distance",
-  "threshold_m": 100,
-  "wifi_tracker": "device_tracker.sm_s931b",
-  "require": 3
-}
-```
-
-> ⚠️ Usare `require: 3` solo se tutti e tre i sensori sono affidabili e aggiornati regolarmente. Se uno è spesso offline, usa `require: 2`.
-
----
-
-### Fallback automatico se una fonte è offline
-
-HomeMind non si blocca mai se una fonte non è disponibile.
-
-```
-require: 2, WiFi non disponibile → HomeMind usa require: 1 (solo GPS)
-require: 3, Proximity stale     → HomeMind usa require: 2 (GPS + WiFi)
-```
-
-Il fallback viene loggato e non richiede alcuna azione dall'utente.
-
----
-
-## Configurazione dalla pagina web
-
-Vai in ⚙️ Impostazioni → tab **📍 Proximity**.
-
-Per ogni persona vedrai ora:
-
-```
-👤 person.mario                                          [✕]
-[sensor.casa_mario_distance ▼]  [100] m
-
-🟡 Zona gialla  [500] m  attesa  [5] min
-
-📶 WiFi  [binary_sensor.sm_s931b_wi_fi_state]  Fonti [2 fonti ▼]
-```
-
-- **Lascia zona gialla vuota** → funziona come prima
-- **Lascia WiFi vuoto** → funziona come prima  
-- **Fonti: 1-GPS** → funziona come prima
-
-Clicca **💾 Salva impostazioni** — nessun JSON da toccare.
-
----
-
-## Trovare i tuoi sensori WiFi in HA
-
-1. Vai in **Home Assistant → Strumenti Sviluppo → Stati**
-2. Cerca il nome del tuo telefono
-3. Cerca entità che contengono `wi_fi`, `wifi`, `wlan`, `network`
-
-Esempi comuni:
-- `binary_sensor.sm_s931b_wi_fi_state` ← app companion Android
-- `binary_sensor.iphone_di_mario_wifi_connection` ← app companion iOS
-- `device_tracker.mario_telefono` ← integrazione router
-
----
-
-## Riepilogo campi `person_config.json`
-
-| Campo | Tipo | Default | Descrizione |
-|-------|------|---------|-------------|
-| `sensor` | entity_id | — | Sensore distanza GPS (obbligatorio) |
-| `threshold_m` | numero | 100 | Soglia zona verde/gialla in metri |
-| `zone_yellow_m` | numero | vuoto | Limite zona gialla in metri (vuoto = disattivata) |
-| `zone_yellow_wait_min` | numero | 5 | Minuti attesa in zona gialla |
-| `wifi_tracker` | entity_id | vuoto | Entità WiFi (`binary_sensor.*` o `device_tracker.*`) |
-| `require` | 1 / 2 / 3 | 1 | Fonti minime concordi per armare |
-| `stale_check` | bool | true | `false` = mantieni proximity attivo anche con dati vecchi |
