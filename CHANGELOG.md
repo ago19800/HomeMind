@@ -3,6 +3,8 @@
 # 🛡️ HomeMind Orchestrator - Changelog
 
 <!-- All notable changes to HomeMind Orchestrator are documented here. -->
+## [1.5.9] —
+FIX- VARI
 
 ## [1.5.8] — 📅 2026-04-15
 
