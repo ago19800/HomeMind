@@ -3,6 +3,9 @@
 # 🛡️ HomeMind Orchestrator - Changelog
 
 <!-- All notable changes to HomeMind Orchestrator are documented here. -->
+## [1.6.0] —
+FIX- VARI
+
 ## [1.5.9] —
 FIX- VARI
 
