@@ -1,18 +1,22 @@
-# Changelog
 
-All notable changes to HomeMind Orchestrator are documented in this file.
+```markdown
+# 🛡️ HomeMind Orchestrator - Changelog
 
-Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+<!-- All notable changes to HomeMind Orchestrator are documented here. -->
+## [1.6.0] —
+FIX- VARI
 
----
+## [1.5.9] —
+FIX- VARI
 
-## [1.5.8] — 2026-04-15
+## [1.5.8] — 📅 2026-04-15
 
-### Added
+### ✨ Aggiunto (Added)
 
-#### 🔓 Welcome notification with alarm status
-When arriving home while the alarm was armed, the welcome Telegram message now includes the alarm disarm status:
-```
+#### 🔓 Notifica di Benvenuto con stato dell'allarme
+Quando si rientra in casa e l'allarme era armato, il messaggio Telegram di benvenuto include ora lo stato preciso dello sblocco dell'allarme:
+
+
 🏠 HomeMind: Bentornato!
 Agostino rientrato/a
 In casa: Agostino, Rosa
@@ -20,51 +24,54 @@ Ora: 18:32
 🔓 Antifurto disarmato (era: 🏃 via da casa)
 ```
 
-#### 🤖 AI Automations in natural language
-Create Home Assistant automations directly from Telegram using natural language:
+#### 🤖 Automazioni IA in linguaggio naturale
+È possibile creare automazioni Home Assistant direttamente tramite Telegram usando un semplice linguaggio naturale.
+
+**Esempio di utilizzo:**
 > *"Crea automazione: quando sensore scala rileva movimento alle 23, accendi luce esterna e mandami notifica Telegram"*
 
-HomeMind generates valid YAML, uses real entity IDs from the **EntityRegistry**, and saves the automation to `automations.yaml` with automatic reload.
+HomeMind genera YAML valido per HA, utilizzando ID di entità reali dal **Registry delle Entità** (`EntityRegistry`), e salva l'automazione in `automations.yaml` con ricaricamento automatico.
 
-**How it works:**
-- `EntityRegistry` scans all HA entities every 15 minutes and builds a local catalogue
-- Motion sensors are enriched with their zone (e.g. `[zona:cucina]`, `[zona:scala]`) so the AI can match natural language to the correct `entity_id`
-- Telegram notifications use `telegram_bot.send_message` with the configured `chat_id` (the legacy `notify.telegram` service is deprecated in HA 2026+)
-- If an automation with the same `id` already exists, it is **replaced** (upsert) instead of duplicated — preventing reload errors
+*   **Funzionamento:**
+    *   Il `Registry delle Entità` scansiona tutte le entità HA ogni 15 minuti, costruendo un catalogo locale aggiornato.
+    *   I sensori di movimento vengono arricchiti anche con la loro zona (es. `[zona:cucina]`, `[zona:scala]`), permettendo all'IA di abbinare il linguaggio naturale all'`entity_id` corretto.
+    *   Le notifiche Telegram utilizzano `telegram_bot.send_message` con lo `chat_id` configurato (il servizio legacy `notify.telegram` è deprecato in HA 2026+).
+    *   Se un'automazione con lo stesso `id` esiste già, viene **sostituita** (`upsert`) invece di duplicata — prevenendo errori di ricaricamento.
 
-#### ⏱️ Configurable delay between alarm partitions (`alarm_extra_delay`)
-For multi-partition systems (EvoHD, Paradox, DSC) that reject commands sent too quickly, a configurable delay is now applied between each partition during both arming and disarming:
+#### ⏱️ Ritardo configurabile tra le partizioni d'allarme (`alarm_extra_delay`)
+Per i sistemi multiparticellari (EvoHD, Paradox, DSC) che rifiutano comandi inviati troppo rapidamente, è stato applicato un ritardo configurabile tra ogni partizione, sia durante l'armamento che lo smarramento:
 
 ```json
 "alarm_extra_panels": [
-  "alarm_control_panel.evohd_partition_esterno",
-  "alarm_control_panel.evohd_partition_riv_est_1_piano"
+ "alarm_control_panel.evohd_partition_esterno",
+ "alarm_control_panel.evohd_partition_riv_est_1_piano"
 ],
 "alarm_extra_delay": 2
 ```
+*(Default: 1 secondo. Può essere impostato dall'interfaccia web sotto **Antifurto → ⏱️ Ritardo tra partizioni extra**).*
 
-Default is `1` second. Can be set from the web UI under **Antifurto → ⏱️ Delay tra partizioni extra**.
+### 🐛 Corretti (Fixed)
 
-### Fixed
+#### 🚫 `alarm_auto_arm: disabled` ora blocca anche lo smarramento
+Precedentemente, la modalità `disabled` impediva solo a HomeMind di *armare* l'allarme. Al rientro, invece, poteva ancora **disattivarlo** automaticamente. Ora `disabled` è una modalità completamente passiva: HomeMind non tocca l'allarme in nessuna direzione.
 
-#### 🚫 `alarm_auto_arm: disabled` now blocks disarm too
-Previously, `disabled` mode only prevented HomeMind from **arming** the alarm. On return, HomeMind would still **disarm** it automatically. Now `disabled` is a full hands-off mode — HomeMind never touches the alarm in either direction.
+#### 👋 Notifica di benvenuto dopo il riavvio di HomeMind
+Il flag `_was_away` (che controlla le notifiche di benvenuto) veniva reimpostato su `False` ad ogni riavvio. Se HomeMind si era riavviato mentre eri assente, non veniva inviato nessun benvenuto al tuo rientro. **Corretto:** lo `startup_check` e il ciclo di ricreazione dei 2 minuti re-inizializzano `_was_away = True` per chiunque la posizione GPS mostri come assente.
 
-#### 👋 Welcome notification after HomeMind restart
-`_was_away` (the flag that gates welcome notifications) was reset to `False` on every restart. If HomeMind restarted while you were away, no welcome would be sent on return. **Fixed:** `startup_check` and the 2-minute rebuild loop now re-initialise `_was_away = True` for anyone the GPS shows as away.
+#### 🔁 Transizione vicinanza/lontananza — trigger benvenuto
+La logica "passaggio da vicino a lontano $\rightarrow$ attiva il benvenuto" si attivava ad ogni aggiornamento del sensore di prossimità (anche quando fermi allo 0m). **Corretto:** ora il trigger scatta solo su una genuina transizione **da lontano $\rightarrow$ vicino** (valore precedente > soglia, nuovo valore $\le$ soglia), evitando notifiche duplicate in caso di arrivo simultaneo.
 
-#### 🔁 Proximity near/far transition — welcome trigger
-The "proximity becomes near → trigger welcome" logic was firing on every proximity sensor update (even when stationary at 0m). **Fixed:** the trigger now only fires on a genuine **far→near transition** (previous value > threshold, new value ≤ threshold), preventing duplicate welcome notifications when a second person arrives home.
+#### 📍 ID Entità nelle automazioni IA
+In precedenza, l'IA poteva inventare ID entità (es. `light.luce_mario`) anziché usare quelli reali e corretti. **Corretto:** il `Registry delle Entità` fornisce ora all'IA un catalogo strutturato:
 
-#### 📍 Entity IDs in AI automations
-Previously the AI could invent entity IDs (e.g. `light.luce_mario`) instead of using real ones. **Fixed:** the `EntityRegistry` now feeds the AI a structured catalogue:
-```
+```markdown
 [light] Luce Mario → light.yeelight_ct_bulb_0x536fe64 (off)
-[binary_sensor] Sensore occupancy [zona:scala] → binary_sensor.0x00158d000224fa71_occupancy (off)
+[binary_sensor] Sensore occupazione [zona:scala] → binary_sensor.0x00158d000224fa71_occupancy (off)
 ```
 
 ---
 
-## [1.5.7] — previous release
+## [1.5.7] — 🚀 Rilascio precedente
 
-See git history.
+*Consulta la cronologia Git per i dettagli.*
+```
