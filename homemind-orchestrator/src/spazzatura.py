@@ -20,6 +20,8 @@ from datetime import datetime, timedelta
 from utils.timezone_helper import now_local
 from pathlib import Path
 
+_BUILTIN_FILE = Path(__file__).parent.parent / "spazzatura_calendario_lanciano_2026.json"
+CALENDARIO_BUILTIN = _BUILTIN_FILE.read_text(encoding="utf-8") if _BUILTIN_FILE.exists() else "{}"
 logger = logging.getLogger("homemind.spazzatura")
 
 # ── Calendario builtin Lanciano 2026 (fallback se nessun file trovato) ────────
