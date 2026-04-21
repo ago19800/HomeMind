@@ -3,7 +3,7 @@
 ## [1.6.1] — 2026-04-21
  
 ### Added
- 
+  FIX: ALLARME
 #### 🔊 Annuncio vocale Alexa per notifiche spazzatura
 Nella sezione **Spazzatura** del pannello web, nuova opzione per inviare un annuncio TTS sugli speaker Alexa all'ora configurata, in aggiunta o in alternativa al messaggio Telegram.
  
