@@ -207,12 +207,12 @@
     {
       "name": "gemini",
       "model": "gemini-3.1-flash-lite-preview",
-      "api_key": "AIzaSyAZLBnfhxZv9EtUgprSwJSdm_1VZ0lIbKU"
+      "api_key": ""
     },
     {
       "name": "mistral",
       "model": "mistral-small-latest",
-      "api_key": "kJNek3hoaRlryWhUR8ViSgrOPAiG8BjL"
+      "api_key": ""
     }
   ]
 }
