@@ -1,1 +1,0 @@
-# HomeMind HA Client
