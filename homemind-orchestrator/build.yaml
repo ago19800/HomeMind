@@ -1,0 +1,3 @@
+---
+# HomeMind Orchestrator — build config per HA Supervisor
+# build_from rimosso: si usa il Dockerfile custom incluso nell'addon
