@@ -1,0 +1,637 @@
+{
+  "persona": "Rosa",
+  "titolo": "Programma nutrizionale — Fase Building",
+  "valido_da": "2026-10-28",
+  "obiettivi": {
+    "allenamento": {
+      "kcal": 2050,
+      "proteine_g": 110,
+      "carboidrati_g": 279,
+      "grassi_g": 55
+    },
+    "riposo": {
+      "kcal": 1900,
+      "proteine_g": 110,
+      "carboidrati_g": 230,
+      "grassi_g": 60
+    }
+  },
+  "note": [
+    "Pasta, riso e cereali si pesano a crudo/secco. Carne e pesce al netto degli scarti, prima della cottura.",
+    "Acqua: 2,0-2,5 litri al giorno, di più nei giorni di allenamento o con caldo.",
+    "Spuntino serale facoltativo: solo se serve per raggiungere il fabbisogno o in caso di fame reale.",
+    "Whey solo nei 4 giorni di allenamento (lunedì, mercoledì, venerdì, sabato), come pre-workout."
+  ],
+  "giorni": {
+    "lunedi": {
+      "tipo": "allenamento",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Yogurt greco 0%",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Riso soffiato",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Miele",
+            "quantita": "10 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Fesa di tacchino",
+            "quantita": "70 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "50 g"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "90 g"
+          },
+          {
+            "nome": "Petto di pollo",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150-200 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Banana",
+            "quantita": "120 g"
+          },
+          {
+            "nome": "Proteine Whey",
+            "quantita": "20 g",
+            "nota": "60-120 minuti prima dell'allenamento"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Petto di pollo",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Patate",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150-200 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Skyr",
+              "quantita": "150 g"
+            }
+          ]
+        }
+      }
+    },
+    "martedi": {
+      "tipo": "riposo",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Albumi (per i pancake)",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Farina di riso (per i pancake)",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Miele",
+            "quantita": "10 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Bresaola",
+            "quantita": "60 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "3"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Pasta senza glutine (secca)",
+            "quantita": "80 g"
+          },
+          {
+            "nome": "Manzo magro",
+            "quantita": "130 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "5 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Ricotta magra",
+            "quantita": "120 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "40 g"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Fesa di tacchino",
+            "quantita": "160 g"
+          },
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "60 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Fiocchi di latte",
+              "quantita": "150 g"
+            }
+          ]
+        }
+      }
+    },
+    "mercoledi": {
+      "tipo": "allenamento",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Uova intere",
+            "quantita": "2"
+          },
+          {
+            "nome": "Albumi",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "60 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Skyr",
+            "quantita": "170 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "100 g"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Patate dolci",
+            "quantita": "250 g"
+          },
+          {
+            "nome": "Fesa di tacchino",
+            "quantita": "160 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Proteine Whey",
+            "quantita": "25 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "3"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Salmone",
+            "quantita": "130 g"
+          },
+          {
+            "nome": "Patate",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Yogurt greco",
+              "quantita": "170 g"
+            }
+          ]
+        }
+      }
+    },
+    "giovedi": {
+      "tipo": "riposo",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Skyr",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "120 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "3"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Yogurt greco 0%",
+            "quantita": "170 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "100 g"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "80 g"
+          },
+          {
+            "nome": "Tonno al naturale",
+            "quantita": "130 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Bresaola",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "80 g"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Merluzzo",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "70 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Latte senza lattosio",
+              "quantita": "250 ml"
+            }
+          ]
+        }
+      }
+    },
+    "venerdi": {
+      "tipo": "allenamento",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Latte senza lattosio",
+            "quantita": "250 ml"
+          },
+          {
+            "nome": "Cereali senza glutine",
+            "quantita": "60 g"
+          },
+          {
+            "nome": "Yogurt greco",
+            "quantita": "125 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Prosciutto cotto alta qualità",
+            "quantita": "70 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "40 g"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Pasta senza glutine (secca)",
+            "quantita": "90 g"
+          },
+          {
+            "nome": "Merluzzo",
+            "quantita": "180 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Proteine Whey",
+            "quantita": "25 g"
+          },
+          {
+            "nome": "Miele",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "2"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Pesce spada o pesce bianco",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "70 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Proteine Caseina",
+              "quantita": "25 g",
+              "nota": "oppure yogurt greco 150 g"
+            }
+          ]
+        }
+      }
+    },
+    "sabato": {
+      "tipo": "allenamento",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Fiocchi di latte",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "70 g"
+          },
+          {
+            "nome": "Marmellata",
+            "quantita": "20 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Uova sode",
+            "quantita": "2"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "30 g"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Riso jasmine (secco)",
+            "quantita": "90 g"
+          },
+          {
+            "nome": "Salmone",
+            "quantita": "130 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Proteine Whey",
+            "quantita": "25 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "100 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "2"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Uova intere",
+            "quantita": "2"
+          },
+          {
+            "nome": "Albumi",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "60 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "5 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Kefir",
+              "quantita": "200 ml"
+            },
+            {
+              "nome": "Skyr",
+              "quantita": "100 g"
+            }
+          ]
+        }
+      }
+    },
+    "domenica": {
+      "tipo": "riposo",
+      "pasti": {
+        "colazione": [
+          {
+            "nome": "Ricotta magra",
+            "quantita": "150 g"
+          },
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "60 g"
+          },
+          {
+            "nome": "Miele",
+            "quantita": "10 g"
+          }
+        ],
+        "spuntino_mattina": [
+          {
+            "nome": "Yogurt greco",
+            "quantita": "170 g"
+          },
+          {
+            "nome": "Miele",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Gallette di riso",
+            "quantita": "2"
+          }
+        ],
+        "pranzo": [
+          {
+            "nome": "Riso basmati (secco)",
+            "quantita": "80 g"
+          },
+          {
+            "nome": "Tonno al naturale",
+            "quantita": "130 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "10 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_pomeridiano": [
+          {
+            "nome": "Pane senza glutine",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Bresaola",
+            "quantita": "50 g"
+          },
+          {
+            "nome": "Banana",
+            "quantita": "80 g"
+          }
+        ],
+        "cena": [
+          {
+            "nome": "Manzo magro",
+            "quantita": "140 g"
+          },
+          {
+            "nome": "Patate",
+            "quantita": "200 g"
+          },
+          {
+            "nome": "Olio EVO",
+            "quantita": "5 g"
+          },
+          {
+            "nome": "Verdure",
+            "quantita": "150 g"
+          }
+        ],
+        "spuntino_serale": {
+          "facoltativo": true,
+          "alimenti": [
+            {
+              "nome": "Ricotta magra",
+              "quantita": "120 g"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

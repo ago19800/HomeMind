@@ -1,0 +1,188 @@
+{
+  "_nota": "File d'esempio: canali nazionali del digitale terrestre italiano (numerazione LCN). I numeri cambiano da TV a TV e da zona a zona: confrontali con la lista canali della TUA TV, correggi quelli diversi e aggiungi i tuoi. Ogni canale ha «nome» (come lo dici), «numero» (come sulla TV, solo cifre, max 4) e «alias» opzionali (altri modi di dirlo). I nomi con numeri in lettere (rai uno, canale cinque…) funzionano già da soli. «comandi_audio» è opzionale: aggiunge frasi tue per volume e muto (da voce serve sempre la parola «tv»). Azioni ammesse: alza_volume, abbassa_volume, muto, riattiva_audio. Le chiavi che iniziano con _ vengono ignorate.",
+  "canali": [
+    {
+      "nome": "Rai 1",
+      "numero": "1",
+      "alias": [
+        "rai uno"
+      ]
+    },
+    {
+      "nome": "Rai 2",
+      "numero": "2",
+      "alias": [
+        "rai due"
+      ]
+    },
+    {
+      "nome": "Rai 3",
+      "numero": "3",
+      "alias": [
+        "rai tre"
+      ]
+    },
+    {
+      "nome": "Rete 4",
+      "numero": "4",
+      "alias": [
+        "rete quattro"
+      ]
+    },
+    {
+      "nome": "Canale 5",
+      "numero": "5",
+      "alias": [
+        "canale cinque"
+      ]
+    },
+    {
+      "nome": "Italia 1",
+      "numero": "6",
+      "alias": [
+        "italia uno"
+      ]
+    },
+    {
+      "nome": "La7",
+      "numero": "7",
+      "alias": [
+        "la sette"
+      ]
+    },
+    {
+      "nome": "TV8",
+      "numero": "8",
+      "alias": [
+        "tv 8",
+        "tv otto"
+      ]
+    },
+    {
+      "nome": "Nove",
+      "numero": "9",
+      "alias": []
+    },
+    {
+      "nome": "20 Mediaset",
+      "numero": "20",
+      "alias": [
+        "mediaset 20",
+        "mediaset venti"
+      ]
+    },
+    {
+      "nome": "Rai 4",
+      "numero": "21",
+      "alias": [
+        "rai quattro"
+      ]
+    },
+    {
+      "nome": "Iris",
+      "numero": "22",
+      "alias": []
+    },
+    {
+      "nome": "Rai 5",
+      "numero": "23",
+      "alias": [
+        "rai cinque"
+      ]
+    },
+    {
+      "nome": "Rai Movie",
+      "numero": "24",
+      "alias": []
+    },
+    {
+      "nome": "Rai Premium",
+      "numero": "25",
+      "alias": []
+    },
+    {
+      "nome": "Cielo",
+      "numero": "26",
+      "alias": []
+    },
+    {
+      "nome": "27 Twentyseven",
+      "numero": "27",
+      "alias": [
+        "twenty seven",
+        "twentyseven"
+      ]
+    },
+    {
+      "nome": "TV2000",
+      "numero": "28",
+      "alias": [
+        "tv 2000"
+      ]
+    },
+    {
+      "nome": "La7 Cinema",
+      "numero": "29",
+      "alias": [
+        "la7 cinema"
+      ]
+    },
+    {
+      "nome": "La5",
+      "numero": "30",
+      "alias": [
+        "la cinque"
+      ]
+    },
+    {
+      "nome": "Real Time",
+      "numero": "31",
+      "alias": [
+        "realtime"
+      ]
+    },
+    {
+      "nome": "Food Network",
+      "numero": "33",
+      "alias": []
+    },
+    {
+      "nome": "Rai News 24",
+      "numero": "48",
+      "alias": [
+        "rai news"
+      ]
+    }
+  ],
+  "comandi_audio": [
+    {
+      "azione": "alza_volume",
+      "alias": [
+        "alza la voce",
+        "più alto",
+        "su la voce"
+      ]
+    },
+    {
+      "azione": "abbassa_volume",
+      "alias": [
+        "abbassa la voce",
+        "più basso",
+        "giù la voce"
+      ]
+    },
+    {
+      "azione": "muto",
+      "alias": [
+        "silenzio",
+        "togli l'audio"
+      ]
+    },
+    {
+      "azione": "riattiva_audio",
+      "alias": [
+        "rimetti l'audio"
+      ]
+    }
+  ]
+}
