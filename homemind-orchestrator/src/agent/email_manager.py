@@ -14,7 +14,7 @@ Configurazione (in person_config.json):
   "email_accounts": [
     {
       "label": "Casa",
-      "address": "agostino@gmail.com",
+      "address": "xxx@gmail.com",
       "app_password": "xxxx xxxx xxxx xxxx",
       "imap_host": "imap.gmail.com",
       "imap_port": 993,
